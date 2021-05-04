@@ -1,0 +1,26 @@
+{
+  "tasks": [
+    {
+      "id": "0d1e00e2-a5d1-11eb-a0a7-b6a482a78010",
+      "name": "Review the appeal",
+      "type": "reviewTheAppeal",
+      "task_state": "unassigned",
+      "task_system": "SELF",
+      "security_classification": "PUBLIC",
+      "task_title": "Review the appeal",
+      "created_date": "2021-04-25T14:18:05.175+0000",
+      "due_date": "2021-04-27T15:00:00.000+0000",
+      "location_name": "Taylor House",
+      "location": "765324",
+      "execution_type": "Case Management Task",
+      "jurisdiction": "IA",
+      "region": "1",
+      "case_type_id": "Asylum",
+      "case_id": "1619360250476206",
+      "case_category": "protection",
+      "case_name": "Bob Smith",
+      "auto_assigned": false,
+      "warnings": false
+    }
+  ]
+}

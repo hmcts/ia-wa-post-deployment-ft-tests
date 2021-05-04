@@ -1,0 +1,67 @@
+{
+  "description": "Scenario 1: submitAppeal event should create a task",
+  "enabled": true,
+  "jurisdiction" : "IA",
+  "caseType" : "Asylum",
+  "request": {
+    "credentials": "IALegalRepresentative",
+    "input": {
+      "ccd": {
+        "eventId": "submitAppeal",
+        "state": "appealStarted",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "appealType": "protection",
+            "homeOfficeDecisionDate": "{$TODAY-14}"
+          }
+        }
+      },
+      "eventMessage": {
+        "template": "minimal-ccd-event-message.json",
+        "replacements": {
+          "EventId": "submitAppeal",
+          "NewStateId": "appealSubmitted",
+          "AdditionalData": {
+            "Data": {
+              "appealType": "protection"
+            }
+          }
+        }
+      }
+    }
+  },
+  "expectation": {
+    "credentials": "IACaseworker",
+    "status": 200,
+    "taskData": {
+      "template": "minimal-task-response.json",
+      "replacements": {
+        "tasks": [
+          {
+            "id": "{$VERIFIER-UUID}",
+            "case_name": "Functional PostDeployment",
+            "case_id": "{$GENERATED_CASE_ID}",
+            "case_category": "protection",
+            "name": "Review the appeal",
+            "type": "reviewTheAppeal",
+            "task_state": "unassigned",
+            "task_system": "SELF",
+            "security_classification": "PUBLIC",
+            "task_title": "Review the appeal",
+            "created_date": "{$VERIFIER-DATETIME-TODAY}",
+            "due_date": "{$VERIFIER-DATETIME-TODAY+2}",
+            "execution_type": "Case Management Task",
+            "jurisdiction": "IA",
+            "case_type_id": "Asylum",
+            "region": "1",
+            "location": "765324",
+            "location_name": "Taylor House",
+            "auto_assigned": false,
+            "warnings": false
+          }
+        ]
+      }
+    }
+  }
+}
