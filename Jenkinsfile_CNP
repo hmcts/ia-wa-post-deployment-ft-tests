@@ -6,4 +6,11 @@ def type = "java"
 def product = "wa"
 def component = "post-deployment-ft-tests"
 
-withPipeline(type, product, component) {}
+withPipeline(type, product, component) {
+
+    after('test') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/tests/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/tests/integration/**/*'
+    }
+
+}
