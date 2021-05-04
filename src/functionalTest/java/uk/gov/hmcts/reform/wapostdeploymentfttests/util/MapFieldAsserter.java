@@ -17,8 +17,10 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.
 
 @SuppressWarnings("unchecked")
 public final class MapFieldAsserter {
-    private static final Pattern VERIFIER_DATETIME_TODAY_PATTERN = Pattern.compile("\\{\\$VERIFIER-DATETIME-WORKING-DAYS-TODAY([+-]?\\d*?)}");
-    private static final String UUID_REGEX_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
+    private static final Pattern VERIFIER_DATETIME_TODAY_PATTERN =
+        Pattern.compile("\\{\\$VERIFIER-DATETIME-WORKING-DAYS-TODAY([+-]?\\d*?)}");
+    private static final String UUID_REGEX_PATTERN =
+        "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
     private static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
     private static SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat(DATE_TIME_FORMAT);
 

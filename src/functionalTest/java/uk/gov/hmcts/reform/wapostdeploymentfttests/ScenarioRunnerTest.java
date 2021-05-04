@@ -114,9 +114,18 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
                 final String scenarioJurisdiction = MapValueExtractor.extractOrThrow(scenario, "jurisdiction");
 
-                final String testCaseId = ccdCaseCreator.createCase(scenario, scenarioJurisdiction, requestAuthorizationHeaders);
+                final String testCaseId = ccdCaseCreator.createCase(
+                    scenario,
+                    scenarioJurisdiction,
+                    requestAuthorizationHeaders
+                );
 
-                azureMessageInjector.injectMessage(scenarioSource, testCaseId, scenarioJurisdiction, requestAuthorizationHeaders);
+                azureMessageInjector.injectMessage(
+                    scenarioSource,
+                    testCaseId,
+                    scenarioJurisdiction,
+                    requestAuthorizationHeaders
+                );
 
                 String expectationCredentials = MapValueExtractor.extract(scenario, "expectation.credentials");
                 final Headers expectationAuthorizationHeaders = getAuthorizationHeaders(expectationCredentials);
