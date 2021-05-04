@@ -28,7 +28,7 @@ public final class Logger {
                 colouredPrintLine(ANSI_RED, "ℹ️ SCENARIO: " + content + " **disabled**");
                 break;
             case SCENARIO_ENABLED:
-                colouredPrintLine(ANSI_YELLOW, "ℹ️ SCENARIO " + content );
+                colouredPrintLine(ANSI_YELLOW, "ℹ️ SCENARIO " + content);
                 break;
             case SCENARIO_FINISHED:
                 colouredPrintLine(ANSI_CYAN, "-------------------------------------------------------------------");

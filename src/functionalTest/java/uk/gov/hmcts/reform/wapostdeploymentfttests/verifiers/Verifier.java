@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers;
 
-import java.text.ParseException;
 import java.util.Map;
 
 public interface Verifier {

@@ -1,8 +1,8 @@
 {
   "description": "Scenario 1: submitAppeal event should create a task",
   "enabled": true,
-  "jurisdiction" : "IA",
-  "caseType" : "Asylum",
+  "jurisdiction": "IA",
+  "caseType": "Asylum",
   "request": {
     "credentials": "IALegalRepresentative",
     "input": {

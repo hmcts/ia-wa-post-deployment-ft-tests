@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapFieldAsserter;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor;
 
-import java.text.ParseException;
 import java.util.Map;
 
 @Component
