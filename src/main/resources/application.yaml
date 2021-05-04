@@ -36,7 +36,7 @@ idam:
     secret: ${S2S_SECRET_TASK_MANAGEMENT_API:AAAAAAAAAAAAAAAA}
     name: ${S2S_NAME_TASK_MANAGEMENT_API:wa_task_management_api}
   api:
-    baseUrl: ${IDAM_API_URL:http://sidam-api}
+    baseUrl: ${IDAM_URL:http://sidam-api}
 
 logging:
   level:
