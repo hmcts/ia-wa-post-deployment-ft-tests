@@ -6,11 +6,47 @@ def type = "java"
 def product = "wa"
 def component = "post-deployment-ft-tests"
 
-withPipeline(type, product, component) {
+def secrets = [
+        'wa-${env}' : [
+                secret('idam-redirect-uri', 'IA_IDAM_REDIRECT_URI'),
 
-    after('test') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/tests/**/*'
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/tests/integration/**/*'
-    }
+                secret('wa-idam-client-secret', 'WA_IDAM_CLIENT_SECRET'),
 
+                secret('ccd-shared-servicebus-connection-string', 'AZURE_SERVICE_BUS_CONNECTION_STRING'),
+
+                secret('wa-test-law-firm-a-username', 'TEST_WA_LAW_FIRM_USERNAME'),
+                secret('wa-test-law-firm-a-password', 'TEST_WA_LAW_FIRM_PASSWORD'),
+                secret('wa-test-caseofficer-a-username', 'TEST_WA_CASEOFFICER_PUBLIC_A_USERNAME'),
+                secret('wa-test-caseofficer-a-password', 'TEST_WA_CASEOFFICER_PUBLIC_A_PASSWORD'),
+
+        ],
+        's2s-${env}': [
+                secret('microservicekey-wa-task-management-api', 'S2S_SECRET_TASK_MANAGEMENT_API'),
+        ]
+]
+
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+    [$class     : 'AzureKeyVaultSecret',
+     secretType : 'Secret',
+     name       : secretName,
+     version    : '',
+     envVariable: envVar
+    ]
+}
+
+//Run Jenkins_CNP with nightly pipeline
+withNightlyPipeline(type, product, component) {
+    env.AZURE_SERVICE_BUS_TOPIC_NAME = "ccd-case-events-aat"
+
+    env.CCD_URL = "http://ccd-data-store-api-aat.service.core-compute-aat.internal"
+    env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
+    env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
+    env.OPEN_ID_IDAM_URL = "https://idam-web-public.aat.platform.hmcts.net"
+    env.DOCUMENT_STORE_URL = "http://dm-store-aat.service.core-compute-aat.internal"
+//    env.WA_TASK_MANAGEMENT_URL = "http://wa-task-management-api-aat.service.core-compute-aat.internal"
+    //Temporarily point to PR instance
+    env.WA_TASK_MANAGEMENT_URL = "http://wa-task-management-api-pr-227.service.core-compute-preview.internal"
+
+    loadVaultSecrets(secrets)
+    enableFullFunctionalTest()
 }

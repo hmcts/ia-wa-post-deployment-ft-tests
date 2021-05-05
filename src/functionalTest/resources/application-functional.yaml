@@ -9,3 +9,4 @@ azure:
   service-bus:
     connection-string: ${AZURE_SERVICE_BUS_CONNECTION_STRING}
     topic: ${AZURE_SERVICE_BUS_TOPIC_NAME:ccd-case-events-aat}
+
