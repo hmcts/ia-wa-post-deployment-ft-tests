@@ -168,7 +168,7 @@ dependencyManagement {
         dependency group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.4.6'
 
 
-        dependencySet(group: 'io.netty', version: '4.1.61.Final') {
+        dependencySet(group: 'io.netty', version: '4.1.63.Final') {
             entry 'netty-buffer'
             entry 'netty-codec'
             entry 'netty-codec-http'
