@@ -1,6 +1,9 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.CalculateDateParameters;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.services.DateProviderService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,30 +13,32 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNullElse;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.DATETIME_TODAY_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.ENVIRONMENT_PROPERTY_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.GENERATED_CASE_ID_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.RANDOM_UUID_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.TODAY_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.USER_ID_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_PATTERN;
 
 @Component
 @SuppressWarnings("unchecked")
-public final class MapValueExpander {
+public class MapValueExpander {
 
     public static final Properties ENVIRONMENT_PROPERTIES = new Properties(System.getProperties());
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
-    private static final Pattern TODAY_PATTERN = Pattern.compile("\\{\\$TODAY([+-]?\\d*?)}");
-    private static final Pattern DATETIME_TODAY_PATTERN = Pattern.compile("\\{\\$DATETIME-TODAY([+-]?\\d*?)}");
-    private static final Pattern GENERATED_CASE_ID_PATTERN = Pattern.compile("\\{\\$GENERATED_CASE_ID}");
-    private static final Pattern RANDOM_UUID_PATTERN = Pattern.compile("\\{\\$RANDOM_UUID}");
-    private static final Pattern USER_ID_PATTERN = Pattern.compile("\\{\\$USER_ID}");
-    private static final Pattern VERIFIER_PATTERN = Pattern.compile("\\{\\$VERIFIER-(.*?)}");
-    private static final Pattern ENVIRONMENT_PROPERTY_PATTERN = Pattern.compile("\\{\\$([a-zA-Z0-9].+?)}");
 
-    private MapValueExpander() {
-        // noop
+    private final DateProviderService dateProviderService;
+
+    @Autowired
+    private MapValueExpander(DateProviderService dateProviderService) {
+        this.dateProviderService = dateProviderService;
     }
 
-    private static String expandToday(String value) {
+    private String expandToday(String value) {
 
         Matcher matcher = TODAY_PATTERN.matcher(value);
 
@@ -41,34 +46,19 @@ public final class MapValueExpander {
 
         while (matcher.find()) {
 
-            char plusOrMinus = '+';
-            int dayAdjustment = 0;
+            CalculateDateParameters calculateDateParameters = buildDateParameters(matcher);
 
-            if (matcher.groupCount() == 1
-                && !matcher.group(1).isEmpty()) {
-
-                plusOrMinus = matcher.group(1).charAt(0);
-                dayAdjustment = Integer.parseInt(matcher.group(1).substring(1));
-            }
-
-            LocalDate now = LocalDate.now();
-
-            if (plusOrMinus == '+') {
-                now = now.plusDays(dayAdjustment);
-            } else {
-                now = now.minusDays(dayAdjustment);
-            }
+            LocalDate date = dateProviderService.calculateDate(calculateDateParameters);
 
             String token = matcher.group(0);
 
-            expandedValue = expandedValue.replace(token, now.toString());
+            expandedValue = expandedValue.replace(token, date.toString());
         }
 
         return expandedValue;
     }
 
-
-    public static String expandDateTimeToday(String value) {
+    public String expandDateTimeToday(String value) {
 
         Matcher matcher = DATETIME_TODAY_PATTERN.matcher(value);
 
@@ -76,30 +66,38 @@ public final class MapValueExpander {
 
         while (matcher.find()) {
 
-            char plusOrMinus = '+';
-            int dayAdjustment = 0;
+            CalculateDateParameters calculateDateParameters = buildDateParameters(matcher);
 
-            if (matcher.groupCount() == 1
-                && !matcher.group(1).isEmpty()) {
+            LocalDate date = dateProviderService.calculateDate(calculateDateParameters);
 
-                plusOrMinus = matcher.group(1).charAt(0);
-                dayAdjustment = Integer.parseInt(matcher.group(1).substring(1));
-            }
-
-            LocalDateTime now = LocalDateTime.now();
-
-            if (plusOrMinus == '+') {
-                now = now.plusDays(dayAdjustment);
-            } else {
-                now = now.minusDays(dayAdjustment);
-            }
+            LocalDateTime dateTime = date.atStartOfDay();
 
             String token = matcher.group(0);
 
-            expandedValue = expandedValue.replace(token, now.format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
+            expandedValue = expandedValue.replace(
+                token,
+                dateTime.format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
+            );
         }
 
         return expandedValue;
+    }
+
+    private CalculateDateParameters buildDateParameters(Matcher matcher) {
+        char plusOrMinus = '+';
+        int dayAdjustment = 0;
+        boolean shouldUseWorkingDays = false;
+
+        if (matcher.groupCount() > 1 && !matcher.group(1).isEmpty()) {
+            plusOrMinus = matcher.group(1).charAt(0);
+            dayAdjustment = Integer.parseInt(matcher.group(1).substring(1));
+
+            if (matcher.groupCount() == 2 && !matcher.group(2).isEmpty()) {
+                shouldUseWorkingDays = true;
+            }
+        }
+
+        return new CalculateDateParameters(plusOrMinus, dayAdjustment, shouldUseWorkingDays);
     }
 
     public void expandValues(Map<String, Object> map, Map<String, String> additionalValues) {
@@ -140,27 +138,18 @@ public final class MapValueExpander {
                 if (TODAY_PATTERN.matcher(value).find()) {
                     value = expandToday(value);
                 }
-
                 if (DATETIME_TODAY_PATTERN.matcher(value).find()) {
                     value = expandDateTimeToday(value);
                 }
-
                 if (RANDOM_UUID_PATTERN.matcher(value).find()) {
                     value = expandRandomUuid(value);
                 }
-
-                if (GENERATED_CASE_ID_PATTERN.matcher(value).find()) {
-                    if (!additionalValues.isEmpty()) {
-                        value = expandCaseId(value, additionalValues.get("caseId"));
-                    }
+                if (GENERATED_CASE_ID_PATTERN.matcher(value).find() && !additionalValues.isEmpty()) {
+                    value = expandCaseId(value, additionalValues.get("caseId"));
                 }
-
-                if (USER_ID_PATTERN.matcher(value).find()) {
-                    if (!additionalValues.isEmpty()) {
-                        value = expandUserId(value, additionalValues.get("userId"));
-                    }
+                if (USER_ID_PATTERN.matcher(value).find() && !additionalValues.isEmpty()) {
+                    value = expandUserId(value, additionalValues.get("userId"));
                 }
-
                 if (ENVIRONMENT_PROPERTY_PATTERN.matcher(value).find()) {
                     value = expandEnvironmentProperty(value);
                 }

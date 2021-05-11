@@ -38,6 +38,7 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCE
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_FINISHED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_START;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_SUCCESSFUL;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.ENVIRONMENT_PROPERTIES;
 
 public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
@@ -70,10 +71,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         loadPropertiesIntoMapValueExpander();
 
-        assertFalse(
-            "Verifiers configured successfully",
-            verifiers.isEmpty()
-        );
+        assertFalse("Verifiers configured successfully", verifiers.isEmpty());
 
         String scenarioPattern = System.getProperty("scenario");
         if (scenarioPattern == null) {
@@ -194,7 +192,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             .filter(propertySource -> propertySource instanceof EnumerablePropertySource)
             .map(propertySource -> ((EnumerablePropertySource) propertySource).getPropertyNames())
             .flatMap(Arrays::stream)
-            .forEach(name -> MapValueExpander.ENVIRONMENT_PROPERTIES.setProperty(name, environment.getProperty(name)));
+            .forEach(name -> ENVIRONMENT_PROPERTIES.setProperty(name, environment.getProperty(name)));
     }
 
 

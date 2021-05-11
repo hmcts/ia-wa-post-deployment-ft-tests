@@ -1,11 +1,12 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
+import org.springframework.stereotype.Component;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -14,21 +15,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.DATE_TIME_FORMAT;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.UUID_REGEX_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_DATETIME_WORKING_DAYS_TODAY_PATTERN;
 
+@Component
 @SuppressWarnings("unchecked")
-public final class MapFieldAsserter {
-    private static final Pattern VERIFIER_DATETIME_TODAY_PATTERN =
-        Pattern.compile("\\{\\$VERIFIER-DATETIME-WORKING-DAYS-TODAY([+-]?\\d*?)}");
-    private static final String UUID_REGEX_PATTERN =
-        "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
-    private static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
-    private static SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat(DATE_TIME_FORMAT);
+public class MapFieldAsserter {
 
-    private MapFieldAsserter() {
-        // noop
+    private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat(DATE_TIME_FORMAT);
+
+    private final MapValueExpander mapValueExpander;
+
+    private MapFieldAsserter(MapValueExpander mapValueExpander) {
+        this.mapValueExpander = mapValueExpander;
     }
 
-    public static void assertFields(
+    public void assertFields(
         Map<String, Object> expectedMap,
         Map<String, Object> actualMap,
         final String path
@@ -68,7 +71,7 @@ public final class MapFieldAsserter {
         }
     }
 
-    private static void assertValue(
+    private void assertValue(
         Object expectedValue,
         Object actualValue,
         String path
@@ -95,12 +98,10 @@ public final class MapFieldAsserter {
                         "Expected field did not match UUID regular expression (" + path + ")",
                         actualValueString.matches(UUID_REGEX_PATTERN)
                     );
-                } else if (VERIFIER_DATETIME_TODAY_PATTERN.matcher(expectedValueString).find()) {
-
-                    //TODO: This needs to be working days so need to add logic to workout the date in working days.
+                } else if (VERIFIER_DATETIME_WORKING_DAYS_TODAY_PATTERN.matcher(expectedValueString).find()) {
 
                     expectedValueString = expectedValueString.replace("VERIFIER-", "");
-                    String expandedExpectedDate = MapValueExpander.expandDateTimeToday(expectedValueString);
+                    String expandedExpectedDate = mapValueExpander.expandDateTimeToday(expectedValueString);
 
                     Date expectedDate = null;
                     try {
@@ -136,8 +137,6 @@ public final class MapFieldAsserter {
                         actualValueString,
                         matchesPattern(expectedValueString)
                     );
-
-                    return;
                 }
             } else {
                 assertThat(

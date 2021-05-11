@@ -34,7 +34,6 @@ public class TaskManagementService {
     @Autowired
     private MapValueExpander mapValueExpander;
 
-
     @Value("${wa_task_management_api.url}")
     private String taskManagementUrl;
 

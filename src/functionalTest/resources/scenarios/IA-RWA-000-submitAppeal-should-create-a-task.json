@@ -1,5 +1,5 @@
 {
-  "description": "Scenario 1: submitAppeal event should create a task",
+  "description": "submitAppeal event should create a review the appeal task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -50,7 +50,7 @@
             "security_classification": "PUBLIC",
             "task_title": "Review the appeal",
             "created_date": "{$VERIFIER-DATETIME-TODAY}",
-            "due_date": "{$VERIFIER-DATETIME-TODAY+2}",
+            "due_date": "{$VERIFIER-DATETIME-WORKING-DAYS-TODAY+2}",
             "execution_type": "Case Management Task",
             "jurisdiction": "IA",
             "case_type_id": "Asylum",
