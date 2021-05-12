@@ -50,5 +50,5 @@ withNightlyPipeline(type, product, component) {
     env.WA_TASK_MANAGEMENT_URL = "http://wa-task-management-api-aat.service.core-compute-aat.internal"
 
     loadVaultSecrets(secrets)
-//    enableFullFunctionalTest()
+    enableFullFunctionalTest()
 }
