@@ -34,6 +34,7 @@
   "expectation": {
     "credentials": "IACaseworker",
     "status": 200,
+    "numberOfTasksAvailable": 1,
     "taskData": {
       "template": "minimal-task-response.json",
       "replacements": {

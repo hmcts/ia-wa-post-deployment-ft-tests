@@ -1,5 +1,5 @@
 {
-  "description": "makeAnApplication event should create a processApplication task",
+  "description": "submitTimeExtension event should create a decideOnTimeExtension task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -20,7 +20,8 @@
       "eventMessage": {
         "template": "minimal-ccd-event-message.json",
         "replacements": {
-          "EventId": "makeAnApplication",
+          "EventId": "submitCase",
+          "NewStateId": "caseUnderReview",
           "AdditionalData": {
             "Data": {
               "appealType": "protection"
@@ -43,12 +44,12 @@
             "case_name": "Functional PostDeployment",
             "case_id": "{$GENERATED_CASE_ID}",
             "case_category": "protection",
-            "name": "Process Application",
-            "type": "processApplication",
+            "name": "Review Appeal Skeleton Argument",
+            "type": "reviewAppealSkeletonArgument",
             "task_state": "unassigned",
             "task_system": "SELF",
             "security_classification": "PUBLIC",
-            "task_title": "Process Application",
+            "task_title": "Review Appeal Skeleton Argument",
             "created_date": "{$VERIFIER-DATETIME-TODAY}",
             "due_date": "{$VERIFIER-DATETIME-WORKING-DAYS-TODAY+2}",
             "execution_type": "Case Management Task",
