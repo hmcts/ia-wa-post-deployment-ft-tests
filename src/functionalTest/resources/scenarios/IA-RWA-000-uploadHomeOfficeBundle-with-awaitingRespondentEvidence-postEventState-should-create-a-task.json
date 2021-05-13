@@ -1,5 +1,5 @@
 {
-  "description": "uploadHomeOfficeBundle event should create a reviewRespondentEvidence task",
+  "description": "uploadHomeOfficeBundle with awaitingRespondentEvidence post event state should create a reviewRespondentEvidence task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
