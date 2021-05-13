@@ -1,5 +1,5 @@
 {
-  "description": "submitCase event should create a reviewAppealSkeletonArgument task",
+  "description": "submitReasonsForAppeal event should create a reviewReasonsForAppeal task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -20,8 +20,8 @@
       "eventMessage": {
         "template": "minimal-ccd-event-message.json",
         "replacements": {
-          "EventId": "submitCase",
-          "NewStateId": "caseUnderReview",
+          "EventId": "submitReasonsForAppeal",
+          "NewStateId": "reasonsForAppealSubmitted",
           "AdditionalData": {
             "Data": {
               "appealType": "protection"
@@ -44,12 +44,12 @@
             "case_name": "Functional PostDeployment",
             "case_id": "{$GENERATED_CASE_ID}",
             "case_category": "protection",
-            "name": "Review Appeal Skeleton Argument",
-            "type": "reviewAppealSkeletonArgument",
+            "name": "Review Reasons For Appeal",
+            "type": "reviewReasonsForAppeal",
             "task_state": "unassigned",
             "task_system": "SELF",
             "security_classification": "PUBLIC",
-            "task_title": "Review Appeal Skeleton Argument",
+            "task_title": "Review Reasons For Appeal",
             "created_date": "{$VERIFIER-DATETIME-TODAY}",
             "due_date": "{$VERIFIER-DATETIME-WORKING-DAYS-TODAY+2}",
             "execution_type": "Case Management Task",

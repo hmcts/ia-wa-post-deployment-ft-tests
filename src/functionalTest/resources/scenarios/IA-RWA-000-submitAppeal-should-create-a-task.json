@@ -1,5 +1,5 @@
 {
-  "description": "submitAppeal event should create a review the appeal task",
+  "description": "submitAppeal event should create a reviewTheAppeal task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

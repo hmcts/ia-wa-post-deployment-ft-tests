@@ -1,5 +1,5 @@
 {
-  "description": "submitTimeExtension event should create a decideOnTimeExtension task",
+  "description": "uploadHomeOfficeBundle event should create a reviewRespondentEvidence task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
