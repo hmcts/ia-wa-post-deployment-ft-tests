@@ -1,0 +1,68 @@
+{
+  "description": "requestCmaRequirements with awaitingCmaRequirements post event state should create a followUpOverdueCmaRequirements task",
+  "enabled": true,
+  "jurisdiction": "IA",
+  "caseType": "Asylum",
+  "request": {
+    "credentials": "IALegalRepresentative",
+    "input": {
+      "ccd": {
+        "eventId": "submitAppeal",
+        "state": "appealStarted",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "appealType": "protection",
+            "homeOfficeDecisionDate": "{$TODAY-14}"
+          }
+        }
+      },
+      "eventMessage": {
+        "template": "minimal-ccd-event-message.json",
+        "replacements": {
+          "EventId": "requestCmaRequirements",
+          "NewStateId": "awaitingCmaRequirements",
+          "AdditionalData": {
+            "Data": {
+              "appealType": "protection"
+            }
+          }
+        }
+      }
+    }
+  },
+  "expectation": {
+    "credentials": "IACaseworker",
+    "status": 200,
+    "numberOfTasksAvailable": 1,
+    "taskData": {
+      "template": "minimal-task-response.json",
+      "replacements": {
+        "tasks": [
+          {
+            "id": "{$VERIFIER-UUID}",
+            "case_name": "Functional PostDeployment",
+            "case_id": "{$GENERATED_CASE_ID}",
+            "case_category": "protection",
+            "name": "Follow-up overdue CMA requirements",
+            "type": "followUpOverdueCmaRequirements",
+            "task_state": "unassigned",
+            "task_system": "SELF",
+            "security_classification": "PUBLIC",
+            "task_title": "Follow-up overdue CMA requirements",
+            "created_date": "{$VERIFIER-DATETIME-TODAY}",
+            "due_date": "{$VERIFIER-DATETIME-WORKING-DAYS-TODAY+2}",
+            "execution_type": "Case Management Task",
+            "jurisdiction": "IA",
+            "case_type_id": "Asylum",
+            "region": "1",
+            "location": "765324",
+            "location_name": "Taylor House",
+            "auto_assigned": false,
+            "warnings": false
+          }
+        ]
+      }
+    }
+  }
+}
