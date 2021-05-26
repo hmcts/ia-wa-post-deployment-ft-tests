@@ -38,26 +38,6 @@ public class MapValueExpander {
         this.dateProviderService = dateProviderService;
     }
 
-    private String expandToday(String value) {
-
-        Matcher matcher = TODAY_PATTERN.matcher(value);
-
-        String expandedValue = value;
-
-        while (matcher.find()) {
-
-            CalculateDateParameters calculateDateParameters = buildDateParameters(matcher);
-
-            LocalDate date = dateProviderService.calculateDate(calculateDateParameters);
-
-            String token = matcher.group(0);
-
-            expandedValue = expandedValue.replace(token, date.toString());
-        }
-
-        return expandedValue;
-    }
-
     public String expandDateTimeToday(String value) {
 
         Matcher matcher = DATETIME_TODAY_PATTERN.matcher(value);
@@ -83,23 +63,6 @@ public class MapValueExpander {
         return expandedValue;
     }
 
-    private CalculateDateParameters buildDateParameters(Matcher matcher) {
-        char plusOrMinus = '+';
-        int dayAdjustment = 0;
-        boolean shouldUseWorkingDays = false;
-
-        if (matcher.groupCount() > 1 && !matcher.group(1).isEmpty()) {
-            plusOrMinus = matcher.group(1).charAt(0);
-            dayAdjustment = Integer.parseInt(matcher.group(1).substring(1));
-
-            if (matcher.groupCount() == 2 && !matcher.group(2).isEmpty()) {
-                shouldUseWorkingDays = true;
-            }
-        }
-
-        return new CalculateDateParameters(plusOrMinus, dayAdjustment, shouldUseWorkingDays);
-    }
-
     public void expandValues(Map<String, Object> map, Map<String, String> additionalValues) {
 
         for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -120,6 +83,43 @@ public class MapValueExpander {
 
             entry.setValue(untypedValue);
         }
+    }
+
+    private String expandToday(String value) {
+
+        Matcher matcher = TODAY_PATTERN.matcher(value);
+
+        String expandedValue = value;
+
+        while (matcher.find()) {
+
+            CalculateDateParameters calculateDateParameters = buildDateParameters(matcher);
+
+            LocalDate date = dateProviderService.calculateDate(calculateDateParameters);
+
+            String token = matcher.group(0);
+
+            expandedValue = expandedValue.replace(token, date.toString());
+        }
+
+        return expandedValue;
+    }
+
+    private CalculateDateParameters buildDateParameters(Matcher matcher) {
+        char plusOrMinus = '+';
+        int dayAdjustment = 0;
+        boolean shouldUseWorkingDays = false;
+
+        if (matcher.groupCount() > 1 && !matcher.group(1).isEmpty()) {
+            plusOrMinus = matcher.group(1).charAt(0);
+            dayAdjustment = Integer.parseInt(matcher.group(1).substring(1));
+
+            if (matcher.groupCount() == 2 && matcher.group(2) != null && !matcher.group(2).isEmpty()) {
+                shouldUseWorkingDays = true;
+            }
+        }
+
+        return new CalculateDateParameters(plusOrMinus, dayAdjustment, shouldUseWorkingDays);
     }
 
     private Object expandValue(Object untypedValue, Map<String, String> additionalValues) {

@@ -21,18 +21,18 @@ public class DateProviderService {
 
         LocalDate now = LocalDate.now();
 
-        if (!calculateDateParameters.isWorkingDays()) {
-            if (calculateDateParameters.getPlusOrMinus() == '+') {
-                now = now.plusDays(calculateDateParameters.getDayAdjustment());
-            } else {
-                now = now.minusDays(calculateDateParameters.getDayAdjustment());
-            }
-        } else {
+        if (calculateDateParameters.isWorkingDays()) {
             //Calculate with working days
             if (calculateDateParameters.getPlusOrMinus() == '+') {
                 now = addWorkingDays(now, calculateDateParameters.getDayAdjustment());
             } else {
                 now = minusWorkingDays(now, calculateDateParameters.getDayAdjustment());
+            }
+        } else {
+            if (calculateDateParameters.getPlusOrMinus() == '+') {
+                now = now.plusDays(calculateDateParameters.getDayAdjustment());
+            } else {
+                now = now.minusDays(calculateDateParameters.getDayAdjustment());
             }
         }
 

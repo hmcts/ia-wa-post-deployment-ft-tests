@@ -85,7 +85,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 .load("/scenarios/" + scenarioPattern)
                 .values();
 
-
         Logger.say(SCENARIO_START, scenarioSources.size());
 
         for (String scenarioSource : scenarioSources) {
@@ -139,11 +138,10 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                         "/templates/" + scenarioJurisdiction.toLowerCase(Locale.ENGLISH) + "/task/*.json"
                     );
 
-
                 String expectedResponseBody = buildTaskExpectationResponseBody(
-                    MapValueExtractor.extract(scenario, "expectation"),
+                    scenarioSource,
                     taskTemplatesByFilename,
-                    testCaseId
+                    Map.of("caseId", testCaseId)
                 );
 
                 Map<String, Object> actualResponse = MapSerializer.deserialize(actualResponseBody);
@@ -162,17 +160,20 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         }
     }
 
-    private String buildTaskExpectationResponseBody(Map<String, Object> expectation,
+    private String buildTaskExpectationResponseBody(String scenarioSource,
                                                     Map<String, String> taskTemplatesByFilename,
-                                                    String caseId) throws IOException {
+                                                    Map<String, String> additionalValues) throws IOException {
 
+        Map<String, Object> scenario = deserializeWithExpandedValues(scenarioSource, additionalValues);
+
+        Map<String, Object> expectation = MapValueExtractor.extract(scenario, "expectation");
         Map<String, Object> taskData = MapValueExtractor.extract(expectation, "taskData");
 
         String templateFilename = MapValueExtractor.extract(taskData, "template");
 
         Map<String, Object> taskDataExpectation = deserializeWithExpandedValues(
             taskTemplatesByFilename.get(templateFilename),
-            Map.of("caseId", caseId)
+            additionalValues
         );
 
         Map<String, Object> taskDataDataReplacements = MapValueExtractor.extract(taskData, "replacements");
@@ -189,7 +190,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         MutablePropertySources propertySources = ((AbstractEnvironment) environment).getPropertySources();
         StreamSupport
             .stream(propertySources.spliterator(), false)
-            .filter(propertySource -> propertySource instanceof EnumerablePropertySource)
+            .filter(EnumerablePropertySource.class::isInstance)
             .map(propertySource -> ((EnumerablePropertySource) propertySource).getPropertyNames())
             .flatMap(Arrays::stream)
             .forEach(name -> ENVIRONMENT_PROPERTIES.setProperty(name, environment.getProperty(name)));

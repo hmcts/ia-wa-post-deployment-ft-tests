@@ -24,7 +24,7 @@
           "NewStateId": "listing",
           "AdditionalData": {
             "Data": {
-              "appealType": "protection"
+              "appealType": "Protection"
             }
           }
         }
@@ -43,15 +43,15 @@
             "id": "{$VERIFIER-UUID}",
             "case_name": "Functional PostDeployment",
             "case_id": "{$GENERATED_CASE_ID}",
-            "case_category": "protection",
-            "name": "Follow-up overdue respondent evidence",
-            "type": "followUpOverdueRespondentEvidence",
+            "case_category": "Protection",
+            "name": "Review hearing requirements",
+            "type": "reviewHearingRequirements",
             "task_state": "unassigned",
             "task_system": "SELF",
             "security_classification": "PUBLIC",
-            "task_title": "Follow-up overdue respondent evidence",
-            "created_date": "{$VERIFIER-DATETIME-TODAY}",
-            "due_date": "{$VERIFIER-DATETIME-WORKING-DAYS-TODAY+2}",
+            "task_title": "Review hearing requirements",
+            "created_date": "{$VERIFIER-DATETIME_TODAY}",
+            "due_date": "{$VERIFIER-DATETIME_TODAY+2_WORKING_DAYS}",
             "execution_type": "Case Management Task",
             "jurisdiction": "IA",
             "case_type_id": "Asylum",

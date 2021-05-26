@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.DATE_TIME_FORMAT;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.UUID_REGEX_PATTERN;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_DATETIME_WORKING_DAYS_TODAY_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_DATETIME_TODAY_WORKING_DAYS_PATTERN;
 
 @Component
 @SuppressWarnings("unchecked")
@@ -43,7 +43,6 @@ public class MapFieldAsserter {
 
             Object expectedValue = expectedEntry.getValue();
             Object actualValue = actualMap.get(key);
-
 
             if ((expectedValue instanceof List) && (actualValue instanceof List)) {
 
@@ -91,14 +90,13 @@ public class MapFieldAsserter {
                 String expectedValueString = (String) expectedValue;
                 String actualValueString = (String) actualValue;
 
-
                 if (expectedValueString.equals("{$VERIFIER-UUID}")) {
 
                     assertTrue(
                         "Expected field did not match UUID regular expression (" + path + ")",
                         actualValueString.matches(UUID_REGEX_PATTERN)
                     );
-                } else if (VERIFIER_DATETIME_WORKING_DAYS_TODAY_PATTERN.matcher(expectedValueString).find()) {
+                } else if (VERIFIER_DATETIME_TODAY_WORKING_DAYS_PATTERN.matcher(expectedValueString).find()) {
 
                     expectedValueString = expectedValueString.replace("VERIFIER-", "");
                     String expandedExpectedDate = mapValueExpander.expandDateTimeToday(expectedValueString);
@@ -136,6 +134,12 @@ public class MapFieldAsserter {
                         "Expected field matches regular expression (" + path + ")",
                         actualValueString,
                         matchesPattern(expectedValueString)
+                    );
+                } else {
+                    assertThat(
+                        "Expected field matches (" + path + ")",
+                        actualValue,
+                        equalTo(expectedValue)
                     );
                 }
             } else {
