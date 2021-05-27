@@ -18,6 +18,7 @@ Note: The connection string and topic can be configured using these environment 
 
 `AZURE_SERVICE_BUS_CONNECTION_STRING` The azure service bus connection string
 `AZURE_SERVICE_BUS_TOPIC_NAME` The azure service bus topic name to publish messages 
+`AZURE_SERVICE_BUS_MESSAGE_AUTHOR` The author of the message this can be used if you have filters set up in your subscription
 
 ### Running in the pipeline
 
