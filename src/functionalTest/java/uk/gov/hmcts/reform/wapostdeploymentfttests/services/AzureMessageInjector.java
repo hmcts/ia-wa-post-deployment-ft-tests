@@ -4,6 +4,7 @@ import com.azure.messaging.servicebus.ServiceBusMessage;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import io.restassured.http.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam.UserInfo;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapMerger;
@@ -30,6 +31,9 @@ public class AzureMessageInjector {
 
     @Autowired
     private ServiceBusSenderClient senderClient;
+
+    @Value("${azure.service-bus.message-author}")
+    private String messageAuthor;
 
     public void injectMessage(String scenarioSource,
                               String testCaseId,
@@ -64,6 +68,7 @@ public class AzureMessageInjector {
         ServiceBusMessage serviceBusMessage = new ServiceBusMessage(message);
 
         serviceBusMessage.getApplicationProperties().put("message_context", "wa-ft-" + caseId);
+        serviceBusMessage.getApplicationProperties().put("message_author", messageAuthor);
         serviceBusMessage.setSessionId(caseId);
 
         System.out.println(
