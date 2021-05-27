@@ -24,7 +24,7 @@ public final class MapSerializer {
 
         return MAPPER.readValue(
             source,
-            new TypeReference<Map<String, Object>>() {
+            new TypeReference<>() {
             }
         );
     }

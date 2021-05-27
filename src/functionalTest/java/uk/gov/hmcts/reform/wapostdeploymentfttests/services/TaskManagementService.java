@@ -20,7 +20,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static net.serenitybdd.rest.SerenityRest.given;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBaseTest.DEFAULT_POLL_INTERVAL_SECONDS;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBaseTest.DEFAULT_TIMEOUT_SECONDS;
@@ -33,7 +32,6 @@ public class TaskManagementService {
 
     @Autowired
     private MapValueExpander mapValueExpander;
-
 
     @Value("${wa_task_management_api.url}")
     private String taskManagementUrl;
@@ -48,6 +46,11 @@ public class TaskManagementService {
         Map<String, Object> scenario = deserializeWithExpandedValues(scenarioSource, additionalValues);
 
         final int expectedStatus = MapValueExtractor.extractOrDefault(scenario, "expectation.status", 200);
+        final int expectedTasks = MapValueExtractor.extractOrDefault(
+            scenario,
+            "expectation.numberOfTasksAvailable",
+            1
+        );
 
         Map<String, Object> searchParameter = Map.of(
             "key", "caseId",
@@ -74,7 +77,7 @@ public class TaskManagementService {
                     result.then().assertThat()
                         .statusCode(expectedStatus)
                         .contentType(APPLICATION_JSON_VALUE)
-                        .body("tasks.size()", is(not(0)));
+                        .body("tasks.size()", is(expectedTasks));
 
                     actualResponseBody.set(
                         result.then()
