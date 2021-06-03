@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AzureServiceBusConfiguration {
 
-    @Value("${azure.service-bus.connection-string}")
+    @Value("${azure.servicebus.connection-string}")
     private String connectionString;
-    @Value("${azure.service-bus.topic}")
+    @Value("${azure.servicebus.topic}")
     private String topic;
 
     @Bean

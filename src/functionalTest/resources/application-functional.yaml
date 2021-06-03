@@ -6,7 +6,7 @@ core_case_data:
     url: ${CCD_URL:http://ccd-data-store-api}
 
 azure:
-  service-bus:
+  servicebus:
     connection-string: ${AZURE_SERVICE_BUS_CONNECTION_STRING}
     topic: ${AZURE_SERVICE_BUS_TOPIC_NAME:ccd-case-events-aat}
 
