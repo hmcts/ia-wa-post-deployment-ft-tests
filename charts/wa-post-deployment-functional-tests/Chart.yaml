@@ -1,12 +1,12 @@
 apiVersion: v2
 appVersion: "1.0"
 description: A Helm chart for wa-post-deployment-ft-tests App
-name: wa-wa-post-deployment-ft-tests
+name: wa-post-deployment-ft-tests
 home: https://github.com/hmcts/wa-post-deployment-ft-tests
 version: 0.0.1
 maintainers:
   - name: HMCTS wa team
 dependencies:
   - name: java
-    version: 3.4.5
+    version: 3.5.1
     repository: '@hmctspublic'
