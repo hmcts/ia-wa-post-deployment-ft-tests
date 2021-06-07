@@ -2,43 +2,60 @@
 
 [![Build Status](https://travis-ci.org/hmcts/wa-post-deployment-ft-tests.svg?branch=master)](https://travis-ci.org/hmcts/wa-post-deployment-ft-tests)
 
-#### What does this app do?
-
+## Purpose
 This repository contains a set of functional tests which are designed to run periodically or after a helm deployment as a post deployment job to ensure regression.
 
-## Running the post deployment functional tests
+## What does this app do?
+It creates a case in CCD and publishes a message for this case on the Demo ASB topic.
+Then your local Case Event Handler can consume this message using your development subscription.
+This way we can test user paths end to end.
 
-### Pre-requisites
+## Requirements
+* Minikube and your local env has to be up and running.
+* Bring up the following services:
+  * case event handler
+  * workflow-api
+  * task-management-api
+  * configuration-api
+  * case-api
+  * documentation-api
+  * notification-api
 
-- WA environment
-- IA environment
-- An azure service bus topic where to publish the messages 
+* Configure the following env vars in the application-functional profile:
+  * AZURE_SERVICE_BUS_CONNECTION_STRING
+  * AZURE_SERVICE_BUS_TOPIC_NAME
+  * AZURE_SERVICE_BUS_MESSAGE_AUTHOR (The author of the message this can be used if you have filters set up in your subscription)
 
-Note: The connection string and topic can be configured using these environment variables:
+* Source your bash so that the Case Event Handler can use those env vars too.
+* Finally, set the following env vars in the Case Event Handler:
+  * AZURE_SERVICE_BUS_SUBSCRIPTION_NAME to your developer subscription in the demo env.
+  * AZURE_SERVICE_BUS_FEATURE_TOGGLE=true
 
-`AZURE_SERVICE_BUS_CONNECTION_STRING` The azure service bus connection string
-`AZURE_SERVICE_BUS_TOPIC_NAME` The azure service bus topic name to publish messages 
-`AZURE_SERVICE_BUS_MESSAGE_AUTHOR` The author of the message this can be used if you have filters set up in your subscription
+## When merging to master:
 
-### Running in the pipeline
-
-#### When merging to master:
 When performing a merge against master the withNightlyPipeline() will be used to run this tests and verify the build this is because this app is not a service that needs to be deployed but rather just a test framework.
 The withNightlyPipeline() will perform:
 
 - Dependency check
 - Full functional tests run
 
-#### Nightly Builds
-The pipeline has also been configured to run every hour in the nightly builds. 
+## Nightly Builds
+The pipeline has also been configured to run every hour in the nightly builds.
 This is specified on the `Jenkinsfile_nightly` file as a cron job `pipelineTriggers([cron('0 * * * *')])`
 
-### Running locally
-
-To run the tests locally ensure you meet the pre-requisites and run with:
-```shell
-./gradlew clean functional
+## Running functional tests
+```bash
+./gradlew functional
 ```
+### (TODO) You can also target a specific scenario:
+```bash
+./gradlew functional --tests ScenarioRunnerTest --info -Dscenario=IA-RWA-000-requestRespondentEvidence-with-awaitingRespondentEvidence-postEventState-should-create-a-task
+```
+### (TODO) or multiple scenarios:
+```bash
+./gradlew functional --tests ScenarioRunnerTest --info -Dscenario=IA-RWA-000
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
