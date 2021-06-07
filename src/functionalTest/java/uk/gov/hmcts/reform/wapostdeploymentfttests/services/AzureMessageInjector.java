@@ -32,7 +32,7 @@ public class AzureMessageInjector {
     @Autowired
     private ServiceBusSenderClient senderClient;
 
-    @Value("${azure.service-bus.message-author}")
+    @Value("${azure.servicebus.message-author}")
     private String messageAuthor;
 
     public void injectMessage(String scenarioSource,
