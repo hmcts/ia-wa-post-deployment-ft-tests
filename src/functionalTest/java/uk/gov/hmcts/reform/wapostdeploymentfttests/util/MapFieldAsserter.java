@@ -103,7 +103,7 @@ public class MapFieldAsserter {
 
                     Date expectedDate = null;
                     try {
-                        expectedDate = DATE_TIME_FORMATTER.parse(expandedExpectedDate);
+                        expectedDate = DATE_FORMATTER.parse(expandedExpectedDate);
 
                     } catch (ParseException e) {
                         fail("Could not parse expected date in (" + path + ")");
@@ -112,27 +112,16 @@ public class MapFieldAsserter {
                     Date actualDate = null;
 
                     try {
-                        actualDate = DATE_TIME_FORMATTER.parse(actualValueString);
+                        actualDate = DATE_FORMATTER.parse(actualValueString);
 
                     } catch (ParseException e) {
                         fail("Could not parse actual date in (" + path + ")");
                     }
 
-                    System.out.println("expandedExpectedDate: " + expandedExpectedDate);
-
-                    System.out.println("expected: " + expectedDate);
-                    String formattedExpectedDate = DATE_FORMATTER.format(expectedDate);
-                    System.out.println("expectedFormatted: " + formattedExpectedDate);
-
-                    System.out.println("actual: " + actualDate);
-                    String formattedActualDate = DATE_FORMATTER.format(actualDate);
-                    System.out.println("actualFormatted: " + formattedActualDate);
-
                     assertEquals(
                         "Expected field did not match actual (" + path + ")",
-                        formattedExpectedDate,
-                        formattedActualDate
-
+                        expectedDate,
+                        actualDate
                     );
                 } else if (expectedValueString.length() > 3
                            && expectedValueString.startsWith("$/")
