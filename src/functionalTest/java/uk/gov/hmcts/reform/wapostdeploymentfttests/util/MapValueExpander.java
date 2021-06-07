@@ -78,7 +78,7 @@ public class MapValueExpander {
 
             LocalDate date = dateProviderService.calculateDate(calculateDateParameters);
 
-            ZonedDateTime dateTime = ZonedDateTime.of(date.atStartOfDay(), ZoneId.of("Europe/London"));
+            ZonedDateTime dateTime = date.atStartOfDay(ZoneId.of("Europe/London"));
 
             String token = matcher.group(0);
 
