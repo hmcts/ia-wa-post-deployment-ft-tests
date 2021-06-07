@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 
 import com.azure.messaging.servicebus.ServiceBusMessage;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
-import com.google.gson.Gson;
 import io.restassured.http.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
