@@ -18,7 +18,6 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNullElse;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.ZONED_DATETIME_TODAY_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.ENVIRONMENT_PROPERTY_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.GENERATED_CASE_ID_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.LOCAL_DATETIME_TODAY_PATTERN;
@@ -26,6 +25,7 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpression
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.TODAY_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.USER_ID_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.ZONED_DATETIME_TODAY_PATTERN;
 
 @Component
 @SuppressWarnings("unchecked")
