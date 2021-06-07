@@ -7,6 +7,8 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.services.DateProviderService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -16,20 +18,22 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNullElse;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.DATETIME_TODAY_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.ENVIRONMENT_PROPERTY_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.GENERATED_CASE_ID_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.LOCAL_DATETIME_TODAY_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.RANDOM_UUID_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.TODAY_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.USER_ID_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.ZONED_DATETIME_TODAY_PATTERN;
 
 @Component
 @SuppressWarnings("unchecked")
 public class MapValueExpander {
 
     public static final Properties ENVIRONMENT_PROPERTIES = new Properties(System.getProperties());
-    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+    public static final String LOCAL_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+    public static final String ZONED_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
     private final DateProviderService dateProviderService;
 
@@ -38,9 +42,9 @@ public class MapValueExpander {
         this.dateProviderService = dateProviderService;
     }
 
-    public String expandDateTimeToday(String value) {
+    public String expandLocalDateTimeToday(String value) {
 
-        Matcher matcher = DATETIME_TODAY_PATTERN.matcher(value);
+        Matcher matcher = LOCAL_DATETIME_TODAY_PATTERN.matcher(value);
 
         String expandedValue = value;
 
@@ -51,12 +55,36 @@ public class MapValueExpander {
             LocalDate date = dateProviderService.calculateDate(calculateDateParameters);
 
             LocalDateTime dateTime = date.atStartOfDay();
+            String token = matcher.group(0);
+
+            expandedValue = expandedValue.replace(
+                token,
+                dateTime.format(DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_FORMAT))
+            );
+        }
+
+        return expandedValue;
+    }
+
+    public String expandDateTimeToday(String value) {
+
+        Matcher matcher = ZONED_DATETIME_TODAY_PATTERN.matcher(value);
+
+        String expandedValue = value;
+
+        while (matcher.find()) {
+
+            CalculateDateParameters calculateDateParameters = buildDateParameters(matcher);
+
+            LocalDate date = dateProviderService.calculateDate(calculateDateParameters);
+
+            ZonedDateTime dateTime = date.atStartOfDay(ZoneId.of("Europe/London"));
 
             String token = matcher.group(0);
 
             expandedValue = expandedValue.replace(
                 token,
-                dateTime.format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
+                dateTime.format(DateTimeFormatter.ofPattern(ZONED_DATE_TIME_FORMAT))
             );
         }
 
@@ -138,7 +166,10 @@ public class MapValueExpander {
                 if (TODAY_PATTERN.matcher(value).find()) {
                     value = expandToday(value);
                 }
-                if (DATETIME_TODAY_PATTERN.matcher(value).find()) {
+                if (LOCAL_DATETIME_TODAY_PATTERN.matcher(value).find()) {
+                    value = expandLocalDateTimeToday(value);
+                }
+                if (ZONED_DATETIME_TODAY_PATTERN.matcher(value).find()) {
                     value = expandDateTimeToday(value);
                 }
                 if (RANDOM_UUID_PATTERN.matcher(value).find()) {
