@@ -22,6 +22,7 @@ public class DateProviderService {
 
         LocalDate now = LocalDate.now(ZoneId.of("Europe/London"));
 
+        System.out.println("now: " + now);
         if (calculateDateParameters.isWorkingDays()) {
             //Calculate with working days
             if (calculateDateParameters.getPlusOrMinus() == '+') {
@@ -37,6 +38,7 @@ public class DateProviderService {
             }
         }
 
+        System.out.println("returned now: " + now);
         return now;
     }
 
