@@ -24,6 +24,7 @@ This way we can test user paths end to end.
 * Configure the following env vars in the application-functional profile:
   * AZURE_SERVICE_BUS_CONNECTION_STRING
   * AZURE_SERVICE_BUS_TOPIC_NAME
+  * AZURE_SERVICE_BUS_MESSAGE_AUTHOR (The author of the message this can be used if you have filters set up in your subscription)
 
 * Source your bash so that the Case Event Handler can use those env vars too.
 * Finally, set the following env vars in the Case Event Handler:
@@ -31,6 +32,7 @@ This way we can test user paths end to end.
   * AZURE_SERVICE_BUS_FEATURE_TOGGLE=true
 
 ## When merging to master:
+
 When performing a merge against master the withNightlyPipeline() will be used to run this tests and verify the build this is because this app is not a service that needs to be deployed but rather just a test framework.
 The withNightlyPipeline() will perform:
 
