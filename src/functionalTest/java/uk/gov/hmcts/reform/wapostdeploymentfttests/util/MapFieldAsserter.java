@@ -118,10 +118,18 @@ public class MapFieldAsserter {
                         fail("Could not parse actual date in (" + path + ")");
                     }
 
+                    System.out.println("expected" + expectedDate);
+                    String formattedExpectedDate = DATE_FORMATTER.format(expectedDate);
+                    System.out.println("expectedFormatted" + formattedExpectedDate);
+
+                    System.out.println("actual" + actualDate);
+                    String formattedActualDate = DATE_FORMATTER.format(actualDate);
+                    System.out.println("actualFormatted" + formattedActualDate);
+
                     assertEquals(
                         "Expected field did not match actual (" + path + ")",
-                        DATE_FORMATTER.format(expectedDate),
-                        DATE_FORMATTER.format(actualDate)
+                        formattedExpectedDate,
+                        formattedActualDate
 
                     );
                 } else if (expectedValueString.length() > 3

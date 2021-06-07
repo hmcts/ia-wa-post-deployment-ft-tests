@@ -54,16 +54,13 @@ public class MapValueExpander {
 
             LocalDate date = dateProviderService.calculateDate(calculateDateParameters);
 
-            System.out.println("calculated: " + date);
             LocalDateTime dateTime = date.atStartOfDay();
-            System.out.println("startOfDay: " + dateTime);
             String token = matcher.group(0);
 
             expandedValue = expandedValue.replace(
                 token,
                 dateTime.format(DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_FORMAT))
             );
-            System.out.println("expanded: " + expandedValue);
         }
 
         return expandedValue;
