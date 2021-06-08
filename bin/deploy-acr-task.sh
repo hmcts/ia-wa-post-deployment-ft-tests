@@ -9,5 +9,4 @@ az acr task create \
     --name task-wa-post-deployment-ft-tests \
     --file acr-build-task.yaml \
     --context https://github.com/hmcts/wa-post-deployment-ft-tests.git \
-    --branch master \
     --git-access-token $GITHUB_TOKEN
