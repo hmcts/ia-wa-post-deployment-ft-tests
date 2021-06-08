@@ -43,6 +43,14 @@ The withNightlyPipeline() will perform:
 The pipeline has also been configured to run every hour in the nightly builds.
 This is specified on the `Jenkinsfile_nightly` file as a cron job `pipelineTriggers([cron('0 * * * *')])`
 
+## Publishing as ACR task
+Any commit or merge into master will automatically trigger an Azure ACR task. This task has been manually
+created using `./bin/deploy-acr-task.sh`. The task is defined in `acr-build-task.yaml`.
+
+Note: the deployment script relies on a GitHub token (https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) defined in `infra-vault-prod`, secret `hmcts-github-apikey`. The token is for setting up a webhook so Azure will be notified when a merge or commit happens. Make sure you are a repo admin and select token scope of: `admin:repo_hook  Full control of repository hooks`
+
+More info on ACR tasks can be read here: https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tasks-overview
+
 ## Running functional tests
 ```bash
 ./gradlew functional
