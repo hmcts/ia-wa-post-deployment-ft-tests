@@ -14,16 +14,16 @@ import static org.hamcrest.text.MatchesPattern.matchesPattern;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.DATE_TIME_FORMAT;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.ZONED_DATE_TIME_FORMAT;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.UUID_REGEX_PATTERN;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_DATETIME_TODAY_WORKING_DAYS_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_ZONED_DATETIME_TODAY_WORKING_DAYS_PATTERN;
 
 @Component
 @SuppressWarnings("unchecked")
 public class MapFieldAsserter {
 
     private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
-    private static final SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat(DATE_TIME_FORMAT);
+    private static final SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat(ZONED_DATE_TIME_FORMAT);
 
     private final MapValueExpander mapValueExpander;
 
@@ -96,14 +96,14 @@ public class MapFieldAsserter {
                         "Expected field did not match UUID regular expression (" + path + ")",
                         actualValueString.matches(UUID_REGEX_PATTERN)
                     );
-                } else if (VERIFIER_DATETIME_TODAY_WORKING_DAYS_PATTERN.matcher(expectedValueString).find()) {
+                } else if (VERIFIER_ZONED_DATETIME_TODAY_WORKING_DAYS_PATTERN.matcher(expectedValueString).find()) {
 
                     expectedValueString = expectedValueString.replace("VERIFIER-", "");
                     String expandedExpectedDate = mapValueExpander.expandDateTimeToday(expectedValueString);
 
                     Date expectedDate = null;
                     try {
-                        expectedDate = DATE_TIME_FORMATTER.parse(expandedExpectedDate);
+                        expectedDate = DATE_FORMATTER.parse(expandedExpectedDate);
 
                     } catch (ParseException e) {
                         fail("Could not parse expected date in (" + path + ")");
@@ -112,7 +112,7 @@ public class MapFieldAsserter {
                     Date actualDate = null;
 
                     try {
-                        actualDate = DATE_TIME_FORMATTER.parse(actualValueString);
+                        actualDate = DATE_FORMATTER.parse(actualValueString);
 
                     } catch (ParseException e) {
                         fail("Could not parse actual date in (" + path + ")");
@@ -120,9 +120,8 @@ public class MapFieldAsserter {
 
                     assertEquals(
                         "Expected field did not match actual (" + path + ")",
-                        DATE_FORMATTER.format(expectedDate),
-                        DATE_FORMATTER.format(actualDate)
-
+                        expectedDate,
+                        actualDate
                     );
                 } else if (expectedValueString.length() > 3
                            && expectedValueString.startsWith("$/")

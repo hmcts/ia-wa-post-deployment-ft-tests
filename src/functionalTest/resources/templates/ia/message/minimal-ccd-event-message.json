@@ -1,7 +1,7 @@
 {
   "EventInstanceId": "{$RANDOM_UUID}",
   "CaseId": "{$GENERATED_CASE_ID}",
-  "EventTimeStamp": "{$DATETIME_TODAY}",
+  "EventTimeStamp": "{$LOCAL_DATETIME_TODAY}",
   "JurisdictionId": "IA",
   "CaseTypeId": "Asylum",
   "EventId": "submitAppeal",

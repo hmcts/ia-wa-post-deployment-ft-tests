@@ -9,6 +9,7 @@ azure:
   servicebus:
     connection-string: ${AZURE_SERVICE_BUS_CONNECTION_STRING}
     topic: ${AZURE_SERVICE_BUS_TOPIC_NAME:ccd-case-events-aat}
+    message-author: ${AZURE_SERVICE_BUS_MESSAGE_AUTHOR:unknown}
 
 govUk:
   url: https://www.gov.uk/

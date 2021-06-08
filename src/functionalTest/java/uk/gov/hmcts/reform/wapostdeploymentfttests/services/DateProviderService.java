@@ -6,6 +6,7 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.CalculateDate
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Component
 public class DateProviderService {
@@ -19,7 +20,7 @@ public class DateProviderService {
 
     public LocalDate calculateDate(CalculateDateParameters calculateDateParameters) {
 
-        LocalDate now = LocalDate.now();
+        LocalDate now = LocalDate.now(ZoneId.of("Europe/London"));
 
         if (calculateDateParameters.isWorkingDays()) {
             //Calculate with working days
