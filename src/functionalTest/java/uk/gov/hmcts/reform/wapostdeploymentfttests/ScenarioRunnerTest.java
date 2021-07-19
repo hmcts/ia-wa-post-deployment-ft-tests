@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.Headers;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
@@ -60,6 +61,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private List<Verifier> verifiers;
     @Autowired
     private CcdCaseCreator ccdCaseCreator;
+
+    org.slf4j.Logger logger = LoggerFactory.getLogger(ScenarioRunnerTest.class);
 
     @Before
     public void setUp() {
@@ -127,11 +130,16 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 String expectationCredentials = MapValueExtractor.extract(scenario, "expectation.credentials");
                 final Headers expectationAuthorizationHeaders = getAuthorizationHeaders(expectationCredentials);
 
-                String actualResponseBody = taskManagementService.searchByCaseId(
-                    scenarioSource,
-                    testCaseId,
-                    expectationAuthorizationHeaders
-                );
+                String actualResponseBody = null;
+                try {
+                    actualResponseBody = taskManagementService.searchByCaseId(
+                        scenarioSource,
+                        testCaseId,
+                        expectationAuthorizationHeaders
+                    );
+                } catch (Exception e) {
+                    throw new RuntimeException("Error using the taskManagementService service:", e);
+                }
 
                 Map<String, String> taskTemplatesByFilename =
                     StringResourceLoader.load(
