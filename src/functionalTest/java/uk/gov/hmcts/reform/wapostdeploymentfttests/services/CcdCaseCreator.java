@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import io.restassured.http.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

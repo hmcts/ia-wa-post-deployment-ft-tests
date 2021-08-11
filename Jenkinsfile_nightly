@@ -43,7 +43,6 @@ withNightlyPipeline(type, product, component) {
     env.AZURE_SERVICE_BUS_TOPIC_NAME = "ccd-case-events-aat"
 
     env.CCD_URL = "http://ccd-data-store-api-aat.service.core-compute-aat.internal"
-    env.CCD_GW_URL = "http://dm-store-aat.service.core-compute-aat.internal"
     env.DM_STORE_URL = "http://dm-store-aat.service.core-compute-aat.internal"
     env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
     env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"

@@ -3,11 +3,11 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.preparers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.documents.Document;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.documents.DocumentNames;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam.UserInfo;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.BinaryResourceLoader;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.documents.Document;
 
 import java.io.IOException;
 import java.util.Collection;
