@@ -206,7 +206,6 @@ public class MapValueExpander {
         return expandedValue;
     }
 
-
     private String expandUserId(String value, String replacementValue) {
         Matcher matcher = USER_ID_PATTERN.matcher(value);
         String expandedValue = value;
@@ -262,4 +261,5 @@ public class MapValueExpander {
 
         return expandedValue;
     }
+
 }

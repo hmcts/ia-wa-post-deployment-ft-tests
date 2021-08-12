@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.Headers;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.preparers.Preparer;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AzureMessageInjector;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.CcdCaseCreator;
@@ -60,9 +60,9 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     @Autowired
     private List<Verifier> verifiers;
     @Autowired
+    private List<Preparer> preparers;
+    @Autowired
     private CcdCaseCreator ccdCaseCreator;
-
-    org.slf4j.Logger logger = LoggerFactory.getLogger(ScenarioRunnerTest.class);
 
     @Before
     public void setUp() {
@@ -73,6 +73,10 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     public void scenarios_should_behave_as_specified() throws IOException {
 
         loadPropertiesIntoMapValueExpander();
+
+        for (Preparer preparer : preparers) {
+            preparer.prepare();
+        }
 
         assertFalse("Verifiers configured successfully", verifiers.isEmpty());
 
@@ -156,11 +160,11 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
 
                 verifiers.forEach(verifier ->
-                    verifier.verify(
-                        scenario,
-                        expectedResponse,
-                        actualResponse
-                    )
+                                      verifier.verify(
+                                          scenario,
+                                          expectedResponse,
+                                          actualResponse
+                                      )
                 );
             }
             Logger.say(SCENARIO_SUCCESSFUL, description);
