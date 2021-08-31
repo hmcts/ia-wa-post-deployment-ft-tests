@@ -38,6 +38,9 @@ idam:
   api:
     baseUrl: ${IDAM_URL:http://sidam-api}
 
+camunda:
+  url: ${CAMUNDA_URL:http://camunda-local-bpm/engine-rest}
+
 logging:
   level:
     com.azure.*: OFF

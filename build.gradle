@@ -8,10 +8,17 @@ plugins {
     id 'org.owasp.dependencycheck' version '6.1.6'
     id 'com.github.ben-manes.versions' version '0.39.0'
     id 'org.sonarqube' version '3.2.0'
+    id 'io.freefair.lombok' version '5.3.0'
 }
 
 group = 'uk.gov.hmcts.reform'
 version = '0.0.1'
+
+lombok {
+  config['config.stopBubbling'] = 'true'
+  config['lombok.addLombokGeneratedAnnotation'] = 'true'
+  config['lombok.anyConstructor.addConstructorProperties'] = 'true'
+}
 
 allprojects {
     sourceCompatibility = '11'
@@ -76,6 +83,7 @@ test {
 task functional(type: Test) {
     description = "Runs functional tests"
     group = "Verification"
+    systemProperty "scenario", System.getProperty('scenario')
     testClassesDirs = sourceSets.functionalTest.output.classesDirs
     classpath = sourceSets.functionalTest.runtimeClasspath
 }

@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.Headers;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +11,18 @@ import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.CamundaTaskRetrievableParameter;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.TaskMgmApiRetrievableParameter;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.TaskRetrievableEnum;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.preparers.Preparer;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AzureMessageInjector;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.CcdCaseCreator;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.services.TaskManagementService;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.CamundaTaskRetrieverService;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.TaskMgmApiRetrieverService;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.Logger;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapMerger;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapSerializer;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.StringResourceLoader;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.TaskDataVerifier;
@@ -28,8 +32,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 import static java.util.Collections.emptyMap;
@@ -41,6 +45,7 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCE
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_SUCCESSFUL;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.ENVIRONMENT_PROPERTIES;
 
+@Slf4j
 public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
     @Autowired
@@ -48,13 +53,15 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     @Autowired
     protected TaskDataVerifier taskDataVerifier;
     @Autowired
-    protected TaskManagementService taskManagementService;
+    private CamundaTaskRetrieverService camundaTaskRetrievableService;
+    @Autowired
+    private TaskMgmApiRetrieverService taskMgmApiRetrievableService;
     @Autowired
     protected AuthorizationHeadersProvider authorizationHeadersProvider;
     @Autowired
     private Environment environment;
     @Autowired
-    private MapValueExpander mapValueExpander;
+    private DeserializeValuesUtil deserializeValuesUtil;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -96,7 +103,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         for (String scenarioSource : scenarioSources) {
 
-            Map<String, Object> scenario = deserializeWithExpandedValues(scenarioSource, emptyMap());
+            Map<String, Object> scenario = deserializeValuesUtil
+                .deserializeWithExpandedValues(scenarioSource, emptyMap());
 
             String description = MapValueExtractor.extract(scenario, "description");
 
@@ -131,71 +139,29 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     requestAuthorizationHeaders
                 );
 
-                String expectationCredentials = MapValueExtractor.extract(scenario, "expectation.credentials");
-                final Headers expectationAuthorizationHeaders = getAuthorizationHeaders(expectationCredentials);
+                String taskRetrievableOption = MapValueExtractor.extract(
+                    scenario,
+                    "options.taskRetrievalApi"
+                );
 
-                String actualResponseBody = null;
-                try {
-                    actualResponseBody = taskManagementService.searchByCaseId(
+                if (TaskRetrievableEnum.CAMUNDA_API.getId().equals(taskRetrievableOption)) {
+                    camundaTaskRetrievableService.retrieveTask(
+                        new CamundaTaskRetrievableParameter(scenario, requestAuthorizationHeaders, testCaseId));
+                } else {
+                    taskMgmApiRetrievableService.retrieveTask(new TaskMgmApiRetrievableParameter(
+                        scenario,
                         scenarioSource,
                         testCaseId,
-                        expectationAuthorizationHeaders
-                    );
-                } catch (Exception e) {
-                    throw new RuntimeException("Error using the taskManagementService service:", e);
+                        getAuthorizationHeaders(Objects.requireNonNull(
+                            MapValueExtractor.extract(scenario, "expectation.credentials")))
+                    ));
                 }
-
-                Map<String, String> taskTemplatesByFilename =
-                    StringResourceLoader.load(
-                        "/templates/" + scenarioJurisdiction.toLowerCase(Locale.ENGLISH) + "/task/*.json"
-                    );
-
-                String expectedResponseBody = buildTaskExpectationResponseBody(
-                    scenarioSource,
-                    taskTemplatesByFilename,
-                    Map.of("caseId", testCaseId)
-                );
-
-                Map<String, Object> actualResponse = MapSerializer.deserialize(actualResponseBody);
-                Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
-
-                verifiers.forEach(verifier ->
-                                      verifier.verify(
-                                          scenario,
-                                          expectedResponse,
-                                          actualResponse
-                                      )
-                );
             }
             Logger.say(SCENARIO_SUCCESSFUL, description);
             Logger.say(SCENARIO_FINISHED, null);
         }
     }
 
-    private String buildTaskExpectationResponseBody(String scenarioSource,
-                                                    Map<String, String> taskTemplatesByFilename,
-                                                    Map<String, String> additionalValues) throws IOException {
-
-        Map<String, Object> scenario = deserializeWithExpandedValues(scenarioSource, additionalValues);
-
-        Map<String, Object> expectation = MapValueExtractor.extract(scenario, "expectation");
-        Map<String, Object> taskData = MapValueExtractor.extract(expectation, "taskData");
-
-        String templateFilename = MapValueExtractor.extract(taskData, "template");
-
-        Map<String, Object> taskDataExpectation = deserializeWithExpandedValues(
-            taskTemplatesByFilename.get(templateFilename),
-            additionalValues
-        );
-
-        Map<String, Object> taskDataDataReplacements = MapValueExtractor.extract(taskData, "replacements");
-        if (taskDataDataReplacements != null) {
-            MapMerger.merge(taskDataExpectation, taskDataDataReplacements);
-        }
-
-        return MapSerializer.serialize(taskDataExpectation);
-
-    }
 
     private void loadPropertiesIntoMapValueExpander() {
 
@@ -209,24 +175,17 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     }
 
 
-    private Map<String, Object> deserializeWithExpandedValues(String source,
-                                                              Map<String, String> additionalValues) throws IOException {
-        Map<String, Object> data = MapSerializer.deserialize(source);
-        mapValueExpander.expandValues(data, additionalValues);
-        return data;
-    }
-
     private Headers getAuthorizationHeaders(String credentials) {
-
-        if ("IALegalRepresentative".equalsIgnoreCase(credentials)) {
-
-            return authorizationHeadersProvider.getLegalRepAuthorization();
+        switch (credentials) {
+            case "IALegalRepresentative":
+                return authorizationHeadersProvider.getLegalRepAuthorization();
+            case "IACaseworker":
+                return authorizationHeadersProvider.getTribunalCaseworkerAAuthorization();
+            case "WaSystemUser":
+                return authorizationHeadersProvider.getWaSystemUserAuthorization();
+            default:
+                return new Headers();
         }
 
-        if ("IACaseworker".equalsIgnoreCase(credentials)) {
-            return authorizationHeadersProvider.getTribunalCaseworkerAAuthorization();
-        }
-
-        return new Headers();
     }
 }

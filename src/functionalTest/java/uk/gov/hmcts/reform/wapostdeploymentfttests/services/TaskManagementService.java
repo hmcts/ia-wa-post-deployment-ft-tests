@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -25,6 +26,7 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBa
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBaseTest.DEFAULT_TIMEOUT_SECONDS;
 
 @Service
+@Slf4j
 public class TaskManagementService {
 
     @Autowired
@@ -89,7 +91,7 @@ public class TaskManagementService {
                 });
 
 
-        System.out.println("Response body: " + actualResponseBody);
+        log.info("Response body: " + actualResponseBody);
 
         return actualResponseBody.get();
     }

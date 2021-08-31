@@ -55,11 +55,11 @@ More info on ACR tasks can be read here: https://docs.microsoft.com/en-us/azure/
 ```bash
 ./gradlew functional
 ```
-### (TODO) You can also target a specific scenario:
+### You can also target a specific scenario:
 ```bash
 ./gradlew functional --tests ScenarioRunnerTest --info -Dscenario=IA-RWA-000-requestRespondentEvidence-with-awaitingRespondentEvidence-postEventState-should-create-a-task
 ```
-### (TODO) or multiple scenarios:
+### or multiple scenarios:
 ```bash
 ./gradlew functional --tests ScenarioRunnerTest --info -Dscenario=IA-RWA-000
 ```

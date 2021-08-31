@@ -55,11 +55,18 @@ public class AuthorizationHeadersProvider {
         );
     }
 
+    public Headers getWaSystemUserAuthorization() {
+        return new Headers(
+            getUserAuthorizationOnly(
+                "WA_SYSTEM_USERNAME",
+                "WA_SYSTEM_PASSWORD",
+                "WaSystemUser"
+            ),
+            getServiceAuthorizationHeader()
+        );
+    }
 
     public Headers getLegalRepAuthorization() {
-        /*
-         * This user is used to create cases in ccd and inject messages
-         */
         return new Headers(
             getLawFirmAuthorizationOnly(),
             getServiceAuthorizationHeader()
@@ -69,18 +76,21 @@ public class AuthorizationHeadersProvider {
 
     public Header getCaseworkerAAuthorizationOnly() {
 
-        String username = System.getenv("TEST_WA_CASEOFFICER_PUBLIC_A_USERNAME");
-        String password = System.getenv("TEST_WA_CASEOFFICER_PUBLIC_A_PASSWORD");
+        return getUserAuthorizationOnly("TEST_WA_CASEOFFICER_PUBLIC_A_USERNAME",
+                                        "TEST_WA_CASEOFFICER_PUBLIC_A_PASSWORD",
+                                        "Caseworker A");
+    }
 
-        return getAuthorization("Caseworker A", username, password);
+    public Header getUserAuthorizationOnly(String username, String password, String key) {
+        return getAuthorization(key, System.getenv(username), System.getenv(password));
     }
 
     public Header getLawFirmAuthorizationOnly() {
-
-        String username = System.getenv("TEST_WA_LAW_FIRM_USERNAME");
-        String password = System.getenv("TEST_WA_LAW_FIRM_PASSWORD");
-
-        return getAuthorization("LawFirm", username, password);
+        return getUserAuthorizationOnly(
+            "TEST_WA_LAW_FIRM_USERNAME",
+            "TEST_WA_LAW_FIRM_PASSWORD",
+            "LawFirm"
+        );
 
     }
 

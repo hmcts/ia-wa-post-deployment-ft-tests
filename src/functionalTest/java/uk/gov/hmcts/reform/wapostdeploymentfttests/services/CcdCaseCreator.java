@@ -56,24 +56,29 @@ public class CcdCaseCreator {
             ccdTemplatesByFilename
         );
 
+        String eventId = MapValueExtractor.extractOrThrow(scenario, "request.input.ccd.eventId");
+
         String caseId = createInitialStartEventAndSubmit(
-            "startAppeal",
+            jurisdiction.equals("IA") ? "startAppeal" : eventId,
             jurisdiction,
             caseType,
             caseData,
             authorizationHeaders
         );
 
-        CaseDetails updatedCaseDetails = fireStartAndSubmitEventsFor(
-            caseId,
-            "submitAppeal",
-            jurisdiction,
-            caseType,
-            caseData,
-            authorizationHeaders
-        );
+        if (!jurisdiction.equalsIgnoreCase("WA")) {
+            fireStartAndSubmitEventsFor(
+                caseId,
+                "submitAppeal",
+                jurisdiction,
+                caseType,
+                caseData,
+                authorizationHeaders
+            );
+        }
 
-        return updatedCaseDetails.getId().toString();
+        return caseId;
+
     }
 
     private String createInitialStartEventAndSubmit(String eventId,
@@ -111,8 +116,8 @@ public class CcdCaseCreator {
             userToken,
             serviceToken,
             userInfo.getUid(),
-            "IA",
-            "Asylum",
+            jurisdiction,
+            caseType,
             true,
             caseDataContent
         );
@@ -165,8 +170,8 @@ public class CcdCaseCreator {
             userToken,
             serviceToken,
             userInfo.getUid(),
-            "IA",
-            "Asylum",
+            jurisdiction,
+            caseType,
             caseId,
             true,
             submitCaseDataContent
