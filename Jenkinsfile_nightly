@@ -22,9 +22,12 @@ def secrets = [
 
                 secret('wa-test-law-firm-a-username', 'TEST_WA_LAW_FIRM_USERNAME'),
                 secret('wa-test-law-firm-a-password', 'TEST_WA_LAW_FIRM_PASSWORD'),
+
                 secret('wa-test-caseofficer-a-username', 'TEST_WA_CASEOFFICER_PUBLIC_A_USERNAME'),
                 secret('wa-test-caseofficer-a-password', 'TEST_WA_CASEOFFICER_PUBLIC_A_PASSWORD'),
 
+                secret('wa-system-username', 'WA_SYSTEM_USERNAME'),
+                secret('wa-system-password', 'WA_SYSTEM_PASSWORD'),
         ],
         's2s-${env}': [
                 secret('microservicekey-wa-task-management-api', 'S2S_SECRET_TASK_MANAGEMENT_API'),
@@ -49,7 +52,7 @@ withNightlyPipeline(type, product, component) {
     env.OPEN_ID_IDAM_URL = "https://idam-web-public.aat.platform.hmcts.net"
     env.DOCUMENT_STORE_URL = "http://dm-store-aat.service.core-compute-aat.internal"
     env.WA_TASK_MANAGEMENT_URL = "http://wa-task-management-api-aat.service.core-compute-aat.internal"
-
+    env.CAMUNDA_URL = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest"
 
     loadVaultSecrets(secrets)
     enableFullFunctionalTest()
