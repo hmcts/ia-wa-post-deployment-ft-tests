@@ -49,7 +49,8 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
             );
         Map<String, String> additionalValues = Map.of("caseId", scenario.getCaseId());
 
-        Map<String, Object> deserializedClauseValues = deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
+        Map<String, Object> deserializedClauseValues =
+            deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
 
         await()
             .ignoreException(AssertionError.class)
@@ -60,13 +61,13 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                 () -> {
 
                     String actualResponseBody = taskManagementService.searchByCaseId(
-                        clauseValues,
+                        deserializedClauseValues,
                         scenario.getCaseId(),
                         scenario.getExpectationAuthorizationHeaders()
                     );
 
                     String expectedResponseBody = buildTaskExpectationResponseBody(
-                        clauseValues,
+                        deserializedClauseValues,
                         taskTemplatesByFilename,
                         Map.of("caseId", scenario.getCaseId())
                     );

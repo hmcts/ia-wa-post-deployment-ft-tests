@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever;
 
 import lombok.extern.slf4j.Slf4j;
+import org.awaitility.core.ConditionEvaluationLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
@@ -29,7 +30,9 @@ public class CamundaTaskRetrieverService implements TaskRetrieverService {
 
         Map<String, Object> deserializedClauseValues = deserializeValuesUtil.expandMapValues(clauseValues, emptyMap());
 
-        await().ignoreException(AssertionError.class)
+        await()
+            .ignoreException(AssertionError.class)
+            .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
             .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
             .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
             .until(

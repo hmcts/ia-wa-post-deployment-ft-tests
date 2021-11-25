@@ -15,7 +15,8 @@ public class DeserializeValuesUtil {
     }
 
     public Map<String, Object> deserializeStringWithExpandedValues(String source,
-                                                                   Map<String, String> additionalValues) throws IOException {
+                                                                   Map<String, String> additionalValues)
+        throws IOException {
         Map<String, Object> data = MapSerializer.deserialize(source);
         //Map Value Expander will mutate the "data" source
 

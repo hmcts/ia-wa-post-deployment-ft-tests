@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.awaitility.core.ConditionEvaluationLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -47,7 +48,9 @@ public class TaskMonitorService {
     }
 
     private void initateJob(Map<String, Map<String, String>> requestBody, Headers authorizationHeaders) {
-        await().ignoreException(AssertionError.class)
+        await()
+            .ignoreException(AssertionError.class)
+            .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
             .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
             .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
             .until(

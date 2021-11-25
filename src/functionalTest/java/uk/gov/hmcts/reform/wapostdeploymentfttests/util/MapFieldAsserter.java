@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
-import com.google.gson.Gson;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
