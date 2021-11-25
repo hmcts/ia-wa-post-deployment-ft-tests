@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam.UserInfo;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapMerger;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapSerializer;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander;
@@ -32,10 +33,13 @@ public class AzureMessageInjector {
     @Autowired
     private ServiceBusSenderClient senderClient;
 
+    @Autowired
+    private DeserializeValuesUtil deserializeValuesUtil;
+
     @Value("${azure.servicebus.message-author}")
     private String messageAuthor;
 
-    public void injectMessage(String scenarioSource,
+    public void injectMessage(Map<String, Object> clauseValues,
                               String testCaseId,
                               String jurisdiction,
                               Headers authorizationHeaders) throws IOException {
@@ -53,10 +57,10 @@ public class AzureMessageInjector {
             "userId", userInfo.getUid()
         );
 
-        Map<String, Object> scenario = deserializeWithExpandedValues(scenarioSource, additionalValues);
+        Map<String, Object> scenario = deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
 
         String eventMessage = getMessageData(
-            MapValueExtractor.extract(scenario, "request.input.eventMessage"),
+            MapValueExtractor.extract(clauseValues, "request.input.eventMessage"),
             eventMessageTemplatesByFilename,
             additionalValues
         );
@@ -87,7 +91,7 @@ public class AzureMessageInjector {
 
         String templateFilename = MapValueExtractor.extract(messageDataInput, "template");
 
-        Map<String, Object> eventMessageData = deserializeWithExpandedValues(
+        Map<String, Object> eventMessageData = deserializeValuesUtil.deserializeStringWithExpandedValues(
             templatesByFilename.get(templateFilename),
             additionalValues
         );
@@ -101,11 +105,4 @@ public class AzureMessageInjector {
         return MapSerializer.serialize(eventMessageData);
     }
 
-
-    private Map<String, Object> deserializeWithExpandedValues(String source,
-                                                              Map<String, String> additionalValues) throws IOException {
-        Map<String, Object> data = MapSerializer.deserialize(source);
-        mapValueExpander.expandValues(data, additionalValues);
-        return data;
-    }
 }

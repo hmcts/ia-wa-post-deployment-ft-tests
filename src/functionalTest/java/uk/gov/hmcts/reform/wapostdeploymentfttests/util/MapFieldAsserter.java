@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
+import com.google.gson.Gson;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -49,18 +51,35 @@ public class MapFieldAsserter {
                 List expectedValueCollection = (List) expectedValue;
                 List actualValueCollection = (List) actualValue;
 
-                for (int i = 0; i < expectedValueCollection.size(); i++) {
+                if (!actualValueCollection.isEmpty()) {
+                    //Get first Item to check the instance
+                    Object actualValueCollectionItem = actualValueCollection.get(0);
 
-                    String pathWithKeyAndIndex = pathWithKey + "." + i;
+                    if ((actualValueCollectionItem instanceof Map)) {
 
-                    Object expectedValueItem = expectedValueCollection.get(i);
-                    Object actualValueItem =
-                        i < actualValueCollection.size()
-                            ? actualValueCollection.get(i)
-                            : null;
+                        for (int i = 0; i < expectedValueCollection.size(); i++) {
+                            String pathWithKeyAndIndex = pathWithKey + "." + i;
 
 
-                    assertValue(expectedValueItem, actualValueItem, pathWithKeyAndIndex);
+                            Object expectedValueItem = expectedValueCollection.get(i);
+                            Object actualValueItem =
+                                i < actualValueCollection.size()
+                                    ? actualValueCollection.get(i)
+                                    : null;
+
+                            assertValue(expectedValueItem, actualValueItem, pathWithKeyAndIndex);
+
+                        }
+                    } else {
+                        List<Object> expectedValuesStrings = expectedValueCollection;
+                        List<Object> actualValuesStrings = actualValueCollection;
+                        //The collection was a list of objects assert them using any order
+                        assertThat(expectedValuesStrings, containsInAnyOrder(actualValuesStrings.toArray()));
+                        assertEquals(expectedValuesStrings.size(), actualValuesStrings.size());
+                    }
+                } else {
+                    //The collection was empty
+                    assertThat(actualValue, equalTo(expectedValue));
                 }
 
             } else {

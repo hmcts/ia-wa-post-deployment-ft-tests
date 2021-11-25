@@ -1,26 +1,34 @@
 {
   "tasks": [
     {
-      "id": "0d1e00e2-a5d1-11eb-a0a7-b6a482a78010",
+      "id": "fe8f8a80-4c74-11ec-9724-0242ac110008",
       "name": "Review the appeal",
       "type": "reviewTheAppeal",
       "task_state": "unassigned",
       "task_system": "SELF",
       "security_classification": "PUBLIC",
       "task_title": "Review the appeal",
-      "created_date": "2021-04-25T14:18:05.175+0000",
-      "due_date": "2021-04-27T15:00:00.000+0000",
+      "created_date": "2021-11-23T15:49:51+0000",
+      "due_date": "2021-11-25T16:00:00+0000",
       "location_name": "Taylor House",
       "location": "765324",
       "execution_type": "Case Management Task",
       "jurisdiction": "IA",
       "region": "1",
       "case_type_id": "Asylum",
-      "case_id": "1619360250476206",
-      "case_category": "protection",
-      "case_name": "Bob Smith",
+      "case_id": "1637682585406949",
+      "case_category": "Protection",
+      "case_name": "Functional PostDeployment",
       "auto_assigned": false,
-      "warnings": false
+      "warnings": false,
+      "warning_list": {
+        "values": []
+      },
+      "case_management_category": "Protection",
+      "work_type_id": "decision_making_work",
+      "permissions": {
+        "values": ["Cancel", "Manage", "Own", "Refer", "Read"]
+      }
     }
   ]
 }

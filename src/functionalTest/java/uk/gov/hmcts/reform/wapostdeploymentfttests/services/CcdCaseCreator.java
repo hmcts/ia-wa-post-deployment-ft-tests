@@ -52,11 +52,11 @@ public class CcdCaseCreator {
             );
 
         Map<String, Object> caseData = getCaseData(
-            MapValueExtractor.extract(scenario, "request.input.ccd"),
+            MapValueExtractor.extract(scenario, "required.ccd"),
             ccdTemplatesByFilename
         );
 
-        String eventId = MapValueExtractor.extractOrThrow(scenario, "request.input.ccd.eventId");
+        String eventId = MapValueExtractor.extractOrThrow(scenario, "required.ccd.eventId");
 
         String caseId = createInitialStartEventAndSubmit(
             jurisdiction.equals("IA") ? "startAppeal" : eventId,
@@ -205,6 +205,7 @@ public class CcdCaseCreator {
 
         String template = templatesByFilename.get(templateFilename);
 
+        //TODO: Abstract this as teams might use different docs
         Document noticeOfAppealDocument = documentManagementFiles.getDocument(NOTICE_OF_APPEAL_PDF);
         template = template.replace("\"{$NOTICE_OF_DECISION_DOCUMENT}\"", toJsonString(noticeOfAppealDocument));
 

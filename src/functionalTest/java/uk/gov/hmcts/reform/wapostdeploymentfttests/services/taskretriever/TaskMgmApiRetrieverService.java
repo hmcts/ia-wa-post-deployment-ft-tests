@@ -2,8 +2,9 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.awaitility.core.ConditionEvaluationLogger;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.TaskMgmApiRetrievableParameter;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.TaskManagementService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapMerger;
@@ -17,9 +18,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBaseTest.DEFAULT_POLL_INTERVAL_SECONDS;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBaseTest.DEFAULT_TIMEOUT_SECONDS;
+
 @Component
 @Slf4j
-public class TaskMgmApiRetrieverService implements TaskRetrieverService<TaskMgmApiRetrievableParameter> {
+public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
     private final TaskManagementService taskManagementService;
     private final DeserializeValuesUtil deserializeValuesUtil;
@@ -35,61 +41,62 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService<TaskMgmA
 
     @SneakyThrows
     @Override
-    public void retrieveTask(TaskMgmApiRetrievableParameter taskMgmApiRetrievableParameter) {
-        final String scenarioJurisdiction = MapValueExtractor.extractOrThrow(
-            taskMgmApiRetrievableParameter.getScenario(),
-            "jurisdiction"
-        );
+    public void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario) {
 
         Map<String, String> taskTemplatesByFilename =
             StringResourceLoader.load(
-                "/templates/" + scenarioJurisdiction.toLowerCase(Locale.ENGLISH) + "/task/*.json"
+                "/templates/" + scenario.getJurisdiction().toLowerCase(Locale.ENGLISH) + "/task/*.json"
             );
-        String actualResponseBody;
-        try {
-            actualResponseBody = taskManagementService.searchByCaseId(
-                taskMgmApiRetrievableParameter.getScenarioSource(),
-                taskMgmApiRetrievableParameter.getTestCaseId(),
-                taskMgmApiRetrievableParameter.getRequestAuthorizationHeaders()
-            );
-        } catch (Exception e) {
-            throw new RuntimeException("Error using the taskManagementService service:", e);
-        }
+        Map<String, String> additionalValues = Map.of("caseId", scenario.getCaseId());
 
-        String expectedResponseBody = buildTaskExpectationResponseBody(
-            taskMgmApiRetrievableParameter.getScenarioSource(),
-            taskTemplatesByFilename,
-            Map.of("caseId", taskMgmApiRetrievableParameter.getTestCaseId())
-        );
+        Map<String, Object> deserializedClauseValues = deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
 
-        Map<String, Object> actualResponse = MapSerializer.deserialize(actualResponseBody);
-        Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
+        await()
+            .ignoreException(AssertionError.class)
+            .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
+            .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
+            .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
+            .until(
+                () -> {
 
-        verifiers.forEach(verifier ->
-                              verifier.verify(
-                                  taskMgmApiRetrievableParameter.getScenario(),
-                                  expectedResponse,
-                                  actualResponse
-                              )
-        );
+                    String actualResponseBody = taskManagementService.searchByCaseId(
+                        clauseValues,
+                        scenario.getCaseId(),
+                        scenario.getExpectationAuthorizationHeaders()
+                    );
 
+                    String expectedResponseBody = buildTaskExpectationResponseBody(
+                        clauseValues,
+                        taskTemplatesByFilename,
+                        Map.of("caseId", scenario.getCaseId())
+                    );
+
+                    Map<String, Object> actualResponse = MapSerializer.deserialize(actualResponseBody);
+                    Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
+
+                    verifiers.forEach(verifier ->
+                        verifier.verify(
+                            clauseValues,
+                            expectedResponse,
+                            actualResponse
+                        )
+                    );
+                    return true;
+                });
     }
 
-    private String buildTaskExpectationResponseBody(String scenarioSource,
+    private String buildTaskExpectationResponseBody(Map<String, Object> clauseValues,
                                                     Map<String, String> taskTemplatesByFilename,
                                                     Map<String, String> additionalValues) throws IOException {
 
-        Map<String, Object> scenario = deserializeValuesUtil.deserializeWithExpandedValues(
-            scenarioSource,
-            additionalValues
-        );
+        Map<String, Object> scenario = deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
 
         Map<String, Object> expectation = MapValueExtractor.extract(scenario, "expectation");
         Map<String, Object> taskData = MapValueExtractor.extract(expectation, "taskData");
 
         String templateFilename = MapValueExtractor.extract(taskData, "template");
 
-        Map<String, Object> taskDataExpectation = deserializeValuesUtil.deserializeWithExpandedValues(
+        Map<String, Object> taskDataExpectation = deserializeValuesUtil.deserializeStringWithExpandedValues(
             taskTemplatesByFilename.get(templateFilename),
             additionalValues
         );

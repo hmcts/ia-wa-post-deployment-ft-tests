@@ -22,8 +22,5 @@
     "credentials": "WaSystemUser",
     "status": 200,
     "numberOfTasksAvailable": 1
-  },
-  "options": {
-    "taskRetrievalApi": "camunda-api"
   }
 }

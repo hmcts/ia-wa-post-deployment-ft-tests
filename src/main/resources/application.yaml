@@ -44,4 +44,5 @@ camunda:
 logging:
   level:
     com.azure.*: OFF
+    com.azure.core.amqp.implementation.*: OFF
     net.serenitybdd.rest.decorators.request.RequestSpecificationDecorated: OFF

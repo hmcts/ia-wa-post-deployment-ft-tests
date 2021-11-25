@@ -1,15 +1,15 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.clients.CamundaClient;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.CamundaTask;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.CamundaTaskRetrievableParameter;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.services.CamundaService;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Map;
 
+import static java.util.Collections.emptyMap;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBaseTest.DEFAULT_POLL_INTERVAL_SECONDS;
@@ -17,46 +17,27 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBa
 
 @Component
 @Slf4j
-public class CamundaTaskRetrieverService implements TaskRetrieverService<CamundaTaskRetrievableParameter> {
+public class CamundaTaskRetrieverService implements TaskRetrieverService {
 
-    private final CamundaClient camundaClient;
-
-    public CamundaTaskRetrieverService(CamundaClient camundaClient) {
-        this.camundaClient = camundaClient;
-    }
+    @Autowired
+    private CamundaService camundaService;
+    @Autowired
+    private DeserializeValuesUtil deserializeValuesUtil;
 
     @Override
-    public void retrieveTask(CamundaTaskRetrievableParameter camundaTaskRetrievableParameter) {
-        String jurisdiction = MapValueExtractor.extract(
-            camundaTaskRetrievableParameter.getScenario(),
-            "jurisdiction"
-        );
-        String caseType = MapValueExtractor.extract(
-            camundaTaskRetrievableParameter.getScenario(),
-            "caseType"
-        );
-        String numberOfTasksAvailable = MapValueExtractor.extractOrDefault(
-            camundaTaskRetrievableParameter.getScenario(),
-            "expectations.numberOfTasksAvailable",
-            "1"
-        );
-        AtomicReference<List<CamundaTask>> camundaTaskList = new AtomicReference<>();
+    public void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario) {
+
+        Map<String, Object> deserializedClauseValues = deserializeValuesUtil.expandMapValues(clauseValues, emptyMap());
+
         await().ignoreException(AssertionError.class)
             .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
             .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
             .until(
                 () -> {
-                    camundaTaskList.set(camundaClient.getTasksByTaskVariables(
-                        camundaTaskRetrievableParameter
-                            .getRequestAuthorizationHeaders().getValue("ServiceAuthorization"),
-                        "caseId_eq_" + camundaTaskRetrievableParameter.getTestCaseId()
-                        + ",jurisdiction_eq_" + jurisdiction
-                        + ",caseTypeId_eq_" + caseType,
-                        "created",
-                        "desc"
-                    ));
-                    return (camundaTaskList.get().size() == Integer.parseInt(numberOfTasksAvailable));
+                    camundaService.searchByCaseIdJurisdictionAndCaseType(deserializedClauseValues, scenario);
+                    // TODO: Do we want to verify responses for camunda?
+                    return true;
                 });
-        log.info("camunda task retrieved successfully: " + camundaTaskList);
+
     }
 }
