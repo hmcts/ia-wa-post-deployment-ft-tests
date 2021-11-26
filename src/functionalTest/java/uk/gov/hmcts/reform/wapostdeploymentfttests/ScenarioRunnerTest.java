@@ -127,10 +127,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
             String description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
 
-            //FIXME: HAck to only choose the R2 scenario format will refactor all tests to r2 in another PR
-            if (!description.equals("Given a reviewTheAppeal task exist")) {
-                continue;
-            }
             Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
 
             if (!scenarioEnabled) {
