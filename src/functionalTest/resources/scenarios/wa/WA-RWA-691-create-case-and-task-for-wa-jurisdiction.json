@@ -7,7 +7,7 @@
     "taskRetrievalApi": "camunda-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": "WaSystemUser",
     "ccd": {
       "eventId": "CREATE",
       "state": "",
@@ -18,14 +18,14 @@
   },
   "test": {
     "request": {
-      "credentials": "IALegalRepresentative",
+      "credentials": "WaSystemUser",
       "input": {
         "eventMessage": {
           "template": "minimal-ccd-event-message.json"
         }
       },
       "expectation": {
-        "credentials": "IACaseworker",
+        "credentials": "WaSystemUser",
         "status": 200,
         "numberOfTasksAvailable": 1
       }
