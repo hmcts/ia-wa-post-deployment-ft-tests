@@ -129,7 +129,23 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
             Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
 
-            if (!scenarioEnabled) {
+            if (!scenarioEnabled
+                || description.contains("requestCaseBuilding")
+                || description.contains("moveToPaymentPending")
+                || description.contains("createCaseSummary")
+                || description.contains("decisionWithoutHearing")
+                || description.contains("draftHearingRequirements")
+                || description.contains("requestCaseBuilding")
+                || description.contains("requestCmaRequirements")
+                || description.contains("makeAnApplication")
+                || description.contains("requestHearingRequirements")
+                || description.contains("requestReasonsForAppeal")
+                || description.contains("requestRespondentEvidence")
+                || description.contains("requestReasonsForAppeal")
+                || description.contains("sendDirection event should create a followUpNonStandardDirection task")
+                || description.contains("submit")
+                || description.contains("requestRespondentReview")
+            ) {
                 Logger.say(SCENARIO_DISABLED, description);
                 continue;
             } else {
