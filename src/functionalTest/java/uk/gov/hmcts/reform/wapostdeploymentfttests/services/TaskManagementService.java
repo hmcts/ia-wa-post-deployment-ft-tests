@@ -66,7 +66,9 @@ public class TaskManagementService {
             .post(taskManagementUrl + "/task");
 
         result.then().assertThat()
-            .statusCode(expectedStatus)
+            .statusCode(expectedStatus);
+
+        result.then().assertThat()
             .contentType(APPLICATION_JSON_VALUE)
             .body("tasks.size()", is(expectedTasks));
 
