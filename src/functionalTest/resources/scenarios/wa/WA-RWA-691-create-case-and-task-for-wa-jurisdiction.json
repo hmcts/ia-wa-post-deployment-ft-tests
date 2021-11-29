@@ -23,12 +23,12 @@
         "eventMessage": {
           "template": "minimal-ccd-event-message.json"
         }
-      },
-      "expectation": {
-        "credentials": "WaSystemUser",
-        "status": 200,
-        "numberOfTasksAvailable": 1
       }
+    },
+    "expectation": {
+      "credentials": "WaSystemUser",
+      "status": 200,
+      "numberOfTasksAvailable": 1
     }
   }
 }
