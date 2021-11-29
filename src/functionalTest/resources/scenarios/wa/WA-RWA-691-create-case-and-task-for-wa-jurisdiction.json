@@ -1,6 +1,6 @@
 {
   "description": "create case and task for the WA jurisdiction",
-  "enabled": true,
+  "enabled": false,
   "jurisdiction": "WA",
   "caseType": "WaCaseType",
   "options": {
