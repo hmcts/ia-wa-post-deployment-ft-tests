@@ -1,68 +1,77 @@
 {
   "description": "removeRepresentation event should create a delayed followUpNoticeOfChange task",
-  "enabled": false,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
-  "request": {
+  "options": {
+    "taskRetrievalApi": "task-management-api"
+  },
+  "required": {
     "credentials": "IALegalRepresentative",
-    "input": {
-      "ccd": {
-        "eventId": "submitAppeal",
-        "state": "appealStarted",
-        "caseData": {
-          "template": "minimal-appeal-started.json",
-          "replacements": {
-            "appealType": "protection",
-            "homeOfficeDecisionDate": "{$TODAY-14}"
-          }
-        }
-      },
-      "eventMessage": {
-        "template": "minimal-ccd-event-message.json",
+    "ccd": {
+      "eventId": "submitAppeal",
+      "state": "appealStarted",
+      "caseData": {
+        "template": "minimal-appeal-started.json",
         "replacements": {
-          "EventId": "removeRepresentation",
-          "NewStateId": "appealSubmitted",
-          "AdditionalData": {
-            "Data": {
-              "appealType": "Protection"
-            }
-          }
+          "appealType": "protection",
+          "homeOfficeDecisionDate": "{$TODAY-14}"
         }
       }
     }
   },
-  "expectation": {
-    "credentials": "IACaseworker",
-    "status": 200,
-    "numberOfTasksAvailable": 1,
-    "taskData": {
-      "template": "minimal-task-response.json",
-      "replacements": {
-        "tasks": [
-          {
-            "id": "{$VERIFIER-UUID}",
-            "case_name": "Functional PostDeployment",
-            "case_id": "{$GENERATED_CASE_ID}",
-            "case_category": "Protection",
-            "name": "Follow-up Notice of Change",
-            "type": "followUpNoticeOfChange",
-            "task_state": "unassigned",
-            "task_system": "SELF",
-            "security_classification": "PUBLIC",
-            "task_title": "Follow-up Notice of Change",
-            "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-            "due_date": "{$VERIFIER-DATETIME_WORKING_DAYS_TODAY+16}",
-            "execution_type": "Case Management Task",
-            "jurisdiction": "IA",
-            "case_type_id": "Asylum",
-            "region": "1",
-            "location": "765324",
-            "location_name": "Taylor House",
-            "auto_assigned": false,
-            "warnings": false
+  "test": {
+    "request": {
+      "credentials": "IALegalRepresentative",
+      "input": {
+        "eventMessage": {
+          "template": "minimal-ccd-event-message.json",
+          "replacements": {
+            "EventId": "removeRepresentation",
+            "NewStateId": "appealSubmitted",
+            "AdditionalData": {
+              "Data": {
+                "appealType": "protection"
+              }
+            }
           }
-        ]
+        }
+      }
+    },
+    "expectation": {
+      "credentials": "IACaseworker",
+      "status": 200,
+      "numberOfTasksAvailable": 1,
+      "taskData": {
+        "template": "minimal-task-response.json",
+        "replacements": {
+          "tasks": [
+            {
+              "id": "{$VERIFIER-UUID}",
+              "case_name": "Functional PostDeployment",
+              "case_id": "{$GENERATED_CASE_ID}",
+              "case_category": "Protection",
+              "name": "Follow-up Notice of Change",
+              "type": "followUpNoticeOfChange",
+              "task_state": "unassigned",
+              "task_system": "SELF",
+              "security_classification": "PUBLIC",
+              "task_title": "Follow-up Notice of Change",
+              "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+              "due_date": "{$VERIFIER-DATETIME_WORKING_DAYS_TODAY+16}",
+              "execution_type": "Case Management Task",
+              "jurisdiction": "IA",
+              "case_type_id": "Asylum",
+              "region": "1",
+              "location": "765324",
+              "location_name": "Taylor House",
+              "auto_assigned": false,
+              "warnings": false
+            }
+          ]
+        }
       }
     }
   }
 }
+

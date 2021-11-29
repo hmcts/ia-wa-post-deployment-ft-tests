@@ -3,24 +3,32 @@
   "enabled": true,
   "jurisdiction": "WA",
   "caseType": "WaCaseType",
-  "request": {
-    "credentials": "WaSystemUser",
-    "input": {
-      "ccd": {
-        "eventId": "CREATE",
-        "state": "",
-        "caseData": {
-          "template": "minimal-appeal-started.json"
-        }
-      },
-      "eventMessage": {
-        "template": "minimal-ccd-event-message.json"
+  "options": {
+    "taskRetrievalApi": "camunda-api"
+  },
+  "required": {
+    "credentials": "IALegalRepresentative",
+    "ccd": {
+      "eventId": "CREATE",
+      "state": "",
+      "caseData": {
+        "template": "minimal-appeal-started.json"
       }
     }
   },
-  "expectation": {
-    "credentials": "WaSystemUser",
-    "status": 200,
-    "numberOfTasksAvailable": 1
+  "test": {
+    "request": {
+      "credentials": "IALegalRepresentative",
+      "input": {
+        "eventMessage": {
+          "template": "minimal-ccd-event-message.json"
+        }
+      },
+      "expectation": {
+        "credentials": "IACaseworker",
+        "status": 200,
+        "numberOfTasksAvailable": 1
+      }
+    }
   }
 }

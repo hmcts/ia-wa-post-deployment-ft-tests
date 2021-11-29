@@ -1,5 +1,5 @@
 {
-  "description": "Given a reviewTheAppeal task exist",
+  "description": "Given a reviewTheAppeal exist moveToPaymentPending should terminate reviewTheAppeal task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -72,7 +72,13 @@
               "case_management_category": "Protection",
               "work_type_id": "decision_making_work",
               "permissions": {
-                "values": ["Read","Refer","Own","Manage","Cancel"]
+                "values": [
+                  "Read",
+                  "Refer",
+                  "Own",
+                  "Manage",
+                  "Cancel"
+                ]
               }
             }
           ]
@@ -127,20 +133,24 @@
               "region": "1",
               "auto_assigned": false,
               "warnings": false,
-              "warning_list": {"values": []},
+              "warning_list": {
+                "values": []
+              },
               "case_management_category": "Protection",
               "work_type_id": "decision_making_work",
               "permissions": {
-                "values": ["Read","Refer","Own","Manage","Cancel"]
+                "values": [
+                  "Read",
+                  "Refer",
+                  "Own",
+                  "Manage",
+                  "Cancel"
+                ]
               }
             }
           ]
         }
       }
     }
-  },
-  "after": {
-    "enabled": true,
-    "cleanUp": true
   }
 }
