@@ -160,10 +160,13 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
                 }
                 Logger.say(SCENARIO_RUNNING);
+
                 processTestClauseScenario(scenario);
+
+                Logger.say(SCENARIO_SUCCESSFUL, description);
+                Logger.say(SCENARIO_FINISHED);
             }
-            Logger.say(SCENARIO_SUCCESSFUL, description);
-            Logger.say(SCENARIO_FINISHED);
+
         }
     }
 
