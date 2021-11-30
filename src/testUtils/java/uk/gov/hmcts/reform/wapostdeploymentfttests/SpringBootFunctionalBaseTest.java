@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("functional")
 public abstract class SpringBootFunctionalBaseTest {
 
-    public static final int DEFAULT_TIMEOUT_SECONDS = 300;
+    public static final int DEFAULT_TIMEOUT_SECONDS = 180;
     public static final int DEFAULT_POLL_INTERVAL_SECONDS = 30;
     @Autowired
     protected ObjectMapper objectMapper;
