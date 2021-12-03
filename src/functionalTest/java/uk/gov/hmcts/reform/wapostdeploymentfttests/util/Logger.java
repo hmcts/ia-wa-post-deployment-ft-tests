@@ -16,11 +16,15 @@ public final class Logger {
         // noop
     }
 
+    public static void say(LoggerMessage message) {
+        say(message, null);
+    }
+
     public static void say(LoggerMessage message, Object content) {
         switch (message) {
             case SCENARIO_START:
                 colouredPrintLine(ANSI_CYAN, "-------------------------------------------------------------------");
-                colouredPrintLine(ANSI_YELLOW, "⚙️️ RUNNING " + content + " SCENARIOS");
+                colouredPrintLine(ANSI_YELLOW, "⚙️️ FOUND " + content + " SCENARIOS");
                 colouredPrintLine(ANSI_CYAN, "-------------------------------------------------------------------");
                 break;
             case SCENARIO_DISABLED:
@@ -34,6 +38,15 @@ public final class Logger {
                 break;
             case SCENARIO_SUCCESSFUL:
                 colouredPrintLine(ANSI_GREEN, "✅ SCENARIO: " + content + " completed successfully");
+                break;
+            case SCENARIO_BEFORE_FOUND:
+                colouredPrintLine(ANSI_CYAN, "ℹ️ SCENARIO: Found BEFORE Clause processing setup scenario");
+                break;
+            case SCENARIO_BEFORE_COMPLETED:
+                colouredPrintLine(ANSI_CYAN, "ℹ️ SCENARIO: BEFORE Clause completed successfully");
+                break;
+            case SCENARIO_RUNNING:
+                colouredPrintLine(ANSI_CYAN, "ℹ️ SCENARIO: Processing scenario");
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + message);

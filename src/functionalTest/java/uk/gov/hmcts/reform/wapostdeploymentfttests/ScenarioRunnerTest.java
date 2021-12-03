@@ -11,9 +11,8 @@ import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.CamundaTaskRetrievableParameter;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.TaskMgmApiRetrievableParameter;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.TaskRetrievableEnum;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.TaskRetrieverEnum;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.preparers.Preparer;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AzureMessageInjector;
@@ -28,22 +27,31 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.util.StringResourceLoader;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.TaskDataVerifier;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.Verifier;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 import static java.util.Collections.emptyMap;
 import static org.junit.Assert.assertFalse;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_BEFORE_COMPLETED;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_BEFORE_FOUND;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_DISABLED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_ENABLED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_FINISHED;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_RUNNING;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_START;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_SUCCESSFUL;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.ENVIRONMENT_PROPERTIES;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrDefault;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrThrow;
 
 @Slf4j
 public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
@@ -53,11 +61,11 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     @Autowired
     protected TaskDataVerifier taskDataVerifier;
     @Autowired
+    protected AuthorizationHeadersProvider authorizationHeadersProvider;
+    @Autowired
     private CamundaTaskRetrieverService camundaTaskRetrievableService;
     @Autowired
     private TaskMgmApiRetrieverService taskMgmApiRetrievableService;
-    @Autowired
-    protected AuthorizationHeadersProvider authorizationHeadersProvider;
     @Autowired
     private Environment environment;
     @Autowired
@@ -77,7 +85,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     }
 
     @Test
-    public void scenarios_should_behave_as_specified() throws IOException {
+    public void scenarios_should_behave_as_specified() throws IOException, URISyntaxException {
 
         loadPropertiesIntoMapValueExpander();
 
@@ -87,6 +95,17 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         assertFalse("Verifiers configured successfully", verifiers.isEmpty());
 
+        URL path = getClass().getClassLoader().getResource("scenarios");
+        File[] directories = new File(path.toURI()).listFiles(File::isDirectory);
+        Objects.requireNonNull(directories, "No directories found under 'scenarios'");
+
+        for (File directory : directories) {
+            runAllScenariosFor(directory.getName());
+        }
+
+    }
+
+    private void runAllScenariosFor(String directoryName) throws IOException {
         String scenarioPattern = System.getProperty("scenario");
         if (scenarioPattern == null) {
             scenarioPattern = "*.json";
@@ -96,23 +115,19 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         Collection<String> scenarioSources =
             StringResourceLoader
-                .load("/scenarios/" + scenarioPattern)
+                .load("/scenarios/" + directoryName + "/" + scenarioPattern)
                 .values();
 
-        Logger.say(SCENARIO_START, scenarioSources.size());
+        Logger.say(SCENARIO_START, scenarioSources.size() + " " + directoryName.toUpperCase(Locale.ROOT));
 
         for (String scenarioSource : scenarioSources) {
 
-            Map<String, Object> scenario = deserializeValuesUtil
-                .deserializeWithExpandedValues(scenarioSource, emptyMap());
+            Map<String, Object> scenarioValues = deserializeValuesUtil
+                .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
 
-            String description = MapValueExtractor.extract(scenario, "description");
+            String description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
 
-            Boolean scenarioEnabled = MapValueExtractor.extract(scenario, "enabled");
-
-            if (scenarioEnabled == null) {
-                scenarioEnabled = true;
-            }
+            Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
 
             if (!scenarioEnabled) {
                 Logger.say(SCENARIO_DISABLED, description);
@@ -120,45 +135,95 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             } else {
                 Logger.say(SCENARIO_ENABLED, description);
 
-                String requestCredentials = MapValueExtractor.extract(scenario, "request.credentials");
+                Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
+                Map<String, Object> testClauseValues = extractOrThrow(scenarioValues, "test");
 
-                final Headers requestAuthorizationHeaders = getAuthorizationHeaders(requestCredentials);
 
-                final String scenarioJurisdiction = MapValueExtractor.extractOrThrow(scenario, "jurisdiction");
+                String scenarioJurisdiction = extractOrThrow(scenarioValues, "jurisdiction");
+                String caseType = extractOrThrow(scenarioValues, "caseType");
 
-                final String testCaseId = ccdCaseCreator.createCase(
-                    scenario,
-                    scenarioJurisdiction,
-                    requestAuthorizationHeaders
-                );
-
-                azureMessageInjector.injectMessage(
+                TestScenario scenario = new TestScenario(
+                    scenarioValues,
                     scenarioSource,
-                    testCaseId,
                     scenarioJurisdiction,
-                    requestAuthorizationHeaders
+                    caseType,
+                    beforeClauseValues,
+                    testClauseValues
                 );
+                createBaseCcdCase(scenario);
 
-                String taskRetrievableOption = MapValueExtractor.extract(
-                    scenario,
-                    "options.taskRetrievalApi"
-                );
+                if (scenario.getBeforeClauseValues() != null) {
+                    Logger.say(SCENARIO_BEFORE_FOUND);
+                    //If before was found process with before values
+                    processBeforeClauseScenario(scenario);
+                    Logger.say(SCENARIO_BEFORE_COMPLETED);
 
-                if (TaskRetrievableEnum.CAMUNDA_API.getId().equals(taskRetrievableOption)) {
-                    camundaTaskRetrievableService.retrieveTask(
-                        new CamundaTaskRetrievableParameter(scenario, requestAuthorizationHeaders, testCaseId));
-                } else {
-                    taskMgmApiRetrievableService.retrieveTask(new TaskMgmApiRetrievableParameter(
-                        scenario,
-                        scenarioSource,
-                        testCaseId,
-                        getAuthorizationHeaders(Objects.requireNonNull(
-                            MapValueExtractor.extract(scenario, "expectation.credentials")))
-                    ));
                 }
+                Logger.say(SCENARIO_RUNNING);
+
+                processTestClauseScenario(scenario);
+
+                Logger.say(SCENARIO_SUCCESSFUL, description);
+                Logger.say(SCENARIO_FINISHED);
             }
-            Logger.say(SCENARIO_SUCCESSFUL, description);
-            Logger.say(SCENARIO_FINISHED, null);
+
+        }
+    }
+
+    private void processBeforeClauseScenario(TestScenario scenario) throws IOException {
+        processScenario(scenario.getBeforeClauseValues(), scenario);
+    }
+
+    private void processTestClauseScenario(TestScenario scenario) throws IOException {
+        processScenario(scenario.getTestClauseValues(), scenario);
+    }
+
+    private void createBaseCcdCase(TestScenario scenario) throws IOException {
+        Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
+        String requestCredentials = extractOrThrow(scenarioValues, "required.credentials");
+
+        Headers requestAuthorizationHeaders = getAuthorizationHeaders(requestCredentials);
+
+        scenario.setRequestAuthorizationHeaders(requestAuthorizationHeaders);
+
+
+        String caseId = ccdCaseCreator.createCase(
+            scenarioValues,
+            scenario.getJurisdiction(),
+            requestAuthorizationHeaders
+        );
+
+        scenario.setCaseId(caseId);
+    }
+
+    private void processScenario(Map<String, Object> values, TestScenario scenario) throws IOException {
+
+        azureMessageInjector.injectMessage(
+            values,
+            scenario.getCaseId(),
+            scenario.getJurisdiction(),
+            scenario.getRequestAuthorizationHeaders()
+        );
+
+        String taskRetrieverOption = MapValueExtractor.extract(
+            values,
+            "options.taskRetrievalApi"
+        );
+
+        String expectationCredentials = extractOrThrow(values, "expectation.credentials");
+        Headers expectationAuthorizationHeaders = getAuthorizationHeaders(expectationCredentials);
+        scenario.setExpectationAuthorizationHeaders(expectationAuthorizationHeaders);
+
+        if (TaskRetrieverEnum.CAMUNDA_API.getId().equals(taskRetrieverOption)) {
+            camundaTaskRetrievableService.retrieveTask(
+                values,
+                scenario
+            );
+        } else {
+            taskMgmApiRetrievableService.retrieveTask(
+                values,
+                scenario
+            );
         }
     }
 
@@ -174,7 +239,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             .forEach(name -> ENVIRONMENT_PROPERTIES.setProperty(name, environment.getProperty(name)));
     }
 
-
     private Headers getAuthorizationHeaders(String credentials) {
         switch (credentials) {
             case "IALegalRepresentative":
@@ -184,7 +248,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             case "WaSystemUser":
                 return authorizationHeadersProvider.getWaSystemUserAuthorization();
             default:
-                return new Headers();
+                throw new IllegalStateException("Credentials implementation for '" + credentials + "' not found");
         }
 
     }

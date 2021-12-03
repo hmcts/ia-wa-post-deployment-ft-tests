@@ -1,8 +1,10 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever;
 
-import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.TaskRetrievableParameter;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
 
-public interface TaskRetrieverService<T extends TaskRetrievableParameter> {
+import java.util.Map;
 
-    void retrieveTask(T taskRetrievableParameter);
+public interface TaskRetrieverService {
+
+    void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario);
 }

@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.CalculateDateParameters;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.DateProviderService;
 
@@ -176,13 +177,21 @@ public class MapValueExpander {
                     value = expandRandomUuid(value);
                 }
                 if (GENERATED_CASE_ID_PATTERN.matcher(value).find() && !additionalValues.isEmpty()) {
-                    value = expandCaseId(value, additionalValues.get("caseId"));
+                    if (additionalValues.get("caseId") != null) {
+                        value = expandCaseId(value, additionalValues.get("caseId"));
+                    }
                 }
                 if (USER_ID_PATTERN.matcher(value).find() && !additionalValues.isEmpty()) {
-                    value = expandUserId(value, additionalValues.get("userId"));
+                    if (additionalValues.get("userId") != null) {
+                        value = expandUserId(value, additionalValues.get("userId"));
+                    }
                 }
                 if (ENVIRONMENT_PROPERTY_PATTERN.matcher(value).find()) {
-                    value = expandEnvironmentProperty(value);
+                    // Environment variables default to empty string if not found.
+                    String expandedFromEnvValue = expandEnvironmentProperty(value);
+                    if (StringUtils.hasText(expandedFromEnvValue)) {
+                        value = expandEnvironmentProperty(value);
+                    }
                 }
             }
 

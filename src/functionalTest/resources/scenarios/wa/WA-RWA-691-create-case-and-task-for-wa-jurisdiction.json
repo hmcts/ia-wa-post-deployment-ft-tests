@@ -1,0 +1,34 @@
+{
+  "description": "create case and task for the WA jurisdiction",
+  "enabled": false,
+  "jurisdiction": "WA",
+  "caseType": "WaCaseType",
+  "options": {
+    "taskRetrievalApi": "camunda-api"
+  },
+  "required": {
+    "credentials": "WaSystemUser",
+    "ccd": {
+      "eventId": "CREATE",
+      "state": "",
+      "caseData": {
+        "template": "minimal-appeal-started.json"
+      }
+    }
+  },
+  "test": {
+    "request": {
+      "credentials": "WaSystemUser",
+      "input": {
+        "eventMessage": {
+          "template": "minimal-ccd-event-message.json"
+        }
+      }
+    },
+    "expectation": {
+      "credentials": "WaSystemUser",
+      "status": 200,
+      "numberOfTasksAvailable": 1
+    }
+  }
+}
