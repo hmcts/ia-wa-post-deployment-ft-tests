@@ -52,5 +52,5 @@ withNightlyPipeline(type, product, component) {
   env.CAMUNDA_URL = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest"
 
   loadVaultSecrets(secrets)
-  enableFullFunctionalTest()
+  enableFullFunctionalTest(60)
 }
