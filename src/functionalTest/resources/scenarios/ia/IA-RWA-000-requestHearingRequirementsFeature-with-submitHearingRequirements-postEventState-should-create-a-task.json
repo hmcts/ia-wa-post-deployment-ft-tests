@@ -67,6 +67,13 @@
               "location_name": "Taylor House",
               "auto_assigned": false,
               "warnings": false,
+              "warning_list": {
+                "values": [
+
+                ]
+              },
+              "case_management_category": "Protection",
+              "work_type_id": "hearing_work",
               "permissions": {
                 "values": [
                   "Read",
