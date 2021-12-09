@@ -66,7 +66,16 @@
               "location": "765324",
               "location_name": "Taylor House",
               "auto_assigned": false,
-              "warnings": false
+              "warnings": false,
+              "permissions": {
+                "values": [
+                  "Read",
+                  "Refer",
+                  "Own",
+                  "Manage",
+                  "Cancel"
+                ]
+              }
             }
           ]
         }
