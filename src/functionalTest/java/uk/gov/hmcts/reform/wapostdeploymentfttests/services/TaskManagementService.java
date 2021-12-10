@@ -62,7 +62,7 @@ public class TaskManagementService {
             .headers(authorizationHeaders)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(requestBody)
-            .when()git
+            .when()
             .post(taskManagementUrl + "/task");
 
         result.then().assertThat()
