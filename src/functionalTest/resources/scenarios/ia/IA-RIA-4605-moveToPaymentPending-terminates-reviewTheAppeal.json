@@ -84,6 +84,66 @@
             }
           ]
         }
+      },
+      "roleData": {
+        "roles": [
+          {
+            "role_category": "LEGAL_OPERATIONS",
+            "role_name": "case-manager",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Own"
+            ],
+            "authorisations": [
+            ]
+          },
+          {
+            "role_category": "JUDICIAL",
+            "role_name": "judge",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Execute"
+            ],
+            "authorisations": [
+              "IA"
+            ]
+          },
+          {
+            "role_category": "LEGAL_OPERATIONS",
+            "role_name": "senior-tribunal-caseworker",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Own"
+            ],
+            "authorisations": [
+            ]
+          },
+          {
+            "role_name": "task-supervisor",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Manage",
+              "Cancel"
+            ],
+            "authorisations": [
+            ]
+          },
+          {
+            "role_category": "LEGAL_OPERATIONS",
+            "role_name": "tribunal-caseworker",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Own"
+            ],
+            "authorisations": [
+            ]
+          }
+        ]
       }
     }
   },
@@ -152,6 +212,66 @@
             }
           ]
         }
+      },
+      "roleData": {
+        "roles": [
+          {
+            "role_category": "LEGAL_OPERATIONS",
+            "role_name": "case-manager",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Own"
+            ],
+            "authorisations": [
+            ]
+          },
+          {
+            "role_category": "JUDICIAL",
+            "role_name": "judge",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Execute"
+            ],
+            "authorisations": [
+              "IA"
+            ]
+          },
+          {
+            "role_category": "LEGAL_OPERATIONS",
+            "role_name": "senior-tribunal-caseworker",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Own"
+            ],
+            "authorisations": [
+            ]
+          },
+          {
+            "role_name": "task-supervisor",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Manage",
+              "Cancel"
+            ],
+            "authorisations": [
+            ]
+          },
+          {
+            "role_category": "LEGAL_OPERATIONS",
+            "role_name": "tribunal-caseworker",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Own"
+            ],
+            "authorisations": [
+            ]
+          }
+        ]
       }
     }
   }
