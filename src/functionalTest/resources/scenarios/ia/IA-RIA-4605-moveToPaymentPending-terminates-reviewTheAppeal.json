@@ -77,9 +77,11 @@
                   "Refer",
                   "Own",
                   "Manage",
+                  "Execute",
                   "Cancel"
                 ]
-              }
+              },
+              "role_category": "LEGAL_OPERATIONS"
             }
           ]
         }
@@ -144,9 +146,11 @@
                   "Refer",
                   "Own",
                   "Manage",
+                  "Execute",
                   "Cancel"
                 ]
-              }
+              },
+              "role_category": "LEGAL_OPERATIONS"
             }
           ]
         }
