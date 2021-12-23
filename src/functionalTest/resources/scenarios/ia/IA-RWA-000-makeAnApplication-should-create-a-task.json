@@ -66,6 +66,7 @@
               "location_name": "Taylor House",
               "auto_assigned": false,
               "warnings": false,
+              "role_category": "LEGAL_OPERATIONS",
               "warning_list": {
                 "values": [
 
