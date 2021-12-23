@@ -80,4 +80,31 @@ public class TaskManagementService {
         return actualResponseBody;
     }
 
+    public String retrieveTaskRolePermissions(Map<String, Object> clauseValues,
+                                              String taskId,
+                                              Headers authorizationHeaders) {
+
+        Response result = given()
+            .headers(authorizationHeaders)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get(taskManagementUrl + "/task/" + taskId + "/roles");
+
+
+        int expectedStatus = MapValueExtractor.extractOrDefault(
+            clauseValues, "expectation.status", 200);
+
+        result.then().assertThat()
+            .statusCode(expectedStatus)
+            .contentType(APPLICATION_JSON_VALUE)
+            .body("roles.size()", is(5));
+
+        String actualResponseBody = result.then()
+            .extract()
+            .body().asString();
+
+        log.info("Response body: " + actualResponseBody);
+
+        return actualResponseBody;
+    }
 }

@@ -67,10 +67,85 @@
               "location_name": "Taylor House",
               "auto_assigned": false,
               "warnings": false,
-              "role_category": "LEGAL_OPERATIONS"
+              "role_category": "LEGAL_OPERATIONS",
+              "warning_list": {
+                "values": [
+
+                ]
+              },
+              "case_management_category": "Protection",
+              "permissions": {
+                "values": [
+                  "Read",
+                  "Refer",
+                  "Own",
+                  "Manage",
+                  "Execute",
+                  "Cancel"
+                ]
+              }
             }
           ]
         }
+      },      "roleData": {
+        "roles": [
+          {
+            "role_category": "LEGAL_OPERATIONS",
+            "role_name": "case-manager",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Own"
+            ],
+            "authorisations": [
+            ]
+          },
+          {
+            "role_category": "JUDICIAL",
+            "role_name": "judge",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Execute"
+            ],
+            "authorisations": [
+              "IA"
+            ]
+          },
+          {
+            "role_category": "LEGAL_OPERATIONS",
+            "role_name": "senior-tribunal-caseworker",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Own"
+            ],
+            "authorisations": [
+            ]
+          },
+          {
+            "role_name": "task-supervisor",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Manage",
+              "Cancel"
+            ],
+            "authorisations": [
+            ]
+          },
+          {
+            "role_category": "LEGAL_OPERATIONS",
+            "role_name": "tribunal-caseworker",
+            "permissions": [
+              "Read",
+              "Refer",
+              "Own"
+            ],
+            "authorisations": [
+            ]
+          }
+        ]
       }
     }
   }
