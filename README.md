@@ -67,3 +67,4 @@ More info on ACR tasks can be read here: https://docs.microsoft.com/en-us/azure/
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
