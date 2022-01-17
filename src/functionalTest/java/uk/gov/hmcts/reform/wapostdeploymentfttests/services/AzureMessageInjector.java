@@ -44,9 +44,10 @@ public class AzureMessageInjector {
                               String jurisdiction,
                               Headers authorizationHeaders) throws IOException {
 
+        String jurisdictionId = jurisdiction.toLowerCase(Locale.ENGLISH);
         Map<String, String> eventMessageTemplatesByFilename =
             StringResourceLoader.load(
-                "/templates/" + jurisdiction.toLowerCase(Locale.ENGLISH) + "/message/*.json"
+                "/templates/" + jurisdictionId + "/message/*.json"
             );
 
         String userToken = authorizationHeaders.getValue(AUTHORIZATION);
@@ -65,14 +66,15 @@ public class AzureMessageInjector {
             additionalValues
         );
 
-        sendMessage(eventMessage, testCaseId);
+        sendMessage(eventMessage, testCaseId, jurisdictionId);
     }
 
-    private void sendMessage(String message, String caseId) {
+    private void sendMessage(String message, String caseId, String jurisdictionId) {
         ServiceBusMessage serviceBusMessage = new ServiceBusMessage(message);
 
         serviceBusMessage.getApplicationProperties().put("message_context", "wa-ft-" + caseId);
         serviceBusMessage.getApplicationProperties().put("message_author", messageAuthor);
+        serviceBusMessage.getApplicationProperties().put("jurisdiction_id", jurisdictionId);
         serviceBusMessage.setSessionId(caseId);
 
         System.out.println(
