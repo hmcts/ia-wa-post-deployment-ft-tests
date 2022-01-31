@@ -75,10 +75,7 @@
                 "values": [
                   "Read",
                   "Refer",
-                  "Own",
-                  "Manage",
-                  "Execute",
-                  "Cancel"
+                  "Own"
                 ]
               },
               "role_category": "LEGAL_OPERATIONS"
@@ -204,10 +201,7 @@
                 "values": [
                   "Read",
                   "Refer",
-                  "Own",
-                  "Manage",
-                  "Execute",
-                  "Cancel"
+                  "Own"
                 ]
               },
               "role_category": "LEGAL_OPERATIONS"

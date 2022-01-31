@@ -78,9 +78,7 @@
                 "values": [
                   "Read",
                   "Refer",
-                  "Own",
-                  "Manage",
-                  "Cancel"
+                  "Own"
                 ]
               }
             }
