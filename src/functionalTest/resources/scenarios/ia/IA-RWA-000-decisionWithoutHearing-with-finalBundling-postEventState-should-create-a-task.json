@@ -72,10 +72,7 @@
                 "values": [
                   "Read",
                   "Refer",
-                  "Own",
-                  "Manage",
-                  "Execute",
-                  "Cancel"
+                  "Own"
                 ]
               }
             }
