@@ -194,7 +194,7 @@ def versions = [
         reformLogging   : '5.1.9',
         springfoxSwagger: '3.0.0',
         serenity        : '2.2.12',
-        tomcat          : '9.0.54'
+        tomcat          : '9.0.58'
 ]
 
 ext.libraries = [
@@ -221,8 +221,8 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.1'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.17.1'
 
-    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.58'
-    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.58'
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: version.tomcat
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: version.tomcat
 
     testImplementation libraries.junit5
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
