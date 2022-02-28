@@ -22,3 +22,6 @@ document_management:
 
 ccd_gateway:
   url: ${CCD_GW_URL:http://ccd-api-gateway}
+
+wa_dlq_process_test:
+  enabled: ${WA_DLQ_PROCESS_ENABLED:false}

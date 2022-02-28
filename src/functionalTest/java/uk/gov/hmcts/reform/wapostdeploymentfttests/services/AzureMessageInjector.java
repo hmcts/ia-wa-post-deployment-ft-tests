@@ -55,7 +55,7 @@ public class AzureMessageInjector {
 
         Map<String, String> additionalValues = Map.of(
             "caseId", testCaseId,
-            "userId", userInfo.getUid()
+            "userId", userInfo.getEmail()
         );
 
         Map<String, Object> scenario = deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);

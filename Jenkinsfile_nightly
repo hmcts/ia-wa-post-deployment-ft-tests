@@ -20,8 +20,13 @@ def secrets = [
 
                 secret('ccd-shared-servicebus-connection-string', 'AZURE_SERVICE_BUS_CONNECTION_STRING'),
 
+                secret('wa-dlq-process-enabled', 'WA_DLQ_PROCESS_ENABLED'),
+
                 secret('wa-test-law-firm-a-username', 'TEST_WA_LAW_FIRM_USERNAME'),
                 secret('wa-test-law-firm-a-password', 'TEST_WA_LAW_FIRM_PASSWORD'),
+
+                secret('wa-test-dlq-username', 'TEST_WA_DLQ_PROCESS_USERNAME'),
+                secret('wa-test-dlq-password', 'TEST_WA_DLQ_PROCESS_PASSWORD'),
 
                 secret('wa-test-caseofficer-a-username', 'TEST_WA_CASEOFFICER_PUBLIC_A_USERNAME'),
                 secret('wa-test-caseofficer-a-password', 'TEST_WA_CASEOFFICER_PUBLIC_A_PASSWORD'),

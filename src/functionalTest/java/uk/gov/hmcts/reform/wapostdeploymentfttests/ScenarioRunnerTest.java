@@ -4,9 +4,11 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.Headers;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
@@ -78,6 +80,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private List<Preparer> preparers;
     @Autowired
     private CcdCaseCreator ccdCaseCreator;
+    @Value("${wa_dlq_process_test.enabled}")
+    protected String dlqProcessTest;
 
     @Before
     public void setUp() {
@@ -129,7 +133,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
             Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
 
-            if (!scenarioEnabled) {
+            if (!scenarioEnabled || !isValidDlqProcessScenario(scenarioValues)) {
                 Logger.say(SCENARIO_DISABLED, description);
                 continue;
             } else {
@@ -170,6 +174,11 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         }
     }
 
+    private boolean isValidDlqProcessScenario(Map<String, Object> scenarioValues) {
+        Boolean dlqProcessOnly = extractOrDefault(scenarioValues, "dlqProcessOnly", false);
+        return (StringUtils.isNotEmpty(dlqProcessTest) && Boolean.parseBoolean(dlqProcessTest)) || !dlqProcessOnly;
+    }
+
     private void processBeforeClauseScenario(TestScenario scenario) throws IOException {
         processScenario(scenario.getBeforeClauseValues(), scenario);
     }
@@ -206,7 +215,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         );
 
         String taskRetrieverOption = MapValueExtractor.extract(
-            values,
+            scenario.getScenarioMapValues(),
             "options.taskRetrievalApi"
         );
 
