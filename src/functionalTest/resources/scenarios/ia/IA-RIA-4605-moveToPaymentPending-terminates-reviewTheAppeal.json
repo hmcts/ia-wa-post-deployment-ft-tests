@@ -23,18 +23,20 @@
   "before": {
     "request": {
       "input": {
-        "eventMessage": {
-          "template": "minimal-ccd-event-message.json",
-          "replacements": {
-            "EventId": "submitAppeal",
-            "NewStateId": "appealSubmitted",
-            "AdditionalData": {
-              "Data": {
-                "appealType": "protection"
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json",
+            "replacements": {
+              "EventId": "submitAppeal",
+              "NewStateId": "appealSubmitted",
+              "AdditionalData": {
+                "Data": {
+                  "appealType": "protection"
+                }
               }
             }
           }
-        }
+        ]
       }
     },
     "expectation": {
@@ -149,18 +151,20 @@
     "request": {
       "credentials": "IALegalRepresentative",
       "input": {
-        "eventMessage": {
-          "template": "minimal-ccd-event-message.json",
-          "replacements": {
-            "EventId": "moveToPaymentPending",
-            "NewStateId": "appealSubmitted",
-            "AdditionalData": {
-              "Data": {
-                "appealType": "protection"
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json",
+            "replacements": {
+              "EventId": "moveToPaymentPending",
+              "NewStateId": "appealSubmitted",
+              "AdditionalData": {
+                "Data": {
+                  "appealType": "protection"
+                }
               }
             }
           }
-        }
+        ]
       }
     },
     "expectation": {

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
@@ -14,6 +15,9 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.util.StringResourceLoader;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.Verifier;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -26,6 +30,9 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBa
 @Component
 @Slf4j
 public class TaskMgmApiRetrieverService implements TaskRetrieverService {
+
+    private static final DateTimeFormatter CREATE_DATE_TIME_PATTER =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss+SSSS");
 
     private final TaskManagementService taskManagementService;
     private final DeserializeValuesUtil deserializeValuesUtil;
@@ -73,7 +80,8 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                         Map.of("caseId", scenario.getCaseId())
                     );
 
-                    Map<String, Object> actualResponse = MapSerializer.deserialize(actualResponseBody);
+                    Map<String, Object> actualResponse = MapSerializer.deserialize(
+                        MapSerializer.sortCollectionElement(actualResponseBody,"tasks", createDateComparator()));
                     Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
 
                     verifiers.forEach(verifier ->
@@ -114,6 +122,14 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
                     return true;
                 });
+    }
+
+    private Comparator<JsonNode> createDateComparator() {
+        return (j1, j2) -> {
+            LocalDateTime d1 = LocalDateTime.parse(j1.findValue("created_date").asText(), CREATE_DATE_TIME_PATTER);
+            LocalDateTime d2 = LocalDateTime.parse(j2.findValue("created_date").asText(), CREATE_DATE_TIME_PATTER);
+            return d1.compareTo(d2);
+        };
     }
 
     private String buildTaskExpectationResponseBody(Map<String, Object> clauseValues,

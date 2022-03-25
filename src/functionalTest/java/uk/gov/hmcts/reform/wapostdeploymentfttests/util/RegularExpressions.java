@@ -11,6 +11,8 @@ public final class RegularExpressions {
         Pattern.compile("\\{\\$LOCAL_DATETIME_TODAY([+-]?\\d*?)?(_WORKING_DAYS)?}");
     public static final Pattern ZONED_DATETIME_TODAY_PATTERN =
         Pattern.compile("\\{\\$ZONED_DATETIME_TODAY([+-]?\\d*?)?(_WORKING_DAYS)?}");
+    public static final Pattern TODAY_TIMESTAMP_PATTERN =
+        Pattern.compile("\\{\\$LOCAL_DATETIME_TODAY([+-]?\\d*?)?([A-Z].*)}");
     public static final Pattern GENERATED_CASE_ID_PATTERN = Pattern.compile("\\{\\$GENERATED_CASE_ID}");
     public static final Pattern RANDOM_UUID_PATTERN = Pattern.compile("\\{\\$RANDOM_UUID}");
     public static final Pattern USER_ID_PATTERN = Pattern.compile("\\{\\$USER_ID}");

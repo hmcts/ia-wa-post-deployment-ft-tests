@@ -17,8 +17,8 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.TaskRetrieverEnum;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.preparers.Preparer;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AzureMessageInjector;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.CcdCaseCreator;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.services.MessageInjector;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.CamundaTaskRetrieverService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.TaskMgmApiRetrieverService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
@@ -59,7 +59,7 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor
 public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
     @Autowired
-    protected AzureMessageInjector azureMessageInjector;
+    protected MessageInjector messageInjector;
     @Autowired
     protected TaskDataVerifier taskDataVerifier;
     @Autowired
@@ -207,7 +207,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
     private void processScenario(Map<String, Object> values, TestScenario scenario) throws IOException {
 
-        azureMessageInjector.injectMessage(
+        messageInjector.injectMessage(
             values,
             scenario.getCaseId(),
             scenario.getJurisdiction(),

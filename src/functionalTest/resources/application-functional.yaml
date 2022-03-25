@@ -1,5 +1,7 @@
 wa_task_management_api:
   url: ${WA_TASK_MANAGEMENT_URL:http://localhost:8087}
+wa_case_event_handler:
+  url: ${WA_CASE_EVENT_HANDLER_URL:http://localhost:8088}
 wa_task_monitor_api:
   url: ${WA_TASK_MONITOR_URL:http://localhost:8077}
 

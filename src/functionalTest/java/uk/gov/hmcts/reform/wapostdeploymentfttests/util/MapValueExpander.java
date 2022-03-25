@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -24,6 +25,7 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpression
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.LOCAL_DATETIME_TODAY_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.RANDOM_UUID_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.TODAY_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.TODAY_TIMESTAMP_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.USER_ID_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.ZONED_DATETIME_TODAY_PATTERN;
@@ -53,9 +55,8 @@ public class MapValueExpander {
 
             CalculateDateParameters calculateDateParameters = buildDateParameters(matcher);
 
-            LocalDate date = dateProviderService.calculateDate(calculateDateParameters);
-
-            LocalDateTime dateTime = date.atStartOfDay();
+            LocalDate adjustedDate = dateProviderService.calculateDate(calculateDateParameters);
+            LocalDateTime dateTime = adjustedDate.atTime(LocalDateTime.now().toLocalTime());
             String token = matcher.group(0);
 
             expandedValue = expandedValue.replace(
@@ -151,6 +152,25 @@ public class MapValueExpander {
         return new CalculateDateParameters(plusOrMinus, dayAdjustment, shouldUseWorkingDays);
     }
 
+    private LocalDateTime buildTodayTimestampParameters(Matcher matcher) {
+        int adjustment = 0;
+        ChronoUnit unit = ChronoUnit.HOURS;
+
+        if (matcher.groupCount() > 1 && !matcher.group(1).isEmpty()) {
+            char plusOrMinus = matcher.group(1).charAt(0);
+            adjustment = Integer.parseInt(matcher.group(1).substring(1));
+            if ('-' == plusOrMinus) {
+                adjustment *= -1;
+            }
+
+            if (matcher.groupCount() == 2 && matcher.group(2) != null && !matcher.group(2).isEmpty()) {
+                unit = ChronoUnit.valueOf(matcher.group(2));
+            }
+        }
+
+        return LocalDateTime.now().plus(adjustment, unit);
+    }
+
     private Object expandValue(Object untypedValue, Map<String, String> additionalValues) {
 
         if (untypedValue instanceof Map) {
@@ -172,6 +192,9 @@ public class MapValueExpander {
                 }
                 if (ZONED_DATETIME_TODAY_PATTERN.matcher(value).find()) {
                     value = expandDateTimeToday(value);
+                }
+                if (TODAY_TIMESTAMP_PATTERN.matcher(value).find()) {
+                    value = expandLocalDateTimeTodayTimestamp(value);
                 }
                 if (RANDOM_UUID_PATTERN.matcher(value).find()) {
                     value = expandRandomUuid(value);
@@ -199,6 +222,26 @@ public class MapValueExpander {
         }
 
         return untypedValue;
+    }
+
+    private String expandLocalDateTimeTodayTimestamp(String value) {
+
+        Matcher matcher = TODAY_TIMESTAMP_PATTERN.matcher(value);
+
+        String expandedValue = value;
+
+        while (matcher.find()) {
+
+            LocalDateTime dateTime = buildTodayTimestampParameters(matcher);
+            String token = matcher.group(0);
+
+            expandedValue = expandedValue.replace(
+                token,
+                dateTime.format(DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_FORMAT))
+            );
+        }
+
+        return expandedValue;
     }
 
     private String expandRandomUuid(String value) {

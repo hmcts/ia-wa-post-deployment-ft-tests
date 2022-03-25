@@ -24,18 +24,20 @@
     "request": {
       "credentials": "IALegalRepresentative",
       "input": {
-        "eventMessage": {
-          "template": "minimal-ccd-event-message.json",
-          "replacements": {
-            "EventId": "listCase",
-            "NewStateId": "prepareForHearing",
-            "AdditionalData": {
-              "Data": {
-                "appealType": "protection"
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json",
+            "replacements": {
+              "EventId": "listCase",
+              "NewStateId": "prepareForHearing",
+              "AdditionalData": {
+                "Data": {
+                  "appealType": "protection"
+                }
               }
             }
           }
-        }
+        ]
       }
     },
     "expectation": {
