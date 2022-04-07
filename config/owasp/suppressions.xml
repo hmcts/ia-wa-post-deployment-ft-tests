@@ -69,4 +69,9 @@
         <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</packageUrl>
         <cve>CVE-2020-36518</cve>
     </suppress>
+    <suppress>
+      <notes>Only applications on Tomcat as a WAR deployment are affected. This supression can be removed with upgrade of spring boot version</notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-beans@.*$</packageUrl>
+        <cve>CVE-2022-22965</cve>
+    </suppress>
 </suppressions>
