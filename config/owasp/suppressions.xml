@@ -71,7 +71,26 @@
     </suppress>
     <suppress>
       <notes>Only applications on Tomcat as a WAR deployment are affected. This supression can be removed with upgrade of spring boot version</notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-beans@.*$</packageUrl>
         <cve>CVE-2022-22965</cve>
     </suppress>
+    <suppress until="2022-06-06">
+      <notes>Suppressing as our spring boot version needs to be updated. Not a user facing api</notes>
+      <cve>CVE-2022-22950</cve>
+    </suppress>
+  <suppress>
+    <notes>Not affected by CVE. Reference: https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#remoting-httpinvoker</notes>
+    <cve>CVE-2016-1000027</cve>
+  </suppress>
+  <suppress>
+    <notes>False positive</notes>
+    <cve>CVE-2013-4152</cve>
+  </suppress>
+  <suppress>
+    <notes>False positive</notes>
+    <cve>CVE-2013-7315</cve>
+  </suppress>
+  <suppress>
+    <notes>False positive</notes>
+     <cve>CVE-2014-0054</cve>
+  </suppress>
 </suppressions>
