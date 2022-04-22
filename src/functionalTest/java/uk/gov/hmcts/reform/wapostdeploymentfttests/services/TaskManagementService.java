@@ -41,9 +41,9 @@ public class TaskManagementService {
                                  Headers authorizationHeaders) {
 
         int expectedStatus = MapValueExtractor.extractOrDefault(
-            clauseValues, "expectation.status", 200);
+            clauseValues, "status", 200);
         int expectedTasks = MapValueExtractor.extractOrDefault(
-            clauseValues, "expectation.numberOfTasksAvailable", 1);
+            clauseValues, "numberOfTasksAvailable", 1);
 
         Map<String, Object> searchParameter = Map.of(
             "key", "caseId",
@@ -92,7 +92,7 @@ public class TaskManagementService {
 
 
         int expectedStatus = MapValueExtractor.extractOrDefault(
-            clauseValues, "expectation.status", 200);
+            clauseValues, "status", 200);
 
         result.then().assertThat()
             .statusCode(expectedStatus)

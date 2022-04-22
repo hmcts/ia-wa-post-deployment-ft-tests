@@ -9,17 +9,19 @@
   },
   "required": {
     "credentials": "IALegalRepresentative",
-    "ccd": {
-      "eventId": "submitAppeal",
-      "state": "appealStarted",
-      "caseData": {
-        "template": "minimal-appeal-started.json",
-        "replacements": {
-          "appealType": "protection",
-          "homeOfficeDecisionDate": "{$TODAY-14}"
+    "ccd": [
+      {
+        "eventId": "submitAppeal",
+        "state": "appealStarted",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "appealType": "protection",
+            "homeOfficeDecisionDate": "{$TODAY-14}"
+          }
         }
       }
-    }
+    ]
   },
   "test": {
     "request": {
@@ -57,149 +59,154 @@
         ]
       }
     },
-    "expectation": {
-      "credentials": "IACaseworker",
-      "status": 200,
-      "numberOfTasksAvailable": 2,
-      "taskData": {
-        "template": "minimal-task-response.json",
-        "replacements": {
-          "tasks": [
+    "expectations": [
+      {
+        "credentials": "IACaseworker",
+        "status": 200,
+        "numberOfTasksAvailable": 2,
+        "taskData": {
+          "template": "minimal-task-response.json",
+          "replacements": {
+            "tasks": [
+              {
+                "id": "{$VERIFIER-UUID}",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_name": "Functional PostDeployment",
+                "type": "reviewTheAppeal",
+                "name": "Review the appeal",
+                "task_title": "Review the appeal",
+                "task_state": "unassigned",
+                "case_type_id": "Asylum",
+                "case_category": "Protection",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "location_name": "Taylor House",
+                "location": "765324",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "region": "1",
+                "auto_assigned": false,
+                "warnings": false,
+                "warning_list": {
+                  "values": []
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "decision_making_work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Refer",
+                    "Own",
+                    "Manage",
+                    "Cancel"
+                  ]
+                },
+                "role_category": "LEGAL_OPERATIONS"
+              },
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "name": "Follow-up overdue respondent evidence",
+                "type": "followUpOverdueRespondentEvidence",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "Follow-up overdue respondent evidence",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "LEGAL_OPERATIONS",
+                "warning_list": {
+                  "values": [
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "decision_making_work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Refer",
+                    "Own",
+                    "Manage",
+                    "Cancel"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "roleData": {
+          "roles": [
             {
-              "id": "{$VERIFIER-UUID}",
-              "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-              "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
-              "case_id": "{$GENERATED_CASE_ID}",
-              "case_name": "Functional PostDeployment",
-              "type": "reviewTheAppeal",
-              "name": "Review the appeal",
-              "task_title": "Review the appeal",
-              "task_state": "unassigned",
-              "case_type_id": "Asylum",
-              "case_category": "Protection",
-              "task_system": "SELF",
-              "security_classification": "PUBLIC",
-              "location_name": "Taylor House",
-              "location": "765324",
-              "execution_type": "Case Management Task",
-              "jurisdiction": "IA",
-              "region": "1",
-              "auto_assigned": false,
-              "warnings": false,
-              "warning_list": {
-                "values": []
-              },
-              "case_management_category": "Protection",
-              "work_type_id": "decision_making_work",
-              "permissions": {
-                "values": [
-                  "Read",
-                  "Refer",
-                  "Own"
-                ]
-              },
-              "role_category": "LEGAL_OPERATIONS"
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "case-manager",
+              "permissions": [
+                "Read",
+                "Refer",
+                "Own"
+              ],
+              "authorisations": [
+              ]
             },
             {
-              "id": "{$VERIFIER-UUID}",
-              "case_name": "Functional PostDeployment",
-              "case_id": "{$GENERATED_CASE_ID}",
-              "case_category": "Protection",
-              "name": "Follow-up overdue respondent evidence",
-              "type": "followUpOverdueRespondentEvidence",
-              "task_state": "unassigned",
-              "task_system": "SELF",
-              "security_classification": "PUBLIC",
-              "task_title": "Follow-up overdue respondent evidence",
-              "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-              "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
-              "execution_type": "Case Management Task",
-              "jurisdiction": "IA",
-              "case_type_id": "Asylum",
-              "region": "1",
-              "location": "765324",
-              "location_name": "Taylor House",
-              "auto_assigned": false,
-              "warnings": false,
+              "role_category": "JUDICIAL",
+              "role_name": "judge",
+              "permissions": [
+                "Read",
+                "Refer",
+                "Execute"
+              ],
+              "authorisations": [
+                "373"
+              ]
+            },
+            {
               "role_category": "LEGAL_OPERATIONS",
-              "warning_list": {
-                "values": [
-
-                ]
-              },
-              "case_management_category": "Protection",
-              "work_type_id": "decision_making_work",
-              "permissions": {
-                "values": [
-                  "Read",
-                  "Refer",
-                  "Own"
-                ]
-              }
+              "role_name": "senior-tribunal-caseworker",
+              "permissions": [
+                "Read",
+                "Refer",
+                "Own"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_name": "task-supervisor",
+              "permissions": [
+                "Read",
+                "Refer",
+                "Manage",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "tribunal-caseworker",
+              "permissions": [
+                "Read",
+                "Refer",
+                "Own"
+              ],
+              "authorisations": [
+              ]
             }
           ]
         }
-      },
-      "roleData": {
-        "roles": [
-          {
-            "role_category": "LEGAL_OPERATIONS",
-            "role_name": "case-manager",
-            "permissions": [
-              "Read",
-              "Refer",
-              "Own"
-            ],
-            "authorisations": [
-            ]
-          },
-          {
-            "role_category": "JUDICIAL",
-            "role_name": "judge",
-            "permissions": [
-              "Read",
-              "Refer",
-              "Execute"
-            ],
-            "authorisations": [
-              "373"
-            ]
-          },
-          {
-            "role_category": "LEGAL_OPERATIONS",
-            "role_name": "senior-tribunal-caseworker",
-            "permissions": [
-              "Read",
-              "Refer",
-              "Own"
-            ],
-            "authorisations": [
-            ]
-          },
-          {
-            "role_name": "task-supervisor",
-            "permissions": [
-              "Read",
-              "Refer",
-              "Manage",
-              "Cancel"
-            ],
-            "authorisations": [
-            ]
-          },
-          {
-            "role_category": "LEGAL_OPERATIONS",
-            "role_name": "tribunal-caseworker",
-            "permissions": [
-              "Read",
-              "Refer",
-              "Own"
-            ],
-            "authorisations": [
-            ]
-          }
-        ]
       }
-    }
+    ]
   }
 }

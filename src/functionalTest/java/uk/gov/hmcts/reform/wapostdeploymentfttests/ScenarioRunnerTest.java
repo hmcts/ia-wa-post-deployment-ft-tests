@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.Headers;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.awaitility.core.ConditionEvaluationLogger;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,17 @@ import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
+import org.springframework.util.StopWatch;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.TaskRetrieverEnum;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.preparers.Preparer;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.CcdCaseCreator;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.MessageInjector;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.services.RestMessageService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.CamundaTaskRetrieverService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.TaskMgmApiRetrieverService;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.Logger;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapSerializer;
@@ -33,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -42,13 +47,17 @@ import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 import static java.util.Collections.emptyMap;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertFalse;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil.addAssignedCaseId;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_BEFORE_COMPLETED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_BEFORE_FOUND;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_DISABLED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_ENABLED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_FINISHED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_RUNNING;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_RUNNING_TIME;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_START;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_SUCCESSFUL;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.ENVIRONMENT_PROPERTIES;
@@ -80,6 +89,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private List<Preparer> preparers;
     @Autowired
     private CcdCaseCreator ccdCaseCreator;
+    @Autowired
+    private RestMessageService restMessageService;
     @Value("${wa_dlq_process_test.enabled}")
     protected String dlqProcessTest;
 
@@ -90,6 +101,10 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
     @Test
     public void scenarios_should_behave_as_specified() throws IOException, URISyntaxException {
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
 
         loadPropertiesIntoMapValueExpander();
 
@@ -107,6 +122,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             runAllScenariosFor(directory.getName());
         }
 
+        stopWatch.stop();
+        Logger.say(SCENARIO_RUNNING_TIME, stopWatch.getTotalTimeSeconds());
     }
 
     private void runAllScenariosFor(String directoryName) throws IOException {
@@ -195,21 +212,31 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         scenario.setRequestAuthorizationHeaders(requestAuthorizationHeaders);
 
+        List<Map<String, Object>> ccdCaseToCreate = new ArrayList<>(Objects.requireNonNull(
+            MapValueExtractor.extract(scenarioValues, "required.ccd")));
 
-        String caseId = ccdCaseCreator.createCase(
-            scenarioValues,
-            scenario.getJurisdiction(),
-            requestAuthorizationHeaders
-        );
+        ccdCaseToCreate.forEach(caseValues -> {
+            try {
+                String caseId = ccdCaseCreator.createCase(
+                    caseValues,
+                    scenario.getJurisdiction(),
+                    scenario.getCaseType(),
+                    requestAuthorizationHeaders
+                );
+                addAssignedCaseId(caseValues, caseId, scenario);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
-        scenario.setCaseId(caseId);
+
     }
 
     private void processScenario(Map<String, Object> values, TestScenario scenario) throws IOException {
 
         messageInjector.injectMessage(
             values,
-            scenario.getCaseId(),
+            scenario,
             scenario.getJurisdiction(),
             scenario.getRequestAuthorizationHeaders()
         );
@@ -219,21 +246,76 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             "options.taskRetrievalApi"
         );
 
-        String expectationCredentials = extractOrThrow(values, "expectation.credentials");
-        Headers expectationAuthorizationHeaders = getAuthorizationHeaders(expectationCredentials);
-        scenario.setExpectationAuthorizationHeaders(expectationAuthorizationHeaders);
+        List<Map<String, Object>> expectations = new ArrayList<>(Objects.requireNonNull(
+            MapValueExtractor.extract(values, "expectations")));
 
-        if (TaskRetrieverEnum.CAMUNDA_API.getId().equals(taskRetrieverOption)) {
-            camundaTaskRetrievableService.retrieveTask(
-                values,
-                scenario
-            );
-        } else {
-            taskMgmApiRetrievableService.retrieveTask(
-                values,
-                scenario
-            );
-        }
+        expectations.forEach(expectationValue -> {
+
+            int expectedTasks = MapValueExtractor.extractOrDefault(
+                expectationValue, "numberOfTasksAvailable", 0);
+            int expectedMessages = MapValueExtractor.extractOrDefault(
+                expectationValue, "numberOfMessagesToCheck", 0);
+            String expectationCaseId = CaseIdUtil.extractAssignedCaseIdOrDefault(expectationValue, scenario);
+
+            if (expectedTasks > 0) {
+                String expectationCredentials = extractOrThrow(expectationValue, "credentials");
+                Headers expectationAuthorizationHeaders = getAuthorizationHeaders(expectationCredentials);
+                scenario.setExpectationAuthorizationHeaders(expectationAuthorizationHeaders);
+
+                if (TaskRetrieverEnum.CAMUNDA_API.getId().equals(taskRetrieverOption)) {
+                    camundaTaskRetrievableService.retrieveTask(
+                        expectationValue,
+                        scenario,
+                        expectationCaseId
+                    );
+                } else {
+                    taskMgmApiRetrievableService.retrieveTask(
+                        expectationValue,
+                        scenario,
+                        expectationCaseId
+                    );
+                }
+            }
+
+            if (expectedMessages > 0) {
+                await()
+                    .ignoreException(AssertionError.class)
+                    .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
+                    .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
+                    .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
+                    .until(
+                        () -> {
+                            String actualMessageResponse = restMessageService.getCaseMessages(expectationCaseId);
+
+                            String expectedMessageResponse = buildMessageExpectationResponseBody(
+                                expectationValue,
+                                Map.of("caseId", expectationCaseId)
+                            );
+
+                            Map<String, Object> actualResponse = MapSerializer.deserialize(actualMessageResponse);
+                            Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedMessageResponse);
+
+                            verifiers.forEach(verifier ->
+                                                  verifier.verify(
+                                                      expectationValue,
+                                                      expectedResponse,
+                                                      actualResponse
+                                                  )
+                            );
+
+                            return true;
+                        });
+            }
+        });
+    }
+
+    private String buildMessageExpectationResponseBody(Map<String, Object> clauseValues,
+                                                       Map<String, String> additionalValues)
+        throws IOException {
+
+        Map<String, Object> scenario = deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
+        Map<String, Object> roleData = MapValueExtractor.extract(scenario, "messageData");
+        return MapSerializer.serialize(roleData);
     }
 
 

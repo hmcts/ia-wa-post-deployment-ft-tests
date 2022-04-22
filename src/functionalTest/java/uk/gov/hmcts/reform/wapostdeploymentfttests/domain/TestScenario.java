@@ -4,6 +4,7 @@ import io.restassured.http.Headers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class TestScenario {
@@ -15,7 +16,7 @@ public class TestScenario {
     private final String jurisdiction;
     private final String caseType;
 
-    private String caseId;
+    private final Map<String, String> caseIdMap;
     private Headers requestAuthorizationHeaders;
     private Headers expectationAuthorizationHeaders;
 
@@ -31,6 +32,7 @@ public class TestScenario {
         this.caseType = caseType;
         this.beforeClauseValues = beforeClauseValues;
         this.testClauseValues = testClauseValues;
+        this.caseIdMap = new HashMap<>();
     }
 
     public Map<String, Object> getScenarioMapValues() {
@@ -42,12 +44,13 @@ public class TestScenario {
         return scenarioSource;
     }
 
-    public String getCaseId() {
-        return caseId;
+
+    public void addAssignedCaseId(String key, String caseId) {
+        caseIdMap.put(key, caseId);
     }
 
-    public void setCaseId(String caseId) {
-        this.caseId = caseId;
+    public String getAssignedCaseId(String key) {
+        return caseIdMap.get(key);
     }
 
     public String getCaseType() {

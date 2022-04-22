@@ -48,6 +48,9 @@ public final class Logger {
             case SCENARIO_RUNNING:
                 colouredPrintLine(ANSI_CYAN, "ℹ️ SCENARIO: Processing scenario");
                 break;
+            case SCENARIO_RUNNING_TIME:
+                colouredPrintLine(ANSI_GREEN, "✅ SCENARIO: Total time taken to complete test " + content + " Seconds");
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + message);
         }

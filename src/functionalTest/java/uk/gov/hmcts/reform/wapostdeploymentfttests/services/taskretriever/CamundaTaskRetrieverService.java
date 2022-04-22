@@ -26,7 +26,7 @@ public class CamundaTaskRetrieverService implements TaskRetrieverService {
     private DeserializeValuesUtil deserializeValuesUtil;
 
     @Override
-    public void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario) {
+    public void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario, String caseId) {
 
         Map<String, Object> deserializedClauseValues = deserializeValuesUtil.expandMapValues(clauseValues, emptyMap());
 
@@ -37,7 +37,7 @@ public class CamundaTaskRetrieverService implements TaskRetrieverService {
             .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
             .until(
                 () -> {
-                    camundaService.searchByCaseIdJurisdictionAndCaseType(deserializedClauseValues, scenario);
+                    camundaService.searchByCaseIdJurisdictionAndCaseType(deserializedClauseValues, scenario, caseId);
                     // TODO: Do we want to verify responses for camunda?
                     return true;
                 });

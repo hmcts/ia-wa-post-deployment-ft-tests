@@ -17,7 +17,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Service
-public class RestMessageInjector {
+public class RestMessageService {
 
     @Value("${wa_case_event_handler.url}")
     private String caseEventHandlerUrl;
@@ -54,6 +54,23 @@ public class RestMessageInjector {
 
         System.out.println("Message injected successfully using Case Event Handler REST endpoint");
         System.out.println("REST response message body: " + actualResponseBody);
+    }
+
+    public String getCaseMessages(String caseId) {
+        System.out.println(
+            format("Attempting to retrieve messages from Case Event Handler using REST endpoint with "
+                       + "caseId: %s", caseId)
+        );
+
+        Headers systemUserUserToken = authorizationHeadersProvider.getWaSystemUserAuthorization();
+
+        Response result = given()
+            .headers(systemUserUserToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get(caseEventHandlerUrl + "/messages/query?case_id=" + caseId);
+
+        return result.then().extract().body().asString();
     }
 
     @NotNull

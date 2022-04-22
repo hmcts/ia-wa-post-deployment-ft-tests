@@ -21,13 +21,14 @@ public class CamundaService {
     private CamundaClient camundaClient;
 
     public void searchByCaseIdJurisdictionAndCaseType(Map<String, Object> clauseValues,
-                                                      TestScenario scenario) {
+                                                      TestScenario scenario,
+                                                      String caseId) {
         int expectedTasks = MapValueExtractor.extractOrDefault(
-            clauseValues, "expectation.numberOfTasksAvailable", 1);
+            clauseValues, "numberOfTasksAvailable", 1);
 
         List<CamundaTask> response = camundaClient.getTasksByTaskVariables(
             scenario.getExpectationAuthorizationHeaders().getValue("ServiceAuthorization"),
-            "caseId_eq_" + scenario.getCaseId()
+            "caseId_eq_" + caseId
             + ",jurisdiction_eq_" + scenario.getJurisdiction()
             + ",caseTypeId_eq_" + scenario.getCaseType(),
             "created",

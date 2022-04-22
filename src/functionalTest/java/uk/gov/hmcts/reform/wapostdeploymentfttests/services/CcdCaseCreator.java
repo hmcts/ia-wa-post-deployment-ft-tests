@@ -42,21 +42,17 @@ public class CcdCaseCreator {
 
     public String createCase(Map<String, Object> scenario,
                              String jurisdiction,
+                             String caseType,
                              Headers authorizationHeaders) throws IOException {
-
-        final String caseType = MapValueExtractor.extractOrThrow(scenario, "caseType");
 
         Map<String, String> ccdTemplatesByFilename =
             StringResourceLoader.load(
                 "/templates/" + jurisdiction.toLowerCase(Locale.ENGLISH) + "/ccd/*.json"
             );
 
-        Map<String, Object> caseData = getCaseData(
-            MapValueExtractor.extract(scenario, "required.ccd"),
-            ccdTemplatesByFilename
-        );
+        Map<String, Object> caseData = getCaseData(scenario, ccdTemplatesByFilename);
 
-        String eventId = MapValueExtractor.extractOrThrow(scenario, "required.ccd.eventId");
+        String eventId = MapValueExtractor.extractOrThrow(scenario, "eventId");
 
         String caseId = createInitialStartEventAndSubmit(
             jurisdiction.equals("IA") ? "startAppeal" : eventId,

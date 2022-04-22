@@ -3,7 +3,9 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 import io.restassured.http.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam.UserInfo;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapMerger;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapSerializer;
@@ -29,13 +31,13 @@ public class MessageInjector {
     private AzureMessageInjector azureMessageInjector;
 
     @Autowired
-    private RestMessageInjector restMessageInjector;
+    private RestMessageService restMessageService;
 
     @Autowired
     private DeserializeValuesUtil deserializeValuesUtil;
 
     public void injectMessage(Map<String, Object> clauseValues,
-                              String testCaseId,
+                              TestScenario scenario,
                               String jurisdiction,
                               Headers authorizationHeaders) throws IOException {
 
@@ -48,23 +50,16 @@ public class MessageInjector {
         String userToken = authorizationHeaders.getValue(AUTHORIZATION);
         UserInfo userInfo = authorizationHeadersProvider.getUserInfo(userToken);
 
-        Map<String, String> additionalValues = Map.of(
-            "caseId", testCaseId,
-            "userId", userInfo.getEmail()
-        );
-
-        deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
-
         List<Map<String, Object>> messagesToSend = new ArrayList<>(Objects.requireNonNull(
             MapValueExtractor.extract(clauseValues, "request.input.eventMessages")));
 
         messagesToSend.forEach(messageData -> {
             try {
+                String testCaseId = CaseIdUtil.extractAssignedCaseIdOrDefault(messageData, scenario);
                 String eventMessage = getMessageData(messageData,
-                    eventMessageTemplatesByFilename,
-                    additionalValues
-                );
-
+                                                     eventMessageTemplatesByFilename,
+                                                     testCaseId,
+                                                     userInfo.getEmail());
                 String destination = MapValueExtractor.extractOrDefault(messageData, "destination", "ASB");
 
                 sendMessage(eventMessage, testCaseId, jurisdictionId, destination);
@@ -77,9 +72,9 @@ public class MessageInjector {
 
     private void sendMessage(String message, String caseId, String jurisdictionId, String destination) {
         if ("RestEndpoint".equals(destination)) {
-            restMessageInjector.sendMessage(message, caseId, false);
+            restMessageService.sendMessage(message, caseId, false);
         } else if ("RestEndpointFromDLQ".equals(destination)) {
-            restMessageInjector.sendMessage(message, caseId, true);
+            restMessageService.sendMessage(message, caseId, true);
         } else {
             // inject into ASB
             azureMessageInjector.sendMessage(message, caseId, jurisdictionId);
@@ -90,10 +85,16 @@ public class MessageInjector {
     private String getMessageData(
         Map<String, Object> messageDataInput,
         Map<String, String> templatesByFilename,
-        Map<String, String> additionalValues
+        String caseId,
+        String email
     ) throws IOException {
 
         String templateFilename = MapValueExtractor.extract(messageDataInput, "template");
+
+        Map<String, String> additionalValues = Map.of(
+            "caseId", caseId,
+            "userId", email
+        );
 
         Map<String, Object> eventMessageData = deserializeValuesUtil.deserializeStringWithExpandedValues(
             templatesByFilename.get(templateFilename),

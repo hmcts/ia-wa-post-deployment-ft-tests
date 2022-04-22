@@ -6,5 +6,5 @@ import java.util.Map;
 
 public interface TaskRetrieverService {
 
-    void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario);
+    void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario, String caseId);
 }

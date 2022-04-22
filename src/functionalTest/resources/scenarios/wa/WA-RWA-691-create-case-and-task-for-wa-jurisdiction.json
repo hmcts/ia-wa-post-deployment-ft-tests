@@ -8,13 +8,15 @@
   },
   "required": {
     "credentials": "WaSystemUser",
-    "ccd": {
-      "eventId": "CREATE",
-      "state": "",
-      "caseData": {
-        "template": "minimal-appeal-started.json"
+    "ccd": [
+      {
+        "eventId": "CREATE",
+        "state": "",
+        "caseData": {
+          "template": "minimal-appeal-started.json"
+        }
       }
-    }
+    ]
   },
   "test": {
     "request": {
@@ -25,10 +27,12 @@
         }
       }
     },
-    "expectation": {
-      "credentials": "WaSystemUser",
-      "status": 200,
-      "numberOfTasksAvailable": 1
-    }
+    "expectations": [
+      {
+        "credentials": "WaSystemUser",
+        "status": 200,
+        "numberOfTasksAvailable": 1
+      }
+    ]
   }
 }

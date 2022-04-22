@@ -48,14 +48,14 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
     @SneakyThrows
     @Override
-    public void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario) {
+    public void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario, String caseId) {
 
         Map<String, String> taskTemplatesByFilename =
             StringResourceLoader.load(
                 "/templates/" + scenario.getJurisdiction().toLowerCase(Locale.ENGLISH) + "/task/*.json"
             );
 
-        Map<String, String> additionalValues = Map.of("caseId", scenario.getCaseId());
+        Map<String, String> additionalValues = Map.of("caseId", caseId);
 
         Map<String, Object> deserializedClauseValues =
             deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
@@ -70,14 +70,14 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
                     String actualResponseBody = taskManagementService.searchByCaseId(
                         deserializedClauseValues,
-                        scenario.getCaseId(),
+                        caseId,
                         scenario.getExpectationAuthorizationHeaders()
                     );
 
                     String expectedResponseBody = buildTaskExpectationResponseBody(
                         deserializedClauseValues,
                         taskTemplatesByFilename,
-                        Map.of("caseId", scenario.getCaseId())
+                        Map.of("caseId", caseId)
                     );
 
                     Map<String, Object> actualResponse = MapSerializer.deserialize(
@@ -105,7 +105,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
                     String rolesExpectationResponseBody = buildRolesExpectationResponseBody(
                         deserializedClauseValues,
-                        Map.of("caseId", scenario.getCaseId())
+                        Map.of("caseId", caseId)
                     );
 
                     log.info("expected roles: {}", rolesExpectationResponseBody);
@@ -138,8 +138,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
         Map<String, Object> scenario = deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
 
-        Map<String, Object> expectation = MapValueExtractor.extract(scenario, "expectation");
-        Map<String, Object> taskData = MapValueExtractor.extract(expectation, "taskData");
+        Map<String, Object> taskData = MapValueExtractor.extract(scenario, "taskData");
 
         String templateFilename = MapValueExtractor.extract(taskData, "template");
 
@@ -161,8 +160,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                                                     Map<String, String> additionalValues) throws IOException {
 
         Map<String, Object> scenario = deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
-        Map<String, Object> expectation = MapValueExtractor.extract(scenario, "expectation");
-        Map<String, Object> roleData = MapValueExtractor.extract(expectation, "roleData");
+        Map<String, Object> roleData = MapValueExtractor.extract(scenario, "roleData");
         return MapSerializer.serialize(roleData);
     }
 }
