@@ -34,7 +34,7 @@
             "replacements": {
               "EventId": "requestRespondentEvidence",
               "NewStateId": "awaitingRespondentEvidence",
-              "EventTimeStamp": "{$LOCAL_DATETIME_TODAY-2HOURS}",
+              "EventTimeStamp": "{$LOCAL_DATETIME_TODAY-1HOURS}",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection"
@@ -48,7 +48,6 @@
             "replacements": {
               "EventId": "submitAppeal",
               "NewStateId": "appealSubmitted",
-              "EventTimeStamp": "{$LOCAL_DATETIME_TODAY-1HOURS}",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection"
