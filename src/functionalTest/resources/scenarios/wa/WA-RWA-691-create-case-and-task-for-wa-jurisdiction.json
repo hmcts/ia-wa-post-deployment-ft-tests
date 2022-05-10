@@ -1,6 +1,6 @@
 {
   "description": "create case and task for the WA jurisdiction",
-  "enabled": false,
+  "enabled": true,
   "jurisdiction": "WA",
   "caseType": "WaCaseType",
   "options": {
@@ -22,9 +22,11 @@
     "request": {
       "credentials": "WaSystemUser",
       "input": {
-        "eventMessage": {
-          "template": "minimal-ccd-event-message.json"
-        }
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json"
+          }
+        ]
       }
     },
     "expectations": [
