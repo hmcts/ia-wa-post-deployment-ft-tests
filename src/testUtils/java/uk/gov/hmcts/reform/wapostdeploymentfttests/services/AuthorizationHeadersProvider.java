@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
-public class AuthorizationHeadersProvider {
+public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
 
     public static final String AUTHORIZATION = "Authorization";
     public static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
@@ -80,7 +80,6 @@ public class AuthorizationHeadersProvider {
         );
     }
 
-
     public Header getCaseworkerAAuthorizationOnly() {
 
         return getUserAuthorizationOnly("TEST_WA_CASEOFFICER_PUBLIC_A_USERNAME",
@@ -133,6 +132,7 @@ public class AuthorizationHeadersProvider {
         return body;
     }
 
+    @Override
     public UserInfo getUserInfo(String userToken) {
         return userInfo.computeIfAbsent(
             userToken,
@@ -141,7 +141,18 @@ public class AuthorizationHeadersProvider {
 
     }
 
-    public Headers getServiceAuthorizationHeadersOnly() {
-        return new Headers(getServiceAuthorizationHeader());
+    @Override
+    public Headers getAuthorizationHeaders(String credentials) {
+        switch (credentials) {
+            case "IALegalRepresentative":
+                return getLegalRepAuthorization();
+            case "IACaseworker":
+                return getTribunalCaseworkerAAuthorization();
+            case "WaSystemUser":
+                return getWaSystemUserAuthorization();
+            default:
+                throw new IllegalStateException("Credentials implementation for '" + credentials + "' not found");
+        }
+
     }
 }

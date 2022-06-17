@@ -187,7 +187,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 Logger.say(SCENARIO_SUCCESSFUL, description);
                 Logger.say(SCENARIO_FINISHED);
             }
-
         }
     }
 
@@ -204,11 +203,12 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         processScenario(scenario.getTestClauseValues(), scenario);
     }
 
-    private void createBaseCcdCase(TestScenario scenario) throws IOException {
+    private void createBaseCcdCase(TestScenario scenario) {
         Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
         String requestCredentials = extractOrThrow(scenarioValues, "required.credentials");
 
-        Headers requestAuthorizationHeaders = getAuthorizationHeaders(requestCredentials);
+        Headers requestAuthorizationHeaders = authorizationHeadersProvider
+            .getAuthorizationHeaders(requestCredentials);
 
         scenario.setRequestAuthorizationHeaders(requestAuthorizationHeaders);
 
@@ -228,8 +228,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 e.printStackTrace();
             }
         });
-
-
     }
 
     private void processScenario(Map<String, Object> values, TestScenario scenario) throws IOException {
@@ -257,56 +255,66 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 expectationValue, "numberOfMessagesToCheck", 0);
             String expectationCaseId = CaseIdUtil.extractAssignedCaseIdOrDefault(expectationValue, scenario);
 
-            if (expectedTasks > 0) {
-                String expectationCredentials = extractOrThrow(expectationValue, "credentials");
-                Headers expectationAuthorizationHeaders = getAuthorizationHeaders(expectationCredentials);
-                scenario.setExpectationAuthorizationHeaders(expectationAuthorizationHeaders);
+            verifyTasks(scenario, taskRetrieverOption, expectationValue, expectedTasks, expectationCaseId);
 
-                if (TaskRetrieverEnum.CAMUNDA_API.getId().equals(taskRetrieverOption)) {
-                    camundaTaskRetrievableService.retrieveTask(
-                        expectationValue,
-                        scenario,
-                        expectationCaseId
-                    );
-                } else {
-                    taskMgmApiRetrievableService.retrieveTask(
-                        expectationValue,
-                        scenario,
-                        expectationCaseId
-                    );
-                }
-            }
-
-            if (expectedMessages > 0) {
-                await()
-                    .ignoreException(AssertionError.class)
-                    .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
-                    .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
-                    .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
-                    .until(
-                        () -> {
-                            String actualMessageResponse = restMessageService.getCaseMessages(expectationCaseId);
-
-                            String expectedMessageResponse = buildMessageExpectationResponseBody(
-                                expectationValue,
-                                Map.of("caseId", expectationCaseId)
-                            );
-
-                            Map<String, Object> actualResponse = MapSerializer.deserialize(actualMessageResponse);
-                            Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedMessageResponse);
-
-                            verifiers.forEach(verifier ->
-                                                  verifier.verify(
-                                                      expectationValue,
-                                                      expectedResponse,
-                                                      actualResponse
-                                                  )
-                            );
-
-                            return true;
-                        });
-            }
+            verifyMessages(expectationValue, expectedMessages, expectationCaseId);
         });
+    }
+
+    private void verifyMessages(Map<String, Object> expectationValue, int expectedMessages, String expectationCaseId) {
+        if (expectedMessages > 0) {
+            await()
+                .ignoreException(AssertionError.class)
+                .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
+                .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
+                .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
+                .until(
+                    () -> {
+                        String actualMessageResponse = restMessageService.getCaseMessages(expectationCaseId);
+
+                        String expectedMessageResponse = buildMessageExpectationResponseBody(
+                            expectationValue,
+                            Map.of("caseId", expectationCaseId)
+                        );
+
+                        Map<String, Object> actualResponse = MapSerializer.deserialize(actualMessageResponse);
+                        Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedMessageResponse);
+
+                        verifiers.forEach(verifier ->
+                                              verifier.verify(
+                                                  expectationValue,
+                                                  expectedResponse,
+                                                  actualResponse
+                                              )
+                        );
+
+                        return true;
+                    });
+        }
+    }
+
+    private void verifyTasks(TestScenario scenario, String taskRetrieverOption, Map<String, Object> expectationValue,
+                             int expectedTasks, String expectationCaseId) {
+        if (expectedTasks > 0) {
+            String expectationCredentials = extractOrThrow(expectationValue, "credentials");
+            Headers expectationAuthorizationHeaders = authorizationHeadersProvider
+                .getAuthorizationHeaders(expectationCredentials);
+            scenario.setExpectationAuthorizationHeaders(expectationAuthorizationHeaders);
+
+            if (TaskRetrieverEnum.CAMUNDA_API.getId().equals(taskRetrieverOption)) {
+                camundaTaskRetrievableService.retrieveTask(
+                    expectationValue,
+                    scenario,
+                    expectationCaseId
+                );
+            } else {
+                taskMgmApiRetrievableService.retrieveTask(
+                    expectationValue,
+                    scenario,
+                    expectationCaseId
+                );
+            }
+        }
     }
 
     private String buildMessageExpectationResponseBody(Map<String, Object> clauseValues,
@@ -328,19 +336,5 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             .map(propertySource -> ((EnumerablePropertySource) propertySource).getPropertyNames())
             .flatMap(Arrays::stream)
             .forEach(name -> ENVIRONMENT_PROPERTIES.setProperty(name, environment.getProperty(name)));
-    }
-
-    private Headers getAuthorizationHeaders(String credentials) {
-        switch (credentials) {
-            case "IALegalRepresentative":
-                return authorizationHeadersProvider.getLegalRepAuthorization();
-            case "IACaseworker":
-                return authorizationHeadersProvider.getTribunalCaseworkerAAuthorization();
-            case "WaSystemUser":
-                return authorizationHeadersProvider.getWaSystemUserAuthorization();
-            default:
-                throw new IllegalStateException("Credentials implementation for '" + credentials + "' not found");
-        }
-
     }
 }

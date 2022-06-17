@@ -16,7 +16,6 @@ This way we can test user paths end to end.
   * case event handler
   * workflow-api
   * task-management-api
-  * configuration-api
   * case-api
   * documentation-api
   * notification-api
@@ -71,6 +70,28 @@ export WA_DLQ_PROCESS_ENABLED=true
 When you run post deployment tests on Jenkins pipeline, by default this flag is set to false in Jenkins parameter and wa-aat secret vault (key: wa-dlq-process-enabled). You can manually run the Jenkins build and then pass the parameter to turn the DLQ process flow on.
 
 Once the DLQ Process feature is released, this behaviour should be changed to run post deployment test through DLQ process flow by default.
+
+## Tips for onboarding teams
+if you are onboarding into Task Management, you may clone this repository and customize the following items to setup
+your own post deployment tests:
+# src/functionalTest/resources/application-functional.yaml
+- document_management.url: set your local document store api
+- ccd_gateway.url: set your local ccd gateway
+- core_case_data.api.url: set your local ccd case data api
+- azure.servicebus.connection-string: set your service bus connection string
+- azure.servicebus.topic set your service bus topic name
+
+# src/functionalTest/resources/templates
+add your case data template file in json format, this template will be used in your scenarios
+# src/functionalTest/resources/scenarios
+- add your test scenario files in json format
+# src/testUtils/java/uk/gov/hmcts/reform/wapostdeploymentfttests/services/AuthorizationHeadersProvider.java
+customize this class to setup your authorization headers and user credentials.
+# Caveat
+This repository is still under development and so changes may occur in the future.
+We will update this Readme file anytime we modify the structure or the underlying framework.
+If you are unsure about something, please check with the team for clarification.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
