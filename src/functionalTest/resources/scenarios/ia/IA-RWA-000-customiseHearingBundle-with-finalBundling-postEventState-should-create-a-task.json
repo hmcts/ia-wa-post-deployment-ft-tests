@@ -1,5 +1,5 @@
 {
-  "description": "createCaseSummary with finalBundling post event state should create a createHearingBundle task",
+  "description": "customiseHearingBundle with finalBundling post event state should create a allocateHearingJudge task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -30,7 +30,7 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "createCaseSummary",
+              "EventId": "customiseHearingBundle",
               "NewStateId": "finalBundling",
               "AdditionalData": {
                 "Data": {
@@ -46,7 +46,7 @@
       {
         "credentials": "IACaseworker",
         "status": 200,
-        "numberOfTasksAvailable": 1,
+        "numberOfTasksAvailable": 2,
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -56,14 +56,11 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Create Hearing Bundle",
-                "type": "createHearingBundle",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Create Hearing Bundle",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -72,19 +69,12 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "LEGAL_OPERATIONS",
-                "warning_list": {
-                  "values": [
-                  ]
-                },
-                "case_management_category": "Protection",
-                "work_type_id": "hearing_work",
                 "permissions": {
                   "values": [
                     "Read",
                     "Refer",
-                    "Own",
                     "Manage",
+                    "Execute",
                     "Cancel"
                   ]
                 }
@@ -92,62 +82,71 @@
             ]
           }
         },
+        "numberOfRolesAvailable": 5,
         "roleData": {
-          "roles": [
+          "roles":[
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "case-manager",
-              "permissions": [
+              "role_category":"JUDICIAL",
+              "role_name":"hearing-judge",
+              "permissions":[
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
               ]
             },
             {
-              "role_category": "JUDICIAL",
-              "role_name": "judge",
-              "permissions": [
+              "role_category":"JUDICIAL",
+              "role_name":"judge",
+              "permissions":[
                 "Read",
                 "Refer",
-                "Execute"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
                 "373"
               ]
             },
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "senior-tribunal-caseworker",
-              "permissions": [
-                "Read",
-                "Refer",
-                "Own"
-              ],
-              "authorisations": [
-              ]
-            },
-            {
-              "role_name": "task-supervisor",
-              "permissions": [
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
+              "permissions":[
                 "Read",
                 "Refer",
                 "Manage",
+                "Execute",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
               ]
             },
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "tribunal-caseworker",
-              "permissions": [
+              "role_name":"task-supervisor",
+              "permissions":[
                 "Read",
                 "Refer",
-                "Own"
+                "Manage",
+                "Execute",
+                "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Refer",
+                "Manage",
+                "Execute",
+                "Cancel"
+              ],
+              "authorisations":[
               ]
             }
           ]
@@ -156,3 +155,4 @@
     ]
   }
 }
+

@@ -16,7 +16,7 @@
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection",
+            "appealType": "deprivation",
             "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
@@ -37,7 +37,7 @@
               "EventTimeStamp": "{$LOCAL_DATETIME_TODAY-1HOURS}",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "deprivation"
                 }
               }
             }
@@ -50,7 +50,7 @@
               "NewStateId": "appealSubmitted",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "deprivation"
                 }
               }
             }
@@ -71,7 +71,7 @@
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
+                "case_category": "DoC",
                 "name": "Follow-up overdue respondent evidence",
                 "type": "followUpOverdueRespondentEvidence",
                 "task_state": "unassigned",
@@ -93,7 +93,7 @@
                   "values": [
                   ]
                 },
-                "case_management_category": "Protection",
+                "case_management_category": "DoC",
                 "work_type_id": "decision_making_work",
                 "permissions": {
                   "values": [
@@ -101,6 +101,7 @@
                     "Refer",
                     "Own",
                     "Manage",
+                    "Execute",
                     "Cancel"
                   ]
                 }
@@ -116,21 +117,10 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Cancel"
               ],
               "authorisations": [
-              ]
-            },
-            {
-              "role_category": "JUDICIAL",
-              "role_name": "judge",
-              "permissions": [
-                "Read",
-                "Refer",
-                "Execute"
-              ],
-              "authorisations": [
-                "373"
               ]
             },
             {
@@ -139,7 +129,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]
@@ -149,6 +141,7 @@
               "permissions": [
                 "Read",
                 "Refer",
+                "Execute",
                 "Manage",
                 "Cancel"
               ],
@@ -161,7 +154,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]

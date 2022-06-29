@@ -75,6 +75,7 @@
                 "role_category": "LEGAL_OPERATIONS",
                 "warning_list": {
                   "values": [
+
                   ]
                 },
                 "case_management_category": "Protection",
@@ -84,6 +85,7 @@
                     "Refer",
                     "Own",
                     "Manage",
+                    "Execute",
                     "Cancel"
                   ]
                 }
@@ -91,6 +93,7 @@
             ]
           }
         },
+        "numberOfRolesAvailable": 6,
         "roleData": {
           "roles": [
             {
@@ -99,9 +102,22 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Cancel"
               ],
               "authorisations": [
+              ]
+            },
+            {
+              "role_category":"JUDICIAL",
+              "role_name":"hearing-judge",
+              "permissions":[
+                "Read",
+                "Refer",
+                "Execute",
+                "Cancel"
+              ],
+              "authorisations":[
               ]
             },
             {
@@ -110,7 +126,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Execute"
+                "Manage",
+                "Execute",
+                "Cancel"
               ],
               "authorisations": [
                 "373"
@@ -122,7 +140,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]
@@ -132,6 +152,7 @@
               "permissions": [
                 "Read",
                 "Refer",
+                "Execute",
                 "Manage",
                 "Cancel"
               ],
@@ -144,7 +165,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]

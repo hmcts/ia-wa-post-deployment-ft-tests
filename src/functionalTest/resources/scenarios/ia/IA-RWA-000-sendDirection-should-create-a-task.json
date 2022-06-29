@@ -75,6 +75,7 @@
                 "role_category": "LEGAL_OPERATIONS",
                 "warning_list": {
                   "values": [
+
                   ]
                 },
                 "case_management_category": "Protection",
@@ -84,6 +85,7 @@
                     "Refer",
                     "Own",
                     "Manage",
+                    "Execute",
                     "Cancel"
                   ]
                 }
@@ -99,21 +101,10 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Cancel"
               ],
               "authorisations": [
-              ]
-            },
-            {
-              "role_category": "JUDICIAL",
-              "role_name": "judge",
-              "permissions": [
-                "Read",
-                "Refer",
-                "Execute"
-              ],
-              "authorisations": [
-                "373"
               ]
             },
             {
@@ -122,7 +113,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]
@@ -132,6 +125,7 @@
               "permissions": [
                 "Read",
                 "Refer",
+                "Execute",
                 "Manage",
                 "Cancel"
               ],
@@ -144,7 +138,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]

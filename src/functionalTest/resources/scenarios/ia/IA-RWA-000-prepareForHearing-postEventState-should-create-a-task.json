@@ -1,5 +1,5 @@
 {
-  "description": "prepareForHearing post event state should create a createCaseSummary task",
+  "description": "prepareForHearing post event state should create a caseSummaryHearingBundleStartDecision task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -46,7 +46,7 @@
       {
         "credentials": "IACaseworker",
         "status": 200,
-        "numberOfTasksAvailable": 1,
+        "numberOfTasksAvailable": 2,
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -56,12 +56,9 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Create Case Summary",
-                "type": "createCaseSummary",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Create Case Summary",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
@@ -72,9 +69,9 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "LEGAL_OPERATIONS",
                 "warning_list": {
                   "values": [
+
                   ]
                 },
                 "case_management_category": "Protection",
@@ -84,6 +81,7 @@
                     "Refer",
                     "Own",
                     "Manage",
+                    "Execute",
                     "Cancel"
                   ]
                 }
@@ -91,6 +89,7 @@
             ]
           }
         },
+        "numberOfRolesAvailable": 4,
         "roleData": {
           "roles": [
             {
@@ -99,21 +98,10 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Cancel"
               ],
               "authorisations": [
-              ]
-            },
-            {
-              "role_category": "JUDICIAL",
-              "role_name": "judge",
-              "permissions": [
-                "Read",
-                "Refer",
-                "Execute"
-              ],
-              "authorisations": [
-                "373"
               ]
             },
             {
@@ -122,7 +110,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]
@@ -132,6 +122,7 @@
               "permissions": [
                 "Read",
                 "Refer",
+                "Execute",
                 "Manage",
                 "Cancel"
               ],
@@ -144,7 +135,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]
@@ -155,3 +148,4 @@
     ]
   }
 }
+

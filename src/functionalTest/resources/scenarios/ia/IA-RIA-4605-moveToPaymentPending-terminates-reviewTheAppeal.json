@@ -1,5 +1,5 @@
 {
-  "description": "Given a reviewTheAppeal exist moveToPaymentPending should terminate reviewTheAppeal task",
+  "description": "Given a payAndSubmitAppeal exist moveToPaymentPending should terminate reviewTheAppeal task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -10,12 +10,12 @@
     "credentials": "IALegalRepresentative",
     "ccd": [
       {
-        "eventId": "submitAppeal",
+        "eventId": "payAndSubmitAppeal",
         "state": "appealStarted",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection",
+            "appealType": "refusalOfHumanRights",
             "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
@@ -29,11 +29,11 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "submitAppeal",
+              "EventId": "payAndSubmitAppeal",
               "NewStateId": "appealSubmitted",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "refusalOfHumanRights"
                 }
               }
             }
@@ -61,7 +61,7 @@
                 "task_title": "Review the appeal",
                 "task_state": "unassigned",
                 "case_type_id": "Asylum",
-                "case_category": "Protection",
+                "case_category": "Human rights",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
                 "location_name": "Taylor House",
@@ -74,7 +74,7 @@
                 "warning_list": {
                   "values": []
                 },
-                "case_management_category": "Protection",
+                "case_management_category": "Human rights",
                 "work_type_id": "decision_making_work",
                 "permissions": {
                   "values": [
@@ -82,6 +82,7 @@
                     "Refer",
                     "Own",
                     "Manage",
+                    "Execute",
                     "Cancel"
                   ]
                 },
@@ -98,21 +99,10 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Cancel"
               ],
               "authorisations": [
-              ]
-            },
-            {
-              "role_category": "JUDICIAL",
-              "role_name": "judge",
-              "permissions": [
-                "Read",
-                "Refer",
-                "Execute"
-              ],
-              "authorisations": [
-                "373"
               ]
             },
             {
@@ -121,7 +111,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]
@@ -131,6 +123,7 @@
               "permissions": [
                 "Read",
                 "Refer",
+                "Execute",
                 "Manage",
                 "Cancel"
               ],
@@ -143,7 +136,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]
@@ -165,7 +160,7 @@
               "NewStateId": "appealSubmitted",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "Revocation"
                 }
               }
             }
@@ -193,7 +188,7 @@
                 "task_title": "Review the appeal",
                 "task_state": "terminated",
                 "case_type_id": "Asylum",
-                "case_category": "Protection",
+                "case_category": "Human rights",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
                 "location_name": "Taylor House",
@@ -206,7 +201,7 @@
                 "warning_list": {
                   "values": []
                 },
-                "case_management_category": "Protection",
+                "case_management_category": "Human rights",
                 "work_type_id": "decision_making_work",
                 "permissions": {
                   "values": [
@@ -214,6 +209,7 @@
                     "Refer",
                     "Own",
                     "Manage",
+                    "Execute",
                     "Cancel"
                   ]
                 },
@@ -230,21 +226,10 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Cancel"
               ],
               "authorisations": [
-              ]
-            },
-            {
-              "role_category": "JUDICIAL",
-              "role_name": "judge",
-              "permissions": [
-                "Read",
-                "Refer",
-                "Execute"
-              ],
-              "authorisations": [
-                "373"
               ]
             },
             {
@@ -253,7 +238,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]
@@ -263,6 +250,7 @@
               "permissions": [
                 "Read",
                 "Refer",
+                "Execute",
                 "Manage",
                 "Cancel"
               ],
@@ -275,7 +263,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]

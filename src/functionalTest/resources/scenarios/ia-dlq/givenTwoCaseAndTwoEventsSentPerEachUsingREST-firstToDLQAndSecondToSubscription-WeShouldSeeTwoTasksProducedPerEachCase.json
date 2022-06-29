@@ -17,7 +17,7 @@
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection",
+            "appealType": "deprivation",
             "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
@@ -29,7 +29,7 @@
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection",
+            "appealType": "deprivation",
             "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
@@ -51,7 +51,7 @@
               "EventTimeStamp": "{$LOCAL_DATETIME_TODAY-2HOURS}",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "deprivation"
                 }
               }
             }
@@ -66,7 +66,7 @@
               "EventTimeStamp": "{$LOCAL_DATETIME_TODAY-1HOURS}",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "deprivation"
                 }
               }
             }
@@ -81,7 +81,7 @@
               "EventTimeStamp": "{$LOCAL_DATETIME_TODAY-2HOURS}",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "deprivation"
                 }
               }
             }
@@ -96,7 +96,7 @@
               "EventTimeStamp": "{$LOCAL_DATETIME_TODAY-1HOURS}",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "deprivation"
                 }
               }
             }
@@ -118,13 +118,10 @@
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
-                "name": "Follow-up overdue respondent evidence",
-                "type": "followUpOverdueRespondentEvidence",
+                "case_category": "DoC",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Follow-up overdue respondent evidence",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
@@ -140,58 +137,13 @@
                   "values": [
                   ]
                 },
-                "case_management_category": "Protection",
-                "work_type_id": "decision_making_work",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Refer",
-                    "Own",
-                    "Manage",
-                    "Cancel"
-                  ]
-                }
-              },
-              {
-                "id": "{$VERIFIER-UUID}",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
-                "case_id": "{$GENERATED_CASE_ID}",
-                "case_name": "Functional PostDeployment",
-                "type": "reviewTheAppeal",
-                "name": "Review the appeal",
-                "task_title": "Review the appeal",
-                "task_state": "unassigned",
-                "case_type_id": "Asylum",
-                "case_category": "Protection",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "location_name": "Taylor House",
-                "location": "765324",
-                "execution_type": "Case Management Task",
-                "jurisdiction": "IA",
-                "region": "1",
-                "auto_assigned": false,
-                "warnings": false,
-                "warning_list": {
-                  "values": []
-                },
-                "case_management_category": "Protection",
-                "work_type_id": "decision_making_work",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Refer",
-                    "Own",
-                    "Manage",
-                    "Cancel"
-                  ]
-                },
-                "role_category": "LEGAL_OPERATIONS"
+                "case_management_category": "DoC",
+                "work_type_id": "decision_making_work"
               }
             ]
           }
         },
+        "numberOfRolesAvailable": 4,
         "roleData": {
           "roles": [
             {
@@ -200,21 +152,10 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Cancel"
               ],
               "authorisations": [
-              ]
-            },
-            {
-              "role_category": "JUDICIAL",
-              "role_name": "judge",
-              "permissions": [
-                "Read",
-                "Refer",
-                "Execute"
-              ],
-              "authorisations": [
-                "373"
               ]
             },
             {
@@ -223,7 +164,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]
@@ -233,6 +176,7 @@
               "permissions": [
                 "Read",
                 "Refer",
+                "Execute",
                 "Manage",
                 "Cancel"
               ],
@@ -245,7 +189,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]
@@ -266,13 +212,10 @@
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
-                "name": "Follow-up overdue respondent evidence",
-                "type": "followUpOverdueRespondentEvidence",
+                "case_category": "DoC",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Follow-up overdue respondent evidence",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
@@ -288,58 +231,13 @@
                   "values": [
                   ]
                 },
-                "case_management_category": "Protection",
-                "work_type_id": "decision_making_work",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Refer",
-                    "Own",
-                    "Manage",
-                    "Cancel"
-                  ]
-                }
-              },
-              {
-                "id": "{$VERIFIER-UUID}",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
-                "case_id": "{$GENERATED_CASE_ID}",
-                "case_name": "Functional PostDeployment",
-                "type": "reviewTheAppeal",
-                "name": "Review the appeal",
-                "task_title": "Review the appeal",
-                "task_state": "unassigned",
-                "case_type_id": "Asylum",
-                "case_category": "Protection",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "location_name": "Taylor House",
-                "location": "765324",
-                "execution_type": "Case Management Task",
-                "jurisdiction": "IA",
-                "region": "1",
-                "auto_assigned": false,
-                "warnings": false,
-                "warning_list": {
-                  "values": []
-                },
-                "case_management_category": "Protection",
-                "work_type_id": "decision_making_work",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Refer",
-                    "Own",
-                    "Manage",
-                    "Cancel"
-                  ]
-                },
-                "role_category": "LEGAL_OPERATIONS"
+                "case_management_category": "DoC",
+                "work_type_id": "decision_making_work"
               }
             ]
           }
         },
+        "numberOfRolesAvailable": 4,
         "roleData": {
           "roles": [
             {
@@ -348,21 +246,10 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Cancel"
               ],
               "authorisations": [
-              ]
-            },
-            {
-              "role_category": "JUDICIAL",
-              "role_name": "judge",
-              "permissions": [
-                "Read",
-                "Refer",
-                "Execute"
-              ],
-              "authorisations": [
-                "373"
               ]
             },
             {
@@ -371,7 +258,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]
@@ -381,6 +270,7 @@
               "permissions": [
                 "Read",
                 "Refer",
+                "Execute",
                 "Manage",
                 "Cancel"
               ],
@@ -393,7 +283,9 @@
               "permissions": [
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Manage",
+                "Cancel"
               ],
               "authorisations": [
               ]

@@ -94,10 +94,13 @@ public class TaskManagementService {
         int expectedStatus = MapValueExtractor.extractOrDefault(
             clauseValues, "status", 200);
 
+        int expectedRoles = MapValueExtractor.extractOrDefault(
+            clauseValues, "numberOfRolesAvailable", 4);
+
         result.then().assertThat()
             .statusCode(expectedStatus)
             .contentType(APPLICATION_JSON_VALUE)
-            .body("roles.size()", is(5));
+            .body("roles.size()", is(expectedRoles));
 
         String actualResponseBody = result.then()
             .extract()

@@ -33,7 +33,11 @@
               "EventId": "makeAnApplication",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "protection",
+                  "lastModifiedApplication": {
+                    "type": "Expedite",
+                    "decision": ""
+                  }
                 }
               }
             }
@@ -62,7 +66,7 @@
                 "security_classification": "PUBLIC",
                 "task_title": "Process Application",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -74,6 +78,7 @@
                 "role_category": "LEGAL_OPERATIONS",
                 "warning_list": {
                   "values": [
+
                   ]
                 },
                 "case_management_category": "Protection",
@@ -84,6 +89,7 @@
                     "Refer",
                     "Own",
                     "Manage",
+                    "Execute",
                     "Cancel"
                   ]
                 }
@@ -91,62 +97,88 @@
             ]
           }
         },
+        "numberOfRolesAvailable": 6,
         "roleData": {
-          "roles": [
+          "roles":[
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "case-manager",
-              "permissions": [
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"case-manager",
+              "permissions":[
                 "Read",
                 "Refer",
-                "Own"
+                "Own",
+                "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+
               ]
             },
             {
-              "role_category": "JUDICIAL",
-              "role_name": "judge",
-              "permissions": [
+              "role_category":"JUDICIAL",
+              "role_name":"hearing-judge",
+              "permissions":[
                 "Read",
                 "Refer",
-                "Execute"
+                "Execute",
+                "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+
+              ]
+            },
+            {
+              "role_category":"JUDICIAL",
+              "role_name":"judge",
+              "permissions":[
+                "Read",
+                "Refer",
+                "Manage",
+                "Execute",
+                "Cancel"
+              ],
+              "authorisations":[
                 "373"
               ]
             },
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "senior-tribunal-caseworker",
-              "permissions": [
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
+              "permissions":[
                 "Read",
                 "Refer",
-                "Own"
-              ],
-              "authorisations": [
-              ]
-            },
-            {
-              "role_name": "task-supervisor",
-              "permissions": [
-                "Read",
-                "Refer",
+                "Own",
                 "Manage",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+
               ]
             },
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "tribunal-caseworker",
-              "permissions": [
+              "role_name":"task-supervisor",
+              "permissions":[
                 "Read",
                 "Refer",
-                "Own"
+                "Manage",
+                "Execute",
+                "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Refer",
+                "Own",
+                "Manage",
+                "Cancel"
+              ],
+              "authorisations":[
+
               ]
             }
           ]
@@ -155,3 +187,4 @@
     ]
   }
 }
+

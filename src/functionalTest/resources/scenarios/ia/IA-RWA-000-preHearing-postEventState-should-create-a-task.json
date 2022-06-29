@@ -1,5 +1,5 @@
 {
-  "description": "preHearing post event state should create a startDecisionsAndReasonsDocument task",
+  "description": "preHearing post event state should create a allocateHearingJudge task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -56,14 +56,13 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Start Decisions And Reasons Document",
-                "type": "startDecisionsAndReasonsDocument",
+                "name": "Allocate Hearing Judge",
+                "type": "allocateHearingJudge",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Start Decisions And Reasons Document",
+                "task_title": "Allocate Hearing Judge",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -72,7 +71,7 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "LEGAL_OPERATIONS",
+                "role_category": "ADMIN",
                 "warning_list": {
                   "values": [
                   ]
@@ -82,8 +81,8 @@
                   "values": [
                     "Read",
                     "Refer",
-                    "Own",
                     "Manage",
+                    "Execute",
                     "Cancel"
                   ]
                 }
@@ -91,62 +90,34 @@
             ]
           }
         },
+        "numberOfRolesAvailable": 2,
         "roleData": {
           "roles": [
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "case-manager",
-              "permissions": [
+              "role_category":"ADMIN",
+              "role_name":"hearing-centre-admin",
+              "permissions":[
                 "Read",
                 "Refer",
-                "Own"
-              ],
-              "authorisations": [
-              ]
-            },
-            {
-              "role_category": "JUDICIAL",
-              "role_name": "judge",
-              "permissions": [
-                "Read",
-                "Refer",
-                "Execute"
-              ],
-              "authorisations": [
-                "373"
-              ]
-            },
-            {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "senior-tribunal-caseworker",
-              "permissions": [
-                "Read",
-                "Refer",
-                "Own"
-              ],
-              "authorisations": [
-              ]
-            },
-            {
-              "role_name": "task-supervisor",
-              "permissions": [
-                "Read",
-                "Refer",
+                "Own",
                 "Manage",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+
               ]
             },
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "tribunal-caseworker",
-              "permissions": [
+              "role_name":"task-supervisor",
+              "permissions":[
                 "Read",
                 "Refer",
-                "Own"
+                "Manage",
+                "Execute",
+                "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+
               ]
             }
           ]
@@ -155,3 +126,4 @@
     ]
   }
 }
+
