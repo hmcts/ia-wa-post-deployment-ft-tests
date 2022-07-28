@@ -69,6 +69,17 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
         );
     }
 
+    public Headers getWaCaseOfficerAuthorization() {
+        return new Headers(
+            getUserAuthorizationOnly(
+                "WA_CASEOFFICER_USERNAME",
+                "WA_CASEOFFICER_PASSWORD",
+                "WaCaseOfficer"
+            ),
+            getServiceAuthorizationHeader()
+        );
+    }
+
     public Headers getLegalRepAuthorization() {
         Header requiredHeader = (StringUtils.isNotEmpty(dlqProcessTest) && Boolean.parseBoolean(dlqProcessTest))
             ? getWaDlqSystemUserAuthorization()
@@ -150,6 +161,8 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
                 return getTribunalCaseworkerAAuthorization();
             case "WaSystemUser":
                 return getWaSystemUserAuthorization();
+            case "WaCaseOfficer":
+                return getWaCaseOfficerAuthorization();
             default:
                 throw new IllegalStateException("Credentials implementation for '" + credentials + "' not found");
         }

@@ -32,6 +32,9 @@ def secrets = [
 
     secret('wa-system-username', 'WA_SYSTEM_USERNAME'),
     secret('wa-system-password', 'WA_SYSTEM_PASSWORD'),
+
+    secret('wa-caseofficer-username', 'WA_CASEOFFICER_USERNAME'),
+    secret('wa-caseofficer-password', 'WA_CASEOFFICER_PASSWORD'),
   ],
   's2s-${env}': [
     secret('microservicekey-wa-task-management-api', 'S2S_SECRET_TASK_MANAGEMENT_API'),
