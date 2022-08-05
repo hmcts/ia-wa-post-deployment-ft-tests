@@ -1,6 +1,6 @@
 {
   "description": "generateHearingBundle with finalBundling post event state should create a reviewHearingBundle task",
-  "enabled": false,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
@@ -52,6 +52,9 @@
           "replacements": {
             "tasks": [
               {
+                "name": "Allocate Hearing Judge",
+                "type": "allocateHearingJudge",
+                "task_title": "Allocate Hearing Judge",
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
@@ -87,6 +90,9 @@
                 }
               },
               {
+                "name": "Review Hearing bundle",
+                "type": "reviewHearingBundle",
+                "task_title": "Review Hearing bundle",
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
@@ -124,25 +130,12 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 5,
+        "numberOfRolesAvailable": 2,
         "roleData": {
           "roles":[
             {
-              "role_category":"JUDICIAL",
-              "role_name":"hearing-judge",
-              "permissions":[
-                "Read",
-                "Refer",
-                "Own",
-                "Cancel"
-              ],
-              "authorisations":[
-
-              ]
-            },
-            {
-              "role_category":"JUDICIAL",
-              "role_name":"judge",
+              "role_category":"ADMIN",
+              "role_name":"hearing-centre-admin",
               "permissions":[
                 "Read",
                 "Refer",
@@ -151,21 +144,6 @@
                 "Cancel"
               ],
               "authorisations":[
-                "373"
-              ]
-            },
-            {
-              "role_category":"LEGAL_OPERATIONS",
-              "role_name":"senior-tribunal-caseworker",
-              "permissions":[
-                "Read",
-                "Refer",
-                "Manage",
-                "Execute",
-                "Cancel"
-              ],
-              "authorisations":[
-
               ]
             },
             {
@@ -178,21 +156,6 @@
                 "Cancel"
               ],
               "authorisations":[
-
-              ]
-            },
-            {
-              "role_category":"LEGAL_OPERATIONS",
-              "role_name":"tribunal-caseworker",
-              "permissions":[
-                "Read",
-                "Refer",
-                "Manage",
-                "Execute",
-                "Cancel"
-              ],
-              "authorisations":[
-
               ]
             }
           ]

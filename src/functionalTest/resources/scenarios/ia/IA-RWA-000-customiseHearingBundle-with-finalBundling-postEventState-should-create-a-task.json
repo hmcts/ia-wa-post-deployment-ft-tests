@@ -1,6 +1,6 @@
 {
   "description": "customiseHearingBundle with finalBundling post event state should create a allocateHearingJudge task",
-  "enabled": false,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
@@ -52,6 +52,9 @@
           "replacements": {
             "tasks": [
               {
+                "name": "Allocate Hearing Judge",
+                "type": "allocateHearingJudge",
+                "task_title": "Allocate Hearing Judge",
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
@@ -69,6 +72,51 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "hearing_work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Refer",
+                    "Manage",
+                    "Execute",
+                    "Cancel"
+                  ]
+                }
+              },
+              {
+                "name": "Review Hearing bundle",
+                "type": "reviewHearingBundle",
+                "task_title": "Review Hearing bundle",
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "hearing_work",
                 "permissions": {
                   "values": [
                     "Read",
@@ -82,43 +130,17 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 5,
+        "numberOfRolesAvailable": 2,
         "roleData": {
           "roles":[
             {
-              "role_category":"JUDICIAL",
-              "role_name":"hearing-judge",
-              "permissions":[
-                "Read",
-                "Refer",
-                "Own",
-                "Cancel"
-              ],
-              "authorisations":[
-              ]
-            },
-            {
-              "role_category":"JUDICIAL",
-              "role_name":"judge",
+              "role_category":"ADMIN",
+              "role_name":"hearing-centre-admin",
               "permissions":[
                 "Read",
                 "Refer",
                 "Own",
                 "Manage",
-                "Cancel"
-              ],
-              "authorisations":[
-                "373"
-              ]
-            },
-            {
-              "role_category":"LEGAL_OPERATIONS",
-              "role_name":"senior-tribunal-caseworker",
-              "permissions":[
-                "Read",
-                "Refer",
-                "Manage",
-                "Execute",
                 "Cancel"
               ],
               "authorisations":[
@@ -126,19 +148,6 @@
             },
             {
               "role_name":"task-supervisor",
-              "permissions":[
-                "Read",
-                "Refer",
-                "Manage",
-                "Execute",
-                "Cancel"
-              ],
-              "authorisations":[
-              ]
-            },
-            {
-              "role_category":"LEGAL_OPERATIONS",
-              "role_name":"tribunal-caseworker",
               "permissions":[
                 "Read",
                 "Refer",

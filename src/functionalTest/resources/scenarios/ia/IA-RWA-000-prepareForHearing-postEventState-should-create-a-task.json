@@ -1,6 +1,6 @@
 {
   "description": "prepareForHearing post event state should create a caseSummaryHearingBundleStartDecision task",
-  "enabled": false,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
@@ -52,6 +52,9 @@
           "replacements": {
             "tasks": [
               {
+                "name": "Create Hearing Bundle",
+                "type": "caseSummaryHearingBundleStartDecision",
+                "task_title": "Create Hearing Bundle",
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
@@ -80,6 +83,43 @@
                     "Read",
                     "Refer",
                     "Own",
+                    "Manage",
+                    "Execute",
+                    "Cancel"
+                  ]
+                }
+              },
+              {
+                "name": "Upload hearing recording",
+                "type": "uploadHearingRecording",
+                "task_title": "Upload hearing recording",
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Refer",
                     "Manage",
                     "Execute",
                     "Cancel"

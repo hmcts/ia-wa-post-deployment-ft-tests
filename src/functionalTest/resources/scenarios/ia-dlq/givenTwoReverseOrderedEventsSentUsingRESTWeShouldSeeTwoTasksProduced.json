@@ -69,13 +69,53 @@
           "replacements": {
             "tasks": [
               {
+                "name": "Follow-up overdue respondent evidence",
+                "type": "followUpOverdueRespondentEvidence",
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "DoC",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "Follow-up overdue respondent evidence",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "LEGAL_OPERATIONS",
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "DoC",
+                "work_type_id": "decision_making_work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Refer",
+                    "Own",
+                    "Manage",
+                    "Execute",
+                    "Cancel"
+                  ]
+                }
+              },
+              {
+                "name": "Review the appeal",
+                "type": "reviewTheAppeal",
                 "id": "{$VERIFIER-UUID}",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_name": "Functional PostDeployment",
-                "type": "reviewTheAppeal",
-                "name": "Review the appeal",
                 "task_title": "Review the appeal",
                 "task_state": "unassigned",
                 "case_type_id": "Asylum",
@@ -105,45 +145,6 @@
                   ]
                 },
                 "role_category": "LEGAL_OPERATIONS"
-              },
-              {
-                "id": "{$VERIFIER-UUID}",
-                "case_name": "Functional PostDeployment",
-                "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "DoC",
-                "name": "Follow-up overdue respondent evidence",
-                "type": "followUpOverdueRespondentEvidence",
-                "task_state": "unassigned",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "task_title": "Follow-up overdue respondent evidence",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
-                "execution_type": "Case Management Task",
-                "jurisdiction": "IA",
-                "case_type_id": "Asylum",
-                "region": "1",
-                "location": "765324",
-                "location_name": "Taylor House",
-                "auto_assigned": false,
-                "warnings": false,
-                "role_category": "LEGAL_OPERATIONS",
-                "warning_list": {
-                  "values": [
-                  ]
-                },
-                "case_management_category": "DoC",
-                "work_type_id": "decision_making_work",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Refer",
-                    "Own",
-                    "Manage",
-                    "Execute",
-                    "Cancel"
-                  ]
-                }
               }
             ]
           }
