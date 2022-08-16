@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
+import org.awaitility.core.ConditionTimeoutException;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.TaskManagementService;
@@ -15,7 +16,6 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.util.StringResourceLoader;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.Verifier;
 
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -29,9 +29,6 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBa
 @Component
 @Slf4j
 public class TaskMgmApiRetrieverService implements TaskRetrieverService {
-
-    private static final DateTimeFormatter CREATE_DATE_TIME_PATTER =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss+SSSS");
 
     private final TaskManagementService taskManagementService;
     private final DeserializeValuesUtil deserializeValuesUtil;
@@ -59,74 +56,101 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
         Map<String, Object> deserializedClauseValues =
             deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
 
-        await()
-            .ignoreException(AssertionError.class)
-            .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
-            .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
-            .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
-            .until(
-                () -> {
+        try {
+            await()
+                .ignoreException(AssertionError.class)
+                .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
+                .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
+                .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
+                .until(
+                    () -> {
 
-                    String actualResponseBody = taskManagementService.searchByCaseId(
-                        deserializedClauseValues,
-                        caseId,
-                        scenario.getExpectationAuthorizationHeaders()
-                    );
+                        String searchByCaseIdResponseBody = taskManagementService.searchByCaseId(
+                            deserializedClauseValues,
+                            caseId,
+                            scenario.getExpectationAuthorizationHeaders()
+                        );
 
-                    String expectedResponseBody = buildTaskExpectationResponseBody(
-                        deserializedClauseValues,
-                        taskTemplatesByFilename,
-                        Map.of("caseId", caseId)
-                    );
+                        String expectedResponseBody = buildTaskExpectationResponseBody(
+                            deserializedClauseValues,
+                            taskTemplatesByFilename,
+                            Map.of("caseId", caseId)
+                        );
 
-                    Map<String, Object> actualResponse = MapSerializer.deserialize(
-                        MapSerializer.sortCollectionElement(actualResponseBody,"tasks", taskTitleComparator()));
-                    Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
+                        if (searchByCaseIdResponseBody.isBlank()) {
+                            log.error("Find my case ID response is empty. Test will now fail");
+                            return false;
+                        }
 
-                    verifiers.forEach(verifier ->
-                        verifier.verify(
+                        Map<String, Object> actualResponse = MapSerializer.deserialize(
+                            MapSerializer.sortCollectionElement(
+                                searchByCaseIdResponseBody,
+                                "tasks",
+                                taskTitleComparator()
+                            ));
+                        Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
+
+                        verifiers.forEach(verifier ->
+                                              verifier.verify(
+                                                  clauseValues,
+                                                  expectedResponse,
+                                                  actualResponse
+                                              )
+                        );
+
+                        List<Map<String, Object>> tasks = MapValueExtractor.extract(actualResponse, "tasks");
+
+                        if (tasks == null || tasks.isEmpty()) {
+                            log.error("Task list is empty. Test will now fail");
+                            return false;
+                        }
+
+                        String taskId = MapValueExtractor.extract(tasks.get(0), "id");
+                        log.info("task id is {}", taskId);
+
+                        String retrieveTaskRolePermissionsResponseBody =
+                            taskManagementService.retrieveTaskRolePermissions(
                             clauseValues,
-                            expectedResponse,
-                            actualResponse
-                        )
-                    );
+                            taskId,
+                            scenario.getExpectationAuthorizationHeaders()
+                        );
 
-                    List<Map<String, Object>> tasks = MapValueExtractor.extract(actualResponse, "tasks");
-                    String taskId = MapValueExtractor.extract(tasks.get(0), "id");
-                    log.info("task id is {}", taskId);
+                        if (retrieveTaskRolePermissionsResponseBody.isBlank()) {
+                            log.error("Task role permissions response is empty. Test will now fail");
+                            return false;
+                        }
 
-                    String actualRoleResponseBody = taskManagementService.retrieveTaskRolePermissions(
-                        clauseValues,
-                        taskId,
-                        scenario.getExpectationAuthorizationHeaders()
-                    );
+                        String rolesExpectationResponseBody = buildRolesExpectationResponseBody(
+                            deserializedClauseValues,
+                            Map.of("caseId", caseId)
+                        );
 
+                        log.info("expected roles: {}", rolesExpectationResponseBody);
+                        Map<String, Object> actualRoleResponse = MapSerializer.deserialize(
+                            retrieveTaskRolePermissionsResponseBody);
+                        Map<String, Object> expectedRoleResponse = MapSerializer.deserialize(
+                            rolesExpectationResponseBody);
 
-                    String rolesExpectationResponseBody = buildRolesExpectationResponseBody(
-                        deserializedClauseValues,
-                        Map.of("caseId", caseId)
-                    );
+                        verifiers.forEach(verifier ->
+                                              verifier.verify(
+                                                  clauseValues,
+                                                  expectedRoleResponse,
+                                                  actualRoleResponse
+                                              )
+                        );
 
-                    log.info("expected roles: {}", rolesExpectationResponseBody);
-                    Map<String, Object> actualRoleResponse = MapSerializer.deserialize(actualRoleResponseBody);
-                    Map<String, Object> expectedRoleResponse = MapSerializer.deserialize(rolesExpectationResponseBody);
-
-                    verifiers.forEach(verifier ->
-                                          verifier.verify(
-                                              clauseValues,
-                                              expectedRoleResponse,
-                                              actualRoleResponse
-                                          )
-                    );
-
-                    return true;
-                });
+                        return true;
+                    });
+        } catch (ConditionTimeoutException e) {
+            log.error("Condition timed out. Check test results for failing test");
+            log.error(e.getLocalizedMessage());
+        }
     }
 
     private Comparator<JsonNode> taskTitleComparator() {
         return (j1, j2) -> {
             String title1 = j1.findValue("task_title").asText();
-            String title2 = j2.findValue("task_title").asText();;
+            String title2 = j2.findValue("task_title").asText();
             return title1.compareTo(title2);
         };
     }
@@ -156,7 +180,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
     }
 
     private String buildRolesExpectationResponseBody(Map<String, Object> clauseValues,
-                                                    Map<String, String> additionalValues) throws IOException {
+                                                     Map<String, String> additionalValues) throws IOException {
 
         Map<String, Object> scenario = deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
         Map<String, Object> roleData = MapValueExtractor.extract(scenario, "roleData");
