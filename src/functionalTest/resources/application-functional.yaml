@@ -9,6 +9,9 @@ core_case_data:
   api:
     url: ${CCD_URL:http://ccd-data-store-api}
 
+wa-post-deployment-test:
+  environment: ${WA_POST_DEPLOYMENT_TEST_ENVIRONMENT:local}
+
 azure:
   servicebus:
     connection-string: ${AZURE_SERVICE_BUS_CONNECTION_STRING}

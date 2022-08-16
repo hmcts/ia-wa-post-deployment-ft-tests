@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -93,6 +94,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private RestMessageService restMessageService;
     @Value("${wa_dlq_process_test.enabled}")
     protected String dlqProcessTest;
+    @Value("${wa-post-deployment-test.environment}")
+    protected String postDeploymentTestEnvironment;
 
     @Before
     public void setUp() {
@@ -147,6 +150,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
 
             String description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
+            String testType = extractOrDefault(scenarioValues, "testType", "default");
 
             Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
 
@@ -182,7 +186,10 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 }
                 Logger.say(SCENARIO_RUNNING);
 
-                processTestClauseScenario(scenario);
+                if (testType.equals("Reconfiguration")) {
+                    updateBaseCcdCase(scenario);
+                }
+                processTestClauseScenario(scenario, testType);
 
                 Logger.say(SCENARIO_SUCCESSFUL, description);
                 Logger.say(SCENARIO_FINISHED);
@@ -196,11 +203,11 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     }
 
     private void processBeforeClauseScenario(TestScenario scenario) throws IOException {
-        processScenario(scenario.getBeforeClauseValues(), scenario);
+        processScenario(scenario.getBeforeClauseValues(), scenario, "");
     }
 
-    private void processTestClauseScenario(TestScenario scenario) throws IOException {
-        processScenario(scenario.getTestClauseValues(), scenario);
+    private void processTestClauseScenario(TestScenario scenario, String testType) throws IOException {
+        processScenario(scenario.getTestClauseValues(), scenario, testType);
     }
 
     private void createBaseCcdCase(TestScenario scenario) {
@@ -230,7 +237,38 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         });
     }
 
-    private void processScenario(Map<String, Object> values, TestScenario scenario) throws IOException {
+    private void updateBaseCcdCase(TestScenario scenario) {
+        Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
+        String requestCredentials = extractOrThrow(scenarioValues, "required.credentials");
+
+        Headers requestAuthorizationHeaders = authorizationHeadersProvider
+            .getAuthorizationHeaders(requestCredentials);
+
+        scenario.setRequestAuthorizationHeaders(requestAuthorizationHeaders);
+
+        List<Map<String, Object>> ccdCaseToUpdate = new ArrayList<>(Objects.requireNonNull(
+            MapValueExtractor.extract(scenarioValues, "requiredUpdate.ccd")));
+
+        String caseId =  scenario.getAssignedCaseId("defaultCaseId");
+        ccdCaseToUpdate.forEach(caseValues -> {
+            try {
+                ccdCaseCreator.updateCase(
+                    caseId,
+                    caseValues,
+                    scenario.getJurisdiction(),
+                    scenario.getCaseType(),
+                    requestAuthorizationHeaders
+                );
+                addAssignedCaseId(caseValues, caseId, scenario);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void processScenario(Map<String, Object> values,
+                                 TestScenario scenario,
+                                 String testType) throws IOException {
 
         messageInjector.injectMessage(
             values,
@@ -238,6 +276,13 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             scenario.getJurisdiction(),
             scenario.getRequestAuthorizationHeaders()
         );
+
+        if (postDeploymentTestEnvironment.equals("local") && testType.equals("Reconfiguration")) {
+            taskMgmApiRetrievableService.performOperation(
+                OffsetDateTime.now().minusSeconds(30L),
+                scenario.getExpectationAuthorizationHeaders()
+            );
+        }
 
         String taskRetrieverOption = MapValueExtractor.extract(
             scenario.getScenarioMapValues(),

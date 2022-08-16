@@ -77,6 +77,35 @@ public class CcdCaseCreator {
 
     }
 
+    public String updateCase(String caseId,
+                             Map<String, Object> scenario,
+                             String jurisdiction,
+                             String caseType,
+                             Headers authorizationHeaders) throws IOException {
+
+        Map<String, String> ccdTemplatesByFilename =
+            StringResourceLoader.load(
+                "/templates/" + jurisdiction.toLowerCase(Locale.ENGLISH) + "/ccd/*.json"
+            );
+
+        Map<String, Object> caseData = getCaseData(scenario, ccdTemplatesByFilename);
+
+        String eventId = MapValueExtractor.extractOrThrow(scenario, "eventId");
+
+        fireStartAndSubmitEventsFor(
+            caseId,
+            eventId,
+            jurisdiction,
+            caseType,
+            caseData,
+            authorizationHeaders
+        );
+
+
+        return caseId;
+
+    }
+
     private String createInitialStartEventAndSubmit(String eventId,
                                                     String jurisdiction,
                                                     String caseType,

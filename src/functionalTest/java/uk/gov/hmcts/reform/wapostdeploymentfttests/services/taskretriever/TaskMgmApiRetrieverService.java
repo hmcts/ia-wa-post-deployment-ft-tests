@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.restassured.http.Headers;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
@@ -16,6 +17,8 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.util.StringResourceLoader;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.Verifier;
 
 import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -185,5 +188,19 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
         Map<String, Object> scenario = deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
         Map<String, Object> roleData = MapValueExtractor.extract(scenario, "roleData");
         return MapSerializer.serialize(roleData);
+    }
+
+    public void performOperation(OffsetDateTime reconfigureRequestTime, Headers authorizationHeaders) {
+        String reconfigurationTime = reconfigureRequestTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        await()
+            .ignoreException(AssertionError.class)
+            .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
+            .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
+            .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
+            .until(
+                () -> {
+                    taskManagementService.performOperation(reconfigurationTime, authorizationHeaders);
+                    return true;
+                });
     }
 }
