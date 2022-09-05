@@ -53,6 +53,10 @@ public class TestScenario {
         return caseIdMap.get(key);
     }
 
+    public Map<String, String> getAssignedCaseIdMap() {
+        return caseIdMap;
+    }
+
     public String getCaseType() {
         return caseType;
     }

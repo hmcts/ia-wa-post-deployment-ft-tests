@@ -23,6 +23,7 @@ import static java.util.Objects.requireNonNullElse;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.ENVIRONMENT_PROPERTY_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.GENERATED_CASE_ID_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.LOCAL_DATETIME_TODAY_PATTERN;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.MULTIPLE_CASE_ID_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.RANDOM_UUID_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.TODAY_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.TODAY_TIMESTAMP_PATTERN;
@@ -36,7 +37,7 @@ public class MapValueExpander {
 
     public static final Properties ENVIRONMENT_PROPERTIES = new Properties(System.getProperties());
     public static final String LOCAL_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
-    public static final String ZONED_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String ZONED_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
     private final DateProviderService dateProviderService;
 
@@ -202,6 +203,14 @@ public class MapValueExpander {
                 if (GENERATED_CASE_ID_PATTERN.matcher(value).find() && !additionalValues.isEmpty()) {
                     if (additionalValues.get("caseId") != null) {
                         value = expandCaseId(value, additionalValues.get("caseId"));
+                    }
+                }
+                if (MULTIPLE_CASE_ID_PATTERN.matcher(value).find()  && !additionalValues.isEmpty()) {
+                    if (value.contains("case_id")) {
+                        String key = value.substring(2,value.indexOf("}"));
+                        if (additionalValues.get(key) != null) {
+                            value = additionalValues.get(key);
+                        }
                     }
                 }
                 if (USER_ID_PATTERN.matcher(value).find() && !additionalValues.isEmpty()) {

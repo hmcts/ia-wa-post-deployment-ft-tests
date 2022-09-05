@@ -220,6 +220,24 @@
       }
     ]
   },
+  "requiredUpdate": {
+    "credentials": "WaSystemUser",
+    "ccd": [
+      {
+        "eventId": "UPDATE",
+        "state": "TODO",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "caseManagementLocation": {
+              "baseLocation": "512401"
+            },
+            "staffLocation": "Manchester"
+          }
+        }
+      }
+    ]
+  },
   "test": {
     "request": {
       "credentials": "WaCaseOfficer",

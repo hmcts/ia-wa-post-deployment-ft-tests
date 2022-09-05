@@ -38,7 +38,7 @@ public class TaskManagementService {
     private String taskManagementUrl;
 
     public String searchByCaseId(Map<String, Object> clauseValues,
-                                 String caseId,
+                                 List caseIds,
                                  Headers authorizationHeaders) {
 
         int expectedStatus = MapValueExtractor.extractOrDefault(
@@ -49,7 +49,7 @@ public class TaskManagementService {
         Map<String, Object> searchParameter = Map.of(
             "key", "caseId",
             "operator", "IN",
-            "values", singletonList(caseId)
+            "values", caseIds
         );
 
         Map<String, List<Object>> requestBody = Map.of("search_parameters", singletonList(searchParameter));

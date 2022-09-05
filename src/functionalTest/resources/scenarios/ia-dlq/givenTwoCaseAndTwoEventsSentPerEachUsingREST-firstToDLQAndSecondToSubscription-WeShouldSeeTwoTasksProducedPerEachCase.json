@@ -1,5 +1,5 @@
 {
-  "description": "Given two events sent using REST endpoint, first one DLQ and second to subscription, we should see two tasks produced",
+  "description": "Given two events sent using REST endpoint, first one DLQ and second to subscription, we should see two tasks produced per each case",
   "enabled": true,
   "dlqProcessOnly": true,
   "jurisdiction": "IA",
@@ -117,7 +117,7 @@
               {
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
-                "case_id": "{$GENERATED_CASE_ID}",
+                "case_id": "{$case_id_1}",
                 "case_category": "DoC",
                 "task_state": "unassigned",
                 "task_system": "SELF",
@@ -211,7 +211,7 @@
               {
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
-                "case_id": "{$GENERATED_CASE_ID}",
+                "case_id": "{$case_id_2}",
                 "case_category": "DoC",
                 "task_state": "unassigned",
                 "task_system": "SELF",

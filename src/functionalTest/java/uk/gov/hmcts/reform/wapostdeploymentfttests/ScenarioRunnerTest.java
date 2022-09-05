@@ -249,9 +249,9 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         List<Map<String, Object>> ccdCaseToUpdate = new ArrayList<>(Objects.requireNonNull(
             MapValueExtractor.extract(scenarioValues, "requiredUpdate.ccd")));
 
-        String caseId =  scenario.getAssignedCaseId("defaultCaseId");
         ccdCaseToUpdate.forEach(caseValues -> {
             try {
+                String caseId = CaseIdUtil.extractAssignedCaseIdOrDefault(caseValues, scenario);
                 ccdCaseCreator.updateCase(
                     caseId,
                     caseValues,
@@ -298,11 +298,11 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 expectationValue, "numberOfTasksAvailable", 0);
             int expectedMessages = MapValueExtractor.extractOrDefault(
                 expectationValue, "numberOfMessagesToCheck", 0);
-            String expectationCaseId = CaseIdUtil.extractAssignedCaseIdOrDefault(expectationValue, scenario);
+            List<String> expectationCaseIds = CaseIdUtil.extractAllAssignedCaseIdOrDefault(expectationValue, scenario);
 
-            verifyTasks(scenario, taskRetrieverOption, expectationValue, expectedTasks, expectationCaseId);
+            verifyTasks(scenario, taskRetrieverOption, expectationValue, expectedTasks, expectationCaseIds);
 
-            verifyMessages(expectationValue, expectedMessages, expectationCaseId);
+            verifyMessages(expectationValue, expectedMessages, expectationCaseIds.get(0));
         });
     }
 
@@ -339,7 +339,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     }
 
     private void verifyTasks(TestScenario scenario, String taskRetrieverOption, Map<String, Object> expectationValue,
-                             int expectedTasks, String expectationCaseId) {
+                             int expectedTasks, List<String> expectationCaseIds) {
         if (expectedTasks > 0) {
             String expectationCredentials = extractOrThrow(expectationValue, "credentials");
             Headers expectationAuthorizationHeaders = authorizationHeadersProvider
@@ -350,13 +350,13 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 camundaTaskRetrievableService.retrieveTask(
                     expectationValue,
                     scenario,
-                    expectationCaseId
+                    expectationCaseIds.get(0)
                 );
             } else {
                 taskMgmApiRetrievableService.retrieveTask(
                     expectationValue,
                     scenario,
-                    expectationCaseId
+                    expectationCaseIds
                 );
             }
         }

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBaseTest.DEFAULT_POLL_INTERVAL_SECONDS;
@@ -48,13 +49,23 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
     @SneakyThrows
     @Override
     public void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario, String caseId) {
+        retrieveTask(clauseValues, scenario, singletonList(caseId));
+    }
+
+    @SneakyThrows
+    public void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario, List<String> caseIds) {
 
         Map<String, String> taskTemplatesByFilename =
             StringResourceLoader.load(
                 "/templates/" + scenario.getJurisdiction().toLowerCase(Locale.ENGLISH) + "/task/*.json"
             );
 
-        Map<String, String> additionalValues = Map.of("caseId", caseId);
+        Map<String, String> additionalValues;
+        if (scenario.getAssignedCaseIdMap() != null && scenario.getAssignedCaseIdMap().size() > 1) {
+            additionalValues = scenario.getAssignedCaseIdMap();
+        } else {
+            additionalValues = Map.of("caseId", caseIds.get(0));
+        }
 
         Map<String, Object> deserializedClauseValues =
             deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
@@ -70,14 +81,14 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
                         String searchByCaseIdResponseBody = taskManagementService.searchByCaseId(
                             deserializedClauseValues,
-                            caseId,
+                            caseIds,
                             scenario.getExpectationAuthorizationHeaders()
                         );
 
                         String expectedResponseBody = buildTaskExpectationResponseBody(
                             deserializedClauseValues,
                             taskTemplatesByFilename,
-                            Map.of("caseId", caseId)
+                            additionalValues
                         );
 
                         if (searchByCaseIdResponseBody.isBlank()) {
@@ -125,7 +136,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
                         String rolesExpectationResponseBody = buildRolesExpectationResponseBody(
                             deserializedClauseValues,
-                            Map.of("caseId", caseId)
+                            additionalValues
                         );
 
                         log.info("expected roles: {}", rolesExpectationResponseBody);
