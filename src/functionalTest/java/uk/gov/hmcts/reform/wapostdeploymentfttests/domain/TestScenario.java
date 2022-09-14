@@ -13,6 +13,7 @@ public class TestScenario {
     private final String scenarioSource;
     private final Map<String, Object> beforeClauseValues;
     private final Map<String, Object> testClauseValues;
+    private final Map<String, Object> postRoleAssignmentClauseValues;
     private final String jurisdiction;
     private final String caseType;
 
@@ -25,13 +26,15 @@ public class TestScenario {
                         @NotNull String jurisdiction,
                         @NotNull String caseType,
                         @Nullable Map<String, Object> beforeClauseValues,
-                        @NotNull Map<String, Object> testClauseValues) {
+                        @NotNull Map<String, Object> testClauseValues,
+                        @Nullable Map<String, Object> postRoleAssignmentClauseValues) {
         this.scenarioMapValues = scenarioMapValues;
         this.scenarioSource = scenarioSource;
         this.jurisdiction = jurisdiction;
         this.caseType = caseType;
         this.beforeClauseValues = beforeClauseValues;
         this.testClauseValues = testClauseValues;
+        this.postRoleAssignmentClauseValues = postRoleAssignmentClauseValues;
         this.caseIdMap = new HashMap<>();
     }
 
@@ -87,5 +90,9 @@ public class TestScenario {
 
     public String getJurisdiction() {
         return jurisdiction;
+    }
+
+    public Map<String, Object> getPostRoleAssignmentClauseValues() {
+        return postRoleAssignmentClauseValues;
     }
 }

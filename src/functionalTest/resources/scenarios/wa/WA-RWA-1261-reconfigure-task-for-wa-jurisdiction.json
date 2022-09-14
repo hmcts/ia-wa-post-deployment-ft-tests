@@ -202,23 +202,20 @@
       }
     ]
   },
-  "requiredUpdate": {
-    "credentials": "WaSystemUser",
-    "ccd": [
-      {
-        "eventId": "UPDATE",
-        "state": "TODO",
-        "caseData": {
-          "template": "minimal-appeal-started.json",
-          "replacements": {
-            "caseManagementLocation": {
-              "baseLocation": "512401"
-            },
-            "staffLocation": "Manchester"
-          }
-        }
+  "postRoleAssignments" : {
+    "credentials": "WaCaseOfficer",
+    "roleData": {
+      "template": "set-organisational-role-assignment-request.json",
+      "replacements": {
+        "roleName": "case-manager",
+        "caseType": "WaCaseType",
+        "jurisdiction": "WA",
+        "grantType": "SPECIFIC",
+        "roleType": "CASE",
+        "classification": "PUBLIC",
+        "roleCategory": "LEGAL_OPERATIONS"
       }
-    ]
+    }
   },
   "requiredUpdate": {
     "credentials": "WaSystemUser",
@@ -267,7 +264,7 @@
                 "case_id": "{$GENERATED_CASE_ID}",
                 "name": "Process Application",
                 "type": "processApplication",
-                "task_state": "unassigned",
+                "task_state": "assigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
                 "task_title": "Process Application",
@@ -282,7 +279,7 @@
                 "case_type_id": "WaCaseType",
                 "case_category": "Protection",
                 "case_name": "Functional PostDeployment",
-                "auto_assigned": false,
+                "auto_assigned": true,
                 "warnings": false,
                 "warning_list": {
                   "values": [

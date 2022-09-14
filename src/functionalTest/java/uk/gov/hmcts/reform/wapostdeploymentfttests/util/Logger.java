@@ -45,6 +45,12 @@ public final class Logger {
             case SCENARIO_BEFORE_COMPLETED:
                 colouredPrintLine(ANSI_CYAN, "ℹ️ SCENARIO: BEFORE Clause completed successfully");
                 break;
+            case SCENARIO_ROLE_ASSIGNMENT_FOUND:
+                colouredPrintLine(ANSI_CYAN, "ℹ️ SCENARIO: Found POST_ROLE_ASSIGNMENTS Clause found");
+                break;
+            case SCENARIO_ROLE_ASSIGNMENT_COMPLETED:
+                colouredPrintLine(ANSI_CYAN, "ℹ️ SCENARIO: POST_ROLE_ASSIGNMENTS Clause completed successfully");
+                break;
             case SCENARIO_RUNNING:
                 colouredPrintLine(ANSI_CYAN, "ℹ️ SCENARIO: Processing scenario");
                 break;

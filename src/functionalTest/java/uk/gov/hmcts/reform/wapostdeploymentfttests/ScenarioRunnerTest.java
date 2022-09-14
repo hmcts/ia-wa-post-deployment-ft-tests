@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeaders
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.CcdCaseCreator;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.MessageInjector;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.RestMessageService;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.services.RoleAssignmentService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.CamundaTaskRetrieverService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.TaskMgmApiRetrieverService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil;
@@ -57,6 +58,8 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCE
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_DISABLED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_ENABLED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_FINISHED;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_ROLE_ASSIGNMENT_COMPLETED;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_ROLE_ASSIGNMENT_FOUND;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_RUNNING;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_RUNNING_TIME;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_START;
@@ -78,6 +81,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private CamundaTaskRetrieverService camundaTaskRetrievableService;
     @Autowired
     private TaskMgmApiRetrieverService taskMgmApiRetrievableService;
+    @Autowired
+    private RoleAssignmentService roleAssignmentService;
     @Autowired
     private Environment environment;
     @Autowired
@@ -162,7 +167,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
                 Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
                 Map<String, Object> testClauseValues = extractOrThrow(scenarioValues, "test");
-
+                Map<String, Object> postRoleAssignmentClauseValues = extractOrDefault(scenarioValues,
+                    "postRoleAssignments", null);
 
                 String scenarioJurisdiction = extractOrThrow(scenarioValues, "jurisdiction");
                 String caseType = extractOrThrow(scenarioValues, "caseType");
@@ -173,7 +179,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     scenarioJurisdiction,
                     caseType,
                     beforeClauseValues,
-                    testClauseValues
+                    testClauseValues,
+                    postRoleAssignmentClauseValues
                 );
                 createBaseCcdCase(scenario);
 
@@ -184,11 +191,18 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     Logger.say(SCENARIO_BEFORE_COMPLETED);
 
                 }
-                Logger.say(SCENARIO_RUNNING);
+
+                if (scenario.getPostRoleAssignmentClauseValues() != null) {
+                    Logger.say(SCENARIO_ROLE_ASSIGNMENT_FOUND);
+                    roleAssignmentService.processRoleAssignments(scenario, postRoleAssignmentClauseValues);
+                    Logger.say(SCENARIO_ROLE_ASSIGNMENT_COMPLETED);
+                }
 
                 if (testType.equals("Reconfiguration")) {
                     updateBaseCcdCase(scenario);
                 }
+
+                Logger.say(SCENARIO_RUNNING);
                 processTestClauseScenario(scenario, testType);
 
                 Logger.say(SCENARIO_SUCCESSFUL, description);
@@ -196,6 +210,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             }
         }
     }
+
 
     private boolean isValidDlqProcessScenario(Map<String, Object> scenarioValues) {
         Boolean dlqProcessOnly = extractOrDefault(scenarioValues, "dlqProcessOnly", false);
