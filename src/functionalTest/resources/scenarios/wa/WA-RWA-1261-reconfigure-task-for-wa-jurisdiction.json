@@ -71,6 +71,7 @@
                   "values": [
                     "Read",
                     "Refer",
+                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel"
@@ -292,6 +293,7 @@
                   "values": [
                     "Read",
                     "Refer",
+                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel"

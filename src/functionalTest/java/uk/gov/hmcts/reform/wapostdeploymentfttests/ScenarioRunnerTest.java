@@ -292,11 +292,20 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             scenario.getRequestAuthorizationHeaders()
         );
 
-        if (postDeploymentTestEnvironment.equals("local") && testType.equals("Reconfiguration")) {
-            taskMgmApiRetrievableService.performOperation(
-                OffsetDateTime.now().minusSeconds(30L),
-                scenario.getExpectationAuthorizationHeaders()
-            );
+        if (testType.equals("Reconfiguration") && postDeploymentTestEnvironment.equals("local")) {
+            await()
+                .ignoreException(AssertionError.class)
+                .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
+                .pollInterval(10, SECONDS)
+                .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
+                .until(
+                    () -> {
+                        taskMgmApiRetrievableService.performOperation(
+                            OffsetDateTime.now().minusSeconds(60L),
+                            scenario.getExpectationAuthorizationHeaders()
+                        );
+                        return true;
+                    });
         }
 
         String taskRetrieverOption = MapValueExtractor.extract(

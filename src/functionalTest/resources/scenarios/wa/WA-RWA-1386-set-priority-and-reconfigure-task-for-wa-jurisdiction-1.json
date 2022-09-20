@@ -1,5 +1,5 @@
 {
-  "description": "create case and initialize task for the WA jurisdiction and update case data and trigger reconfiguration",
+  "description": "create case and initialize task for the WA jurisdiction and set priority and update case data and trigger reconfiguration",
   "enabled": true,
   "jurisdiction": "WA",
   "caseType": "WaCaseType",
@@ -122,6 +122,7 @@
                   "values": [
                     "Read",
                     "Refer",
+                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel"
@@ -172,6 +173,7 @@
                   "values": [
                     "Read",
                     "Refer",
+                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel"
@@ -222,6 +224,7 @@
                   "values": [
                     "Read",
                     "Refer",
+                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel"
@@ -444,6 +447,7 @@
                   "values": [
                     "Read",
                     "Refer",
+                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel"
@@ -494,6 +498,7 @@
                   "values": [
                     "Read",
                     "Refer",
+                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel"
@@ -544,6 +549,7 @@
                   "values": [
                     "Read",
                     "Refer",
+                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel"
