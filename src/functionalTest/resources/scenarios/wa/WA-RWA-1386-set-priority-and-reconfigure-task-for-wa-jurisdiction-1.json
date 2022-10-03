@@ -121,11 +121,15 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
-                    "Execute",
-                    "Cancel"
+                    "Cancel",
+                    "Complete",
+                    "CompleteOwn",
+                    "CancelOwn",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 },
                 "description": "[Decide an application](/case/WA/WaCaseType/${[CASE_REFERENCE]}/trigger/decideAnApplication)",
@@ -172,11 +176,15 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
-                    "Execute",
-                    "Cancel"
+                    "Cancel",
+                    "Complete",
+                    "CompleteOwn",
+                    "CancelOwn",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 },
                 "description": "[Decide an application](/case/WA/WaCaseType/${[CASE_REFERENCE]}/trigger/decideAnApplication)",
@@ -223,11 +231,15 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
-                    "Execute",
-                    "Cancel"
+                    "Cancel",
+                    "Complete",
+                    "CompleteOwn",
+                    "CancelOwn",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 },
                 "description": "[Decide an application](/case/WA/WaCaseType/${[CASE_REFERENCE]}/trigger/decideAnApplication)",
@@ -262,7 +274,8 @@
               "role_category": "ADMIN",
               "role_name": "challenged-access-admin",
               "permissions": [
-                "Execute"
+                "Execute",
+                "Assign"
               ],
               "authorisations": [
 
@@ -282,7 +295,11 @@
               "role_category": "LEGAL_OPERATIONS",
               "role_name": "challenged-access-legal-ops",
               "permissions": [
-                "Manage"
+                "Manage",
+                "Assign",
+                "Unassign",
+                "Complete",
+                "Own"
               ],
               "authorisations": [
 
@@ -323,8 +340,13 @@
               "role_name": "senior-tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute"
+                "Complete",
+                "Claim",
+                "Unclaim",
+                "UnassignClaim",
+                "Execute",
+                "UnassignAssign",
+                "UnclaimAssign"
               ],
               "authorisations": [
 
@@ -334,9 +356,11 @@
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
-                "Refer",
                 "Manage",
-                "Cancel"
+                "Cancel",
+                "Assign",
+                "Unassign",
+                "Complete"
               ],
               "authorisations": [
 
@@ -347,8 +371,10 @@
               "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute"
+                "CompleteOwn",
+                "CancelOwn",
+                "Claim",
+                "Own"
               ],
               "authorisations": [
 
@@ -416,57 +442,6 @@
             "tasks": [
               {
                 "id": "{$VERIFIER-UUID}",
-                "case_id": "{$case_id_3}",
-                "name": "Process Application",
-                "type": "processApplication",
-                "task_state": "unassigned",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "task_title": "Process Application",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
-                "location_name": "Taylor House",
-                "location": "765324",
-                "execution_type": "Case Management Task",
-                "jurisdiction": "WA",
-                "region": "1",
-                "case_type_id": "WaCaseType",
-                "case_category": "Protection",
-                "case_name": "Functional PostDeployment",
-                "auto_assigned": false,
-                "warnings": false,
-                "warning_list": {
-                  "values": [
-
-                  ]
-                },
-                "case_management_category": "Protection",
-                "work_type_id": "hearing_work",
-                "work_type_label": "Hearing work",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Refer",
-                    "Own",
-                    "Manage",
-                    "Execute",
-                    "Cancel"
-                  ]
-                },
-                "description": "[Decide an application](/case/WA/WaCaseType/${[CASE_REFERENCE]}/trigger/decideAnApplication)",
-                "role_category": "LEGAL_OPERATIONS",
-                "additional_properties": {
-                  "key1": "value1",
-                  "key2": "value2",
-                  "key3": "value3",
-                  "key4": "value4"
-                },
-                "major_priority": 1000,
-                "minor_priority": 500,
-                "priority_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}"
-              },
-              {
-                "id": "{$VERIFIER-UUID}",
                 "case_id": "{$case_id_1}",
                 "name": "Process Application",
                 "type": "processApplication",
@@ -497,11 +472,70 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
-                    "Execute",
-                    "Cancel"
+                    "Cancel",
+                    "Complete",
+                    "CompleteOwn",
+                    "CancelOwn",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
+                  ]
+                },
+                "description": "[Decide an application](/case/WA/WaCaseType/${[CASE_REFERENCE]}/trigger/decideAnApplication)",
+                "role_category": "LEGAL_OPERATIONS",
+                "additional_properties": {
+                  "key1": "value1",
+                  "key2": "value2",
+                  "key3": "value3",
+                  "key4": "value4"
+                },
+                "major_priority": 1000,
+                "minor_priority": 500,
+                "priority_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}"
+              },
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_id": "{$case_id_3}",
+                "name": "Process Application",
+                "type": "processApplication",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "Process Application",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "location_name": "Taylor House",
+                "location": "765324",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "WA",
+                "region": "1",
+                "case_type_id": "WaCaseType",
+                "case_category": "Protection",
+                "case_name": "Functional PostDeployment",
+                "auto_assigned": false,
+                "warnings": false,
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "hearing_work",
+                "work_type_label": "Hearing work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Own",
+                    "Manage",
+                    "Cancel",
+                    "Complete",
+                    "CompleteOwn",
+                    "CancelOwn",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 },
                 "description": "[Decide an application](/case/WA/WaCaseType/${[CASE_REFERENCE]}/trigger/decideAnApplication)",
@@ -548,11 +582,15 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
-                    "Execute",
-                    "Cancel"
+                    "Cancel",
+                    "Complete",
+                    "CompleteOwn",
+                    "CancelOwn",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 },
                 "description": "[Decide an application](/case/WA/WaCaseType/${[CASE_REFERENCE]}/trigger/decideAnApplication)",
@@ -587,7 +625,8 @@
               "role_category": "ADMIN",
               "role_name": "challenged-access-admin",
               "permissions": [
-                "Execute"
+                "Execute",
+                "Assign"
               ],
               "authorisations": [
 
@@ -607,7 +646,11 @@
               "role_category": "LEGAL_OPERATIONS",
               "role_name": "challenged-access-legal-ops",
               "permissions": [
-                "Manage"
+                "Manage",
+                "Assign",
+                "Unassign",
+                "Complete",
+                "Own"
               ],
               "authorisations": [
 
@@ -648,8 +691,13 @@
               "role_name": "senior-tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute"
+                "Complete",
+                "Claim",
+                "Unclaim",
+                "UnassignClaim",
+                "Execute",
+                "UnassignAssign",
+                "UnclaimAssign"
               ],
               "authorisations": [
 
@@ -659,9 +707,11 @@
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
-                "Refer",
                 "Manage",
-                "Cancel"
+                "Cancel",
+                "Assign",
+                "Unassign",
+                "Complete"
               ],
               "authorisations": [
 
@@ -672,8 +722,10 @@
               "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute"
+                "CompleteOwn",
+                "CancelOwn",
+                "Claim",
+                "Own"
               ],
               "authorisations": [
 

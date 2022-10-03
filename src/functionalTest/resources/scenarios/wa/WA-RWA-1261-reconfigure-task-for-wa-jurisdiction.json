@@ -70,11 +70,15 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
-                    "Execute",
-                    "Cancel"
+                    "Cancel",
+                    "Complete",
+                    "CompleteOwn",
+                    "CancelOwn",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 },
                 "description": "[Decide an application](/case/WA/WaCaseType/${[CASE_REFERENCE]}/trigger/decideAnApplication)",
@@ -106,7 +110,8 @@
               "role_category": "ADMIN",
               "role_name": "challenged-access-admin",
               "permissions": [
-                "Execute"
+                "Execute",
+                "Assign"
               ],
               "authorisations": [
 
@@ -126,7 +131,11 @@
               "role_category": "LEGAL_OPERATIONS",
               "role_name": "challenged-access-legal-ops",
               "permissions": [
-                "Manage"
+                "Own",
+                "Manage",
+                "Complete",
+                "Assign",
+                "Unassign"
               ],
               "authorisations": [
 
@@ -167,8 +176,13 @@
               "role_name": "senior-tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute"
+                "Execute",
+                "Complete",
+                "Claim",
+                "Unclaim",
+                "UnclaimAssign",
+                "UnassignClaim",
+                "UnassignAssign"
               ],
               "authorisations": [
 
@@ -178,9 +192,11 @@
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
-                "Refer",
                 "Manage",
-                "Cancel"
+                "Cancel",
+                "Complete",
+                "Assign",
+                "Unassign"
               ],
               "authorisations": [
 
@@ -191,8 +207,10 @@
               "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute"
+                "Own",
+                "CompleteOwn",
+                "CancelOwn",
+                "Claim"
               ],
               "authorisations": [
 
@@ -292,11 +310,15 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
-                    "Execute",
-                    "Cancel"
+                    "Cancel",
+                    "Complete",
+                    "CompleteOwn",
+                    "CancelOwn",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 },
                 "description": "[Decide an application](/case/WA/WaCaseType/${[CASE_REFERENCE]}/trigger/decideAnApplication)",
@@ -328,7 +350,8 @@
               "role_category": "ADMIN",
               "role_name": "challenged-access-admin",
               "permissions": [
-                "Execute"
+                "Execute",
+                "Assign"
               ],
               "authorisations": [
 
@@ -348,7 +371,11 @@
               "role_category": "LEGAL_OPERATIONS",
               "role_name": "challenged-access-legal-ops",
               "permissions": [
-                "Manage"
+                "Own",
+                "Manage",
+                "Complete",
+                "Assign",
+                "Unassign"
               ],
               "authorisations": [
 
@@ -389,8 +416,13 @@
               "role_name": "senior-tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute"
+                "Execute",
+                "Complete",
+                "Claim",
+                "Unclaim",
+                "UnclaimAssign",
+                "UnassignClaim",
+                "UnassignAssign"
               ],
               "authorisations": [
 
@@ -400,9 +432,11 @@
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
-                "Refer",
                 "Manage",
-                "Cancel"
+                "Cancel",
+                "Complete",
+                "Assign",
+                "Unassign"
               ],
               "authorisations": [
 
@@ -413,8 +447,10 @@
               "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute"
+                "Own",
+                "CompleteOwn",
+                "CancelOwn",
+                "Claim"
               ],
               "authorisations": [
 
