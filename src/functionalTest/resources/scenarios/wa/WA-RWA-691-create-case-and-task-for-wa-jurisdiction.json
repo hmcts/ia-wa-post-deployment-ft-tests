@@ -69,15 +69,11 @@
                 "permissions": {
                   "values": [
                     "Read",
+                    "Refer",
                     "Own",
                     "Manage",
-                    "Cancel",
-                    "Complete",
-                    "CompleteOwn",
-                    "CancelOwn",
-                    "Claim",
-                    "Assign",
-                    "Unassign"
+                    "Execute",
+                    "Cancel"
                   ]
                 },
                 "description": "[Decide an application](/case/WA/WaCaseType/${[CASE_REFERENCE]}/trigger/decideAnApplication)",
@@ -111,8 +107,7 @@
               "role_category": "ADMIN",
               "role_name": "challenged-access-admin",
               "permissions": [
-                "Execute",
-                "Assign"
+                "Execute"
               ],
               "authorisations": [
 
@@ -132,11 +127,7 @@
               "role_category": "LEGAL_OPERATIONS",
               "role_name": "challenged-access-legal-ops",
               "permissions": [
-                "Manage",
-                "Assign",
-                "Unassign",
-                "Complete",
-                "Own"
+                "Manage"
               ],
               "authorisations": [
 
@@ -177,13 +168,8 @@
               "role_name": "senior-tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Complete",
-                "Claim",
-                "Unclaim",
-                "UnassignClaim",
-                "Execute",
-                "UnassignAssign",
-                "UnclaimAssign"
+                "Refer",
+                "Execute"
               ],
               "authorisations": [
 
@@ -193,11 +179,9 @@
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
+                "Refer",
                 "Manage",
-                "Cancel",
-                "Assign",
-                "Unassign",
-                "Complete"
+                "Cancel"
               ],
               "authorisations": [
 
@@ -208,10 +192,8 @@
               "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "CompleteOwn",
-                "CancelOwn",
-                "Claim",
-                "Own"
+                "Refer",
+                "Execute"
               ],
               "authorisations": [
 
