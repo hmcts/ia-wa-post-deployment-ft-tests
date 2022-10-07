@@ -5,7 +5,6 @@ import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
@@ -112,38 +111,7 @@ public class TaskManagementService {
         return actualResponseBody;
     }
 
-    public void performOperation(String reconfigureRequestTime, Headers authorizationHeaders) {
-
-        String requestBody = createExecuteReconfigureTaskOperationRequest(reconfigureRequestTime);
-
-        Response result = given()
-            .headers(authorizationHeaders)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(requestBody)
-            .when()
-            .post(taskManagementUrl + "/task/operation");
-
-        result.then().assertThat()
-            .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    private String createExecuteReconfigureTaskOperationRequest(String reconfigureRequestTime) {
-
-        return "{\n"
-               + "    \"operation\": \n"
-               + "        {\n"
-               + "            \"runId\": \"runid1\",\n"
-               + "            \"name\": \"EXECUTE_RECONFIGURE\",\n"
-               + "            \"maxTimeLimit\": 120\n"
-               + "        },\n"
-               + "    \"taskFilter\": [\n"
-               + "        {\n"
-               + "            \"@type\": \"ExecuteReconfigureTaskFilter\",\n"
-               + "            \"key\": \"reconfigure_request_time\",\n"
-               + "            \"values\": \"" + reconfigureRequestTime + "\",\n"
-               + "            \"operator\": \"AFTER\"\n"
-               + "        }\n"
-               + "    ]\n"
-               + "}";
+    public void performOperation(Headers authorizationHeaders) {
+        taskMonitorService.triggerReconfigurationJob(authorizationHeaders);
     }
 }

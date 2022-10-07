@@ -230,7 +230,9 @@
             "caseManagementLocation": {
               "baseLocation": "512401"
             },
-            "staffLocation": "Manchester"
+            "staffLocation": "Manchester",
+            "appellantGivenNames": "E2E",
+            "appellantFamilyName": "Tests"
           }
         }
       }
@@ -244,8 +246,7 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "UPDATE",
-              "NewStateId": "Reconfigure"
+              "EventId": "UPDATE"
             }
           }
         ]
@@ -279,7 +280,7 @@
                 "region": "1",
                 "case_type_id": "WaCaseType",
                 "case_category": "Protection",
-                "case_name": "Functional PostDeployment",
+                "case_name": "E2E Tests",
                 "auto_assigned": true,
                 "warnings": false,
                 "warning_list": {

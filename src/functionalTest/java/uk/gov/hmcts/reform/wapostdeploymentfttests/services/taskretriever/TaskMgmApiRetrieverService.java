@@ -17,8 +17,6 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.util.StringResourceLoader;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.Verifier;
 
 import java.io.IOException;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -201,8 +199,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
         return MapSerializer.serialize(roleData);
     }
 
-    public void performOperation(OffsetDateTime reconfigureRequestTime, Headers authorizationHeaders) {
-        String reconfigurationTime = reconfigureRequestTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    public void performOperation(Headers authorizationHeaders) {
         await()
             .ignoreException(AssertionError.class)
             .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
@@ -210,7 +207,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
             .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
             .until(
                 () -> {
-                    taskManagementService.performOperation(reconfigurationTime, authorizationHeaders);
+                    taskManagementService.performOperation(authorizationHeaders);
                     return true;
                 });
     }

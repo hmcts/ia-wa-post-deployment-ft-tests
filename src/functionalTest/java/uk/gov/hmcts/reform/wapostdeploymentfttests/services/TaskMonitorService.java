@@ -36,7 +36,7 @@ public class TaskMonitorService {
 
         Map<String, Map<String, String>> requestBody = Map.of("job_details", Map.of("name", "INITIATION"));
 
-        initateJob(requestBody, authorizationHeaders);
+        initiateJob(requestBody, authorizationHeaders);
 
     }
 
@@ -44,10 +44,17 @@ public class TaskMonitorService {
 
         Map<String, Map<String, String>> requestBody = Map.of("job_details", Map.of("name", "TERMINATION"));
 
-        initateJob(requestBody, authorizationHeaders);
+        initiateJob(requestBody, authorizationHeaders);
     }
 
-    private void initateJob(Map<String, Map<String, String>> requestBody, Headers authorizationHeaders) {
+    public void triggerReconfigurationJob(Headers authorizationHeaders) {
+
+        Map<String, Map<String, String>> requestBody = Map.of("job_details", Map.of("name", "RECONFIGURATION"));
+
+        initiateJob(requestBody, authorizationHeaders);
+    }
+
+    private void initiateJob(Map<String, Map<String, String>> requestBody, Headers authorizationHeaders) {
         await()
             .ignoreException(AssertionError.class)
             .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
