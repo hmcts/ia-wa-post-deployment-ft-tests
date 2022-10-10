@@ -1,7 +1,6 @@
 {
   "description": "Given two events sent using REST endpoint, first one DLQ and second to subscription, we should see two tasks produced per each case",
   "enabled": true,
-  "dlqProcessOnly": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

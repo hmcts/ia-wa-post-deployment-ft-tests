@@ -4,7 +4,6 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.Headers;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.awaitility.core.ConditionEvaluationLogger;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,8 +95,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private CcdCaseCreator ccdCaseCreator;
     @Autowired
     private RestMessageService restMessageService;
-    @Value("${wa_dlq_process_test.enabled}")
-    protected String dlqProcessTest;
     @Value("${wa-post-deployment-test.environment}")
     protected String postDeploymentTestEnvironment;
 
@@ -158,7 +155,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
             Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
 
-            if (!scenarioEnabled || !isValidDlqProcessScenario(scenarioValues)) {
+            if (!scenarioEnabled) {
                 Logger.say(SCENARIO_DISABLED, description);
                 continue;
             } else {
@@ -208,12 +205,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 Logger.say(SCENARIO_FINISHED);
             }
         }
-    }
-
-
-    private boolean isValidDlqProcessScenario(Map<String, Object> scenarioValues) {
-        Boolean dlqProcessOnly = extractOrDefault(scenarioValues, "dlqProcessOnly", false);
-        return (StringUtils.isNotEmpty(dlqProcessTest) && Boolean.parseBoolean(dlqProcessTest)) || !dlqProcessOnly;
     }
 
     private void processBeforeClauseScenario(TestScenario scenario) throws IOException {

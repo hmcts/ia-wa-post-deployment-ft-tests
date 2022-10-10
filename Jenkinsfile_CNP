@@ -19,8 +19,6 @@ def secrets = [
 
     secret('ccd-shared-servicebus-connection-string', 'AZURE_SERVICE_BUS_CONNECTION_STRING'),
 
-    secret('wa-dlq-process-enabled', 'WA_DLQ_PROCESS_ENABLED'),
-
     secret('wa-test-law-firm-a-username', 'TEST_WA_LAW_FIRM_USERNAME'),
     secret('wa-test-law-firm-a-password', 'TEST_WA_LAW_FIRM_PASSWORD'),
 
@@ -69,9 +67,4 @@ withNightlyPipeline(type, product, component) {
 
   loadVaultSecrets(secrets)
   enableFullFunctionalTest(60)
-
-  //Override the value set in VaultSecret by parameter
-  if (params.DLQ_PROCESS_ENABLED.equals("true")) {
-    env.WA_DLQ_PROCESS_ENABLED = params.DLQ_PROCESS_ENABLED
-  }
 }

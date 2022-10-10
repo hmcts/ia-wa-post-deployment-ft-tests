@@ -62,14 +62,6 @@ More info on ACR tasks can be read here: https://docs.microsoft.com/en-us/azure/
 ```bash
 ./gradlew functional --tests ScenarioRunnerTest --info -Dscenario=IA-RWA-000
 ```
-### To run test scenarios through new DLQ process flow:
-When you run post deployment tests locally, you can set the below environment variable to true to turn the DLQ process on.
-```bash
-export WA_DLQ_PROCESS_ENABLED=true
-```
-When you run post deployment tests on Jenkins pipeline, by default this flag is set to false in Jenkins parameter and wa-aat secret vault (key: wa-dlq-process-enabled). You can manually run the Jenkins build and then pass the parameter to turn the DLQ process flow on.
-
-Once the DLQ Process feature is released, this behaviour should be changed to run post deployment test through DLQ process flow by default.
 
 ## Tips for onboarding teams
 if you are onboarding into Task Management, you may clone this repository and customize the following items to setup

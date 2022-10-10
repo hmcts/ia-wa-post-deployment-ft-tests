@@ -1,7 +1,6 @@
 {
   "description": "Given invalid events sent using REST we should see message in Unprocessable state",
   "enabled": true,
-  "dlqProcessOnly": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

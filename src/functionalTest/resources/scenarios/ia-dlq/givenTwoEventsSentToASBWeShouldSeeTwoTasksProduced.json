@@ -1,7 +1,6 @@
 {
   "description": "Given two events sent to ASB we should see two tasks produced",
   "enabled": true,
-  "dlqProcessOnly": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
