@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.TaskManagementService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.util.Logger;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapMerger;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapSerializer;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor;
@@ -21,12 +22,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBaseTest.DEFAULT_POLL_INTERVAL_SECONDS;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBaseTest.DEFAULT_TIMEOUT_SECONDS;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_FAILED;
 
 @Component
 @Slf4j
@@ -68,6 +71,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
         Map<String, Object> deserializedClauseValues =
             deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
 
+        AtomicBoolean isTestPassed = new AtomicBoolean(false);
         try {
             await()
                 .ignoreException(AssertionError.class)
@@ -77,10 +81,10 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                 .until(
                     () -> {
 
-                        String searchByCaseIdResponseBody = taskManagementService.searchByCaseId(
+                        String searchByCaseIdResponseBody = taskManagementService.search(
                             deserializedClauseValues,
                             caseIds,
-                            scenario.getExpectationAuthorizationHeaders()
+                            scenario
                         );
 
                         String expectedResponseBody = buildTaskExpectationResponseBody(
@@ -103,11 +107,11 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                         Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
 
                         verifiers.forEach(verifier ->
-                                              verifier.verify(
-                                                  clauseValues,
-                                                  expectedResponse,
-                                                  actualResponse
-                                              )
+                            verifier.verify(
+                                clauseValues,
+                                expectedResponse,
+                                actualResponse
+                            )
                         );
 
                         List<Map<String, Object>> tasks = MapValueExtractor.extract(actualResponse, "tasks");
@@ -122,10 +126,10 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
                         String retrieveTaskRolePermissionsResponseBody =
                             taskManagementService.retrieveTaskRolePermissions(
-                            clauseValues,
-                            taskId,
-                            scenario.getExpectationAuthorizationHeaders()
-                        );
+                                clauseValues,
+                                taskId,
+                                scenario.getExpectationAuthorizationHeaders()
+                            );
 
                         if (retrieveTaskRolePermissionsResponseBody.isBlank()) {
                             log.error("Task role permissions response is empty. Test will now fail");
@@ -144,18 +148,24 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                             rolesExpectationResponseBody);
 
                         verifiers.forEach(verifier ->
-                                              verifier.verify(
-                                                  clauseValues,
-                                                  expectedRoleResponse,
-                                                  actualRoleResponse
-                                              )
+                            verifier.verify(
+                                clauseValues,
+                                expectedRoleResponse,
+                                actualRoleResponse
+                            )
                         );
 
+
+                        isTestPassed.set(true);
                         return true;
                     });
         } catch (ConditionTimeoutException e) {
             log.error("Condition timed out. Check test results for failing test");
             log.error(e.getLocalizedMessage());
+        }
+
+        if (!isTestPassed.get()) {
+            Logger.say(SCENARIO_FAILED, scenario.getScenarioMapValues().get("description"));
         }
     }
 

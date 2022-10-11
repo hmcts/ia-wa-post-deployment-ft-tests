@@ -180,6 +180,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 );
                 createBaseCcdCase(scenario);
 
+                addSearchParameters(scenario, scenarioValues);
+
                 if (scenario.getBeforeClauseValues() != null) {
                     Logger.say(SCENARIO_BEFORE_FOUND);
                     //If before was found process with before values
@@ -339,11 +341,11 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                         Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedMessageResponse);
 
                         verifiers.forEach(verifier ->
-                                              verifier.verify(
-                                                  expectationValue,
-                                                  expectedResponse,
-                                                  actualResponse
-                                              )
+                            verifier.verify(
+                                expectationValue,
+                                expectedResponse,
+                                actualResponse
+                            )
                         );
 
                         return true;
@@ -394,5 +396,13 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             .map(propertySource -> ((EnumerablePropertySource) propertySource).getPropertyNames())
             .flatMap(Arrays::stream)
             .forEach(name -> ENVIRONMENT_PROPERTIES.setProperty(name, environment.getProperty(name)));
+    }
+
+    private void addSearchParameters(TestScenario scenario, Map<String, Object> scenarioValues) {
+
+        List<Map<String, Object>> searchParameterObjects = new ArrayList<>();
+        searchParameterObjects = extractOrDefault(scenarioValues, "searchParameters", searchParameterObjects);
+        searchParameterObjects.forEach(scenario::addSearchMap);
+
     }
 }

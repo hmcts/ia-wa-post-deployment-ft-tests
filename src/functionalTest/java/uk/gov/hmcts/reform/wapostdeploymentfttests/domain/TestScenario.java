@@ -5,7 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class TestScenario {
 
@@ -18,6 +20,7 @@ public class TestScenario {
     private final String caseType;
 
     private final Map<String, String> caseIdMap;
+    private final Set<Map<String, Object>> searchMap;
     private Headers requestAuthorizationHeaders;
     private Headers expectationAuthorizationHeaders;
 
@@ -36,6 +39,7 @@ public class TestScenario {
         this.testClauseValues = testClauseValues;
         this.postRoleAssignmentClauseValues = postRoleAssignmentClauseValues;
         this.caseIdMap = new HashMap<>();
+        this.searchMap = new HashSet<>();
     }
 
     public Map<String, Object> getScenarioMapValues() {
@@ -95,4 +99,13 @@ public class TestScenario {
     public Map<String, Object> getPostRoleAssignmentClauseValues() {
         return postRoleAssignmentClauseValues;
     }
+
+    public void addSearchMap(Map<String, Object> map) {
+        searchMap.add(map);
+    }
+
+    public Set<Map<String, Object>> getSearchMap() {
+        return searchMap;
+    }
+
 }

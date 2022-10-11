@@ -7,14 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import static java.util.Collections.singletonList;
 import static net.serenitybdd.rest.SerenityRest.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -36,14 +37,11 @@ public class TaskManagementService {
     @Value("${wa_task_management_api.url}")
     private String taskManagementUrl;
 
-    public String searchByCaseId(Map<String, Object> clauseValues,
-                                 List caseIds,
-                                 Headers authorizationHeaders) {
+    public String search(Map<String, Object> clauseValues,
+                         List caseIds,
+                         TestScenario scenario) {
 
-        int expectedStatus = MapValueExtractor.extractOrDefault(
-            clauseValues, "status", 200);
-        int expectedTasks = MapValueExtractor.extractOrDefault(
-            clauseValues, "numberOfTasksAvailable", 1);
+        Headers authorizationHeaders = scenario.getExpectationAuthorizationHeaders();
 
         Map<String, Object> searchParameter = Map.of(
             "key", "caseId",
@@ -51,12 +49,17 @@ public class TaskManagementService {
             "values", caseIds
         );
 
-        Map<String, List<Object>> requestBody = Map.of("search_parameters", singletonList(searchParameter));
-
+        scenario.addSearchMap(searchParameter);
+        Map<String, Set<Map<String, Object>>> requestBody = Map.of("search_parameters", scenario.getSearchMap());
 
         //Also trigger (CRON) Jobs programmatically
         taskMonitorService.triggerInitiationJob(authorizationHeaders);
         taskMonitorService.triggerTerminationJob(authorizationHeaders);
+
+        int expectedStatus = MapValueExtractor.extractOrDefault(
+            clauseValues, "status", 200);
+        int expectedTasks = MapValueExtractor.extractOrDefault(
+            clauseValues, "numberOfTasksAvailable", 1);
 
         Response result = given()
             .headers(authorizationHeaders)
@@ -69,7 +72,6 @@ public class TaskManagementService {
             .statusCode(expectedStatus)
             .contentType(APPLICATION_JSON_VALUE)
             .body("tasks.size()", is(expectedTasks));
-
 
         String actualResponseBody = result.then()
             .extract()
