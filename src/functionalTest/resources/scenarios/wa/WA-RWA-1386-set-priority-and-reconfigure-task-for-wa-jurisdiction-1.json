@@ -121,7 +121,6 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
                     "Execute",
@@ -172,7 +171,6 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
                     "Execute",
@@ -223,7 +221,6 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
                     "Execute",
@@ -323,7 +320,6 @@
               "role_name": "senior-tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
                 "Execute"
               ],
               "authorisations": [
@@ -334,7 +330,6 @@
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
-                "Refer",
                 "Manage",
                 "Cancel"
               ],
@@ -347,7 +342,6 @@
               "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
                 "Execute"
               ],
               "authorisations": [
@@ -446,7 +440,6 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
                     "Execute",
@@ -497,7 +490,6 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
                     "Execute",
@@ -548,7 +540,6 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
                     "Own",
                     "Manage",
                     "Execute",
@@ -648,7 +639,6 @@
               "role_name": "senior-tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
                 "Execute"
               ],
               "authorisations": [
@@ -659,7 +649,6 @@
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
-                "Refer",
                 "Manage",
                 "Cancel"
               ],
@@ -672,7 +661,6 @@
               "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
                 "Execute"
               ],
               "authorisations": [
