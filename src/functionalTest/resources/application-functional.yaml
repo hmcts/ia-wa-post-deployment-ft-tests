@@ -7,7 +7,7 @@ wa_task_monitor_api:
 
 core_case_data:
   api:
-    url: ${CCD_URL:http://ccd-data-store-api}
+    url: ${CCD_URL:http://ccd-data-store-api:4452}
 
 wa-post-deployment-test:
   environment: ${WA_POST_DEPLOYMENT_TEST_ENVIRONMENT:local}
@@ -15,15 +15,15 @@ wa-post-deployment-test:
 azure:
   servicebus:
     connection-string: ${AZURE_SERVICE_BUS_CONNECTION_STRING}
-    topic: ${AZURE_SERVICE_BUS_TOPIC_NAME:ccd-case-events-aat}
-    message-author: ${AZURE_SERVICE_BUS_MESSAGE_AUTHOR:unknown}
+    topic: ${AZURE_SERVICE_BUS_TOPIC_NAME:wa-case-event-handler-topic-sessions-ft}
+    message-author: ${AZURE_SERVICE_BUS_MESSAGE_AUTHOR:thomas}
 
 govUk:
   url: https://www.gov.uk/
 
 
 document_management:
-  url: ${DM_STORE_URL:http://local-dm-store}
+  url: ${DM_STORE_URL:http://dm-store:4506}
 
 ccd_gateway:
-  url: ${CCD_GW_URL:http://ccd-api-gateway}
+  url: ${CCD_GW_URL:http://ccd-data-store-api:4452}
