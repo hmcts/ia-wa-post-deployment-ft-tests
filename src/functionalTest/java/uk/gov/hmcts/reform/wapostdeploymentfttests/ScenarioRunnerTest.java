@@ -246,7 +246,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
     private void updateBaseCcdCase(TestScenario scenario) {
         Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
-        String requestCredentials = extractOrThrow(scenarioValues, "required.credentials");
+        String requestCredentials = extractOrThrow(scenarioValues, "requiredUpdate.credentials");
 
         Headers requestAuthorizationHeaders = authorizationHeadersProvider
             .getAuthorizationHeaders(requestCredentials);
