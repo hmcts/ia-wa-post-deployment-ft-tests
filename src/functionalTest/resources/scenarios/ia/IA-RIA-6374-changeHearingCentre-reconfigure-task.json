@@ -1,5 +1,5 @@
 {
-  "description": "editAppealAfterSubmit event should trigger reconfiguration",
+  "description": "changeHearingCentre event should trigger reconfiguration",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -11,12 +11,12 @@
     "credentials": "IALegalRepresentative",
     "ccd": [
       {
-        "eventId": "submitAppeal",
+        "eventId": "payAndSubmitAppeal",
         "state": "appealStarted",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection",
+            "appealType": "refusalOfHumanRights",
             "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
@@ -30,11 +30,11 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "submitAppeal",
+              "EventId": "payAndSubmitAppeal",
               "NewStateId": "appealSubmitted",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "revocationOfProtection"
+                  "appealType": "refusalOfHumanRights"
                 }
               }
             }
@@ -53,32 +53,29 @@
             "tasks": [
               {
                 "id": "{$VERIFIER-UUID}",
-                "case_name": "Functional PostDeployment",
-                "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
-                "name": "Review the appeal",
-                "type": "reviewTheAppeal",
-                "task_state": "unassigned",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "task_title": "Review the appeal",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_name": "Functional PostDeployment",
+                "type": "reviewTheAppeal",
+                "name": "Review the appeal",
+                "task_title": "Review the appeal",
+                "task_state": "unassigned",
+                "case_type_id": "Asylum",
+                "case_category": "Human rights",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "location_name": "Taylor House",
+                "location": "765324",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
-                "case_type_id": "Asylum",
                 "region": "1",
-                "location": "765324",
-                "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "LEGAL_OPERATIONS",
                 "warning_list": {
-                  "values": [
-
-                  ]
+                  "values": []
                 },
-                "case_management_category": "Protection",
+                "case_management_category": "Human rights",
                 "work_type_id": "decision_making_work",
                 "permissions": {
                   "values": [
@@ -89,7 +86,8 @@
                     "Execute",
                     "Cancel"
                   ]
-                }
+                },
+                "role_category": "LEGAL_OPERATIONS"
               }
             ]
           }
@@ -170,12 +168,12 @@
     "credentials": "IACaseworker",
     "ccd": [
       {
-        "eventId": "editAppealAfterSubmit",
+        "eventId": "changeHearingCentre",
         "state": "appealSubmitted",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "waDummyPostcode": "M3 1AR",
+            "applicationChangeDesignatedHearingCentre": "birmingham",
             "appellantGivenNames": "E2E",
             "appellantFamilyName": "Tests"
           }
@@ -191,7 +189,7 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "editAppealAfterSubmit"
+              "EventId": "changeHearingCentre"
             }
           }
         ]
@@ -217,11 +215,11 @@
                 "task_title": "Review the appeal",
                 "task_state": "unassigned",
                 "case_type_id": "Asylum",
-                "case_category": "Protection",
+                "case_category": "Human rights",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "location_name": "Manchester",
-                "location": "512401",
+                "location_name": "Birmingham",
+                "location": "231596",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "region": "1",
@@ -230,7 +228,7 @@
                 "warning_list": {
                   "values": []
                 },
-                "case_management_category": "Protection",
+                "case_management_category": "Human rights",
                 "work_type_id": "decision_making_work",
                 "permissions": {
                   "values": [
