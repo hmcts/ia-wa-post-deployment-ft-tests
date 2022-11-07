@@ -55,6 +55,13 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
         );
     }
 
+    public Headers getAdminOfficerAuthorization() {
+        return new Headers(
+            getAdminOfficerAuthorizationOnly(),
+            getServiceAuthorizationHeader()
+        );
+    }
+
     public Headers getWaSystemUserAuthorization() {
         return new Headers(
             getUserAuthorizationOnly(
@@ -91,6 +98,13 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
         return getUserAuthorizationOnly("TEST_WA_CASEOFFICER_PUBLIC_A_USERNAME",
                                         "TEST_WA_CASEOFFICER_PUBLIC_A_PASSWORD",
                                         "Caseworker A");
+    }
+
+    public Header getAdminOfficerAuthorizationOnly() {
+
+        return getUserAuthorizationOnly("TEST_ADMINOFFICER_USERNAME",
+                                        "TEST_ADMINOFFICER_PASSWORD",
+                                        "AdminOfficer");
     }
 
     public Header getUserAuthorizationOnly(String username, String password, String key) {
@@ -154,6 +168,8 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
                 return getLegalRepAuthorization();
             case "IACaseworker":
                 return getTribunalCaseworkerAAuthorization();
+            case "AdminOfficer":
+                return getAdminOfficerAuthorization();
             case "WaSystemUser":
                 return getWaSystemUserAuthorization();
             case "WaCaseOfficer":

@@ -255,7 +255,24 @@
         "eventId": "requestRespondentReview",
         "state": "caseUnderReview",
         "caseData": {
-          "template": "minimal-appeal-started.json"
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "homeOfficeReferenceNumber": "1212-0099-0062-8083",
+            "sendDirectionExplanation": "You have 14 days to review the appellant's argument and evidence. You must explain whether the appellant makes a valid case for overturning the original decision.\\n\\nYou must respond to the Tribunal and tell them:\\n\\n- whether you oppose all or parts of the appellant's case\\n- what your grounds are for opposing the case\\n- which of the issues are agreed or not agreed\\n- whether there are any further issues you wish to raise\\n- whether you are prepared to withdraw to grant\\n- whether the appeal can be resolved without a hearing\\n\\nNext steps\\n\\nIf you do not respond in time the Tribunal will decide how the case should proceed.",
+            "sendDirectionParties": "respondent",
+            "sendDirectionDateDue": "{$TODAY+14}"
+          }
+        }
+      },
+      {
+        "eventId": "requestResponseReview",
+        "state": "respondentReview",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "sendDirectionExplanation": "The Home Office has replied to your Appeal Skeleton Argument and evidence. You should review their response.\n\n# Next steps\n\nReview the Home Office response. If you want to respond to what they have said, you should email the Tribunal.\n\nIf you do not respond by the date indicated below, the case will automatically go to hearing.",
+            "sendDirectionDateDue": "{$TODAY+5}"
+          }
         }
       },
       {
@@ -266,21 +283,36 @@
         }
       },
       {
-        "eventId": "listCase",
-        "state": "appealSubmitted",
+        "eventId": "listCaseWithoutHearingRequirements",
+        "state": "submitHearingRequirements",
         "caseData": {
-          "template": "minimal-appeal-started.json"
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "listCaseHearingLength": "90"
+          }
+        }
+      },
+      {
+        "credentials": "AdminOfficer",
+        "eventId": "listCase",
+        "state": "listing",
+        "caseData": {
+          "template": "minimal-appeal-started-blank.json",
+          "replacements": {
+            "ariaListingReference": "LP/12345/2019",
+            "listCaseHearingCentre": "taylorHouse",
+            "listCaseHearingLength": "300",
+            "listCaseHearingDate": "2020-10-28T10:30:00.000"
+          }
         }
       },
       {
         "eventId": "editCaseListing",
         "state": "prepareForHearing",
         "caseData": {
-          "template": "minimal-appeal-started.json",
+          "template": "minimal-appeal-started-blank.json",
           "replacements": {
-            "hearingCentre": "hattonCross",
-            "appellantGivenNames": "E2E",
-            "appellantFamilyName": "Tests"
+            "listCaseHearingCentre": "hattonCross"
           }
         }
       }
@@ -304,37 +336,38 @@
       {
         "credentials": "IACaseworker",
         "status": 200,
-        "numberOfTasksAvailable": 1,
+        "numberOfTasksAvailable": 2,
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
             "tasks": [
               {
+                "name": "Create Hearing Bundle",
+                "type": "caseSummaryHearingBundleStartDecision",
+                "task_title": "Create Hearing Bundle",
                 "id": "{$VERIFIER-UUID}",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
-                "case_name": "E2E Tests",
-                "type": "reviewTheAppeal",
-                "name": "Review the appeal",
-                "task_title": "Review the appeal",
-                "task_state": "unassigned",
-                "case_type_id": "Asylum",
                 "case_category": "Protection",
+                "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "location_name": "Manchester",
-                "location": "512401",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
+                "case_type_id": "Asylum",
                 "region": "1",
+                "location": "386417",
+                "location_name": "Hatton Cross",
                 "auto_assigned": false,
                 "warnings": false,
                 "warning_list": {
-                  "values": []
+                  "values": [
+
+                  ]
                 },
                 "case_management_category": "Protection",
-                "work_type_id": "decision_making_work",
                 "permissions": {
                   "values": [
                     "Read",
@@ -344,8 +377,44 @@
                     "Execute",
                     "Cancel"
                   ]
+                }
+              },
+              {
+                "name": "Upload hearing recording",
+                "type": "uploadHearingRecording",
+                "task_title": "Upload hearing recording",
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "386417",
+                "location_name": "Hatton Cross",
+                "auto_assigned": false,
+                "warnings": false,
+                "warning_list": {
+                  "values": [
+
+                  ]
                 },
-                "role_category": "LEGAL_OPERATIONS"
+                "case_management_category": "Protection",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Refer",
+                    "Manage",
+                    "Execute",
+                    "Cancel"
+                  ]
+                }
               }
             ]
           }

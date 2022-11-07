@@ -258,13 +258,22 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         ccdCaseToUpdate.forEach(caseValues -> {
             try {
+                Headers customRequestAuthorizationHeaders = null;
+                String customRequestCredentials =
+                    MapValueExtractor.extractOrDefault(caseValues, "credentials", null);
+                if (customRequestCredentials != null) {
+                    customRequestAuthorizationHeaders =
+                        authorizationHeadersProvider.getAuthorizationHeaders(customRequestCredentials);
+                }
+
                 String caseId = CaseIdUtil.extractAssignedCaseIdOrDefault(caseValues, scenario);
                 ccdCaseCreator.updateCase(
                     caseId,
                     caseValues,
                     scenario.getJurisdiction(),
                     scenario.getCaseType(),
-                    requestAuthorizationHeaders
+                    customRequestAuthorizationHeaders == null
+                        ? requestAuthorizationHeaders : customRequestAuthorizationHeaders
                 );
                 addAssignedCaseId(caseValues, caseId, scenario);
             } catch (IOException e) {
