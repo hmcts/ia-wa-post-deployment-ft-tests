@@ -95,7 +95,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private CcdCaseCreator ccdCaseCreator;
     @Autowired
     private RestMessageService restMessageService;
-    @Value("${wa-post-deployment-test.environment}")
+    @Value("${ia-wa-post-deployment-test.environment}")
     protected String postDeploymentTestEnvironment;
 
     @Before

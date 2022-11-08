@@ -9,7 +9,7 @@ core_case_data:
   api:
     url: ${CCD_URL:http://ccd-data-store-api:4452}
 
-wa-post-deployment-test:
+ia-wa-post-deployment-test:
   environment: ${WA_POST_DEPLOYMENT_TEST_ENVIRONMENT:local}
 
 azure:

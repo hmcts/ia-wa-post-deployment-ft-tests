@@ -138,8 +138,8 @@ project.tasks['sonarqube'].dependsOn test, integration, jacocoTestReport
 
 sonarqube {
     properties {
-        property "sonar.projectName", "Reform :: wa-post-deployment-ft-tests"
-        property "sonar.projectKey", "uk.gov.hmcts.reform:wa-post-deployment-ft-tests"
+        property "sonar.projectName", "Reform :: ia-wa-post-deployment-ft-tests"
+        property "sonar.projectKey", "uk.gov.hmcts.reform:ia-wa-post-deployment-ft-tests"
         property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
     }
 }
@@ -276,7 +276,7 @@ mainClassName = 'uk.gov.hmcts.reform.wapostdeploymentfttests.Application'
 
 bootJar {
     getArchiveFileName().set(provider {
-        'wa-post-deployment-ft-tests.jar'
+        'ia-wa-post-deployment-ft-tests.jar'
     })
 
     manifest {

@@ -1,5 +1,5 @@
 java:
   applicationPort: 8888
-  image: 'hmctspublic.azurecr.io/wa/post-deployment-functional-tests:latest'
-  ingressHost: wa-post-deployment-ft-tests-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
-  aadIdentityName: wa
+  image: 'hmctspublic.azurecr.io/ia/wa-post-deployment-functional-tests:latest'
+  ingressHost: ia-wa-post-deployment-ft-tests-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+  aadIdentityName: ia
