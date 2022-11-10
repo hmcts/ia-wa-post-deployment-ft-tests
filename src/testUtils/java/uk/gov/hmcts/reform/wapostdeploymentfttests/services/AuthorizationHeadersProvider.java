@@ -72,18 +72,6 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
             getServiceAuthorizationHeader()
         );
     }
-
-    public Headers getWaCaseOfficerAuthorization() {
-        return new Headers(
-            getUserAuthorizationOnly(
-                "WA_CASEOFFICER_USERNAME",
-                "WA_CASEOFFICER_PASSWORD",
-                "WaCaseOfficer"
-            ),
-            getServiceAuthorizationHeader()
-        );
-    }
-
     public Headers getLegalRepAuthorization() {
         Header requiredHeader = getLawFirmAuthorizationOnly();
 
@@ -116,14 +104,6 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
             "TEST_WA_LAW_FIRM_USERNAME",
             "TEST_WA_LAW_FIRM_PASSWORD",
             "LawFirm"
-        );
-    }
-
-    public Header getWaDlqSystemUserAuthorization() {
-        return getUserAuthorizationOnly(
-            "TEST_WA_DLQ_PROCESS_USERNAME",
-            "TEST_WA_DLQ_PROCESS_PASSWORD",
-            "WaDlqSystemUser"
         );
     }
 
@@ -172,8 +152,6 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
                 return getAdminOfficerAuthorization();
             case "WaSystemUser":
                 return getWaSystemUserAuthorization();
-            case "WaCaseOfficer":
-                return getWaCaseOfficerAuthorization();
             default:
                 throw new IllegalStateException("Credentials implementation for '" + credentials + "' not found");
         }

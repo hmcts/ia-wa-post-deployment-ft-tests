@@ -13,7 +13,7 @@ management:
 
 spring:
   application:
-    name: WA post deployment functional test
+    name: IA WA post deployment functional test
   main:
     allow-bean-definition-overriding: true
   security:
