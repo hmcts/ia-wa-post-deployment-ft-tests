@@ -7,9 +7,9 @@ wa_task_monitor_api:
 
 core_case_data:
   api:
-    url: ${CCD_URL:http://ccd-data-store-api}
+    url: ${CCD_URL:http://ccd-data-store-api:4452}
 
-wa-post-deployment-test:
+ia-wa-post-deployment-test:
   environment: ${WA_POST_DEPLOYMENT_TEST_ENVIRONMENT:local}
 
 azure:
@@ -23,7 +23,7 @@ govUk:
 
 
 document_management:
-  url: ${DM_STORE_URL:http://local-dm-store}
+  url: ${DM_STORE_URL:http://dm-store:4506}
 
 ccd_gateway:
-  url: ${CCD_GW_URL:http://ccd-api-gateway}
+  url: ${CCD_GW_URL:http://ccd-data-store-api:4452}
