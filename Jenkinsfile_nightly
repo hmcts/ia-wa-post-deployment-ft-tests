@@ -14,7 +14,7 @@ def component = "wa-post-deployment-ft-tests"
 
 
 def secrets = [
-        'wa-${env}' : [
+        'ia-${env}' : [
                 secret('idam-redirect-uri', 'IA_IDAM_REDIRECT_URI'),
 
                 secret('idam-secret', 'WA_IDAM_CLIENT_SECRET'),
