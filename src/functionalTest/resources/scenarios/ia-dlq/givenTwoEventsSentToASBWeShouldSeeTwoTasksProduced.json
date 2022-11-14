@@ -97,9 +97,8 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
-                    "Own",
-                    "Manage",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete","Unclaim",
                     "Execute",
                     "Cancel"
                   ]
@@ -134,9 +133,8 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
-                    "Own",
-                    "Manage",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete","Unclaim",
                     "Execute",
                     "Cancel"
                   ]
@@ -153,8 +151,7 @@
               "role_category": "LEGAL_OPERATIONS",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
+                "Own","Claim",
                 "Cancel"
               ],
               "authorisations": [
@@ -165,9 +162,8 @@
               "role_category": "LEGAL_OPERATIONS",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
-                "Manage",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete","Unclaim",
                 "Cancel"
               ],
               "authorisations": [
@@ -177,9 +173,8 @@
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute",
-                "Manage",
+                "Manage","Unassign","Assign","Complete","Unclaim",
+                "Execute","Claim",
                 "Cancel"
               ],
               "authorisations": [
@@ -190,9 +185,8 @@
               "role_category": "LEGAL_OPERATIONS",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
-                "Manage",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete","Unclaim",
                 "Cancel"
               ],
               "authorisations": [
