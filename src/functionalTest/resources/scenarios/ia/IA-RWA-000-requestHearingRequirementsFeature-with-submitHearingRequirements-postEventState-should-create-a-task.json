@@ -100,7 +100,7 @@
               "role_name": "case-manager",
               "permissions": [
                 "Read",
-                ""Own","Claim",,
+                "Own","Claim",
                 "Cancel"
               ],
               "authorisations": [
