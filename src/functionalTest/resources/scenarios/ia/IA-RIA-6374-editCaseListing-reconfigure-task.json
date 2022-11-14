@@ -81,9 +81,8 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
-                    "Own",
-                    "Manage",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete","Unclaim",
                     "Execute",
                     "Cancel"
                   ]
@@ -119,9 +118,8 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
-                    "Manage",
-                    "Execute",
+                    "Manage","Unassign","Assign","Complete","Unclaim",
+                    "Execute","Claim",
                     "Cancel"
                   ]
                 }
@@ -137,8 +135,7 @@
               "role_name": "case-manager",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
+                "Own","Claim",
                 "Cancel"
               ],
               "authorisations": [
@@ -149,9 +146,8 @@
               "role_name": "senior-tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
-                "Manage",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete","Unclaim",
                 "Cancel"
               ],
               "authorisations": [
@@ -161,9 +157,8 @@
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute",
-                "Manage",
+                "Manage","Unassign","Assign","Complete","Unclaim",
+                "Execute","Claim",
                 "Cancel"
               ],
               "authorisations": [
@@ -174,9 +169,8 @@
               "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
-                "Manage",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete","Unclaim",
                 "Cancel"
               ],
               "authorisations": [
@@ -371,9 +365,8 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
-                    "Own",
-                    "Manage",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete","Unclaim",
                     "Execute",
                     "Cancel"
                   ]
@@ -409,9 +402,8 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
-                    "Manage",
-                    "Execute",
+                    "Manage","Unassign","Assign","Complete","Unclaim",
+                    "Execute","Claim",
                     "Cancel"
                   ]
                 }
@@ -426,8 +418,7 @@
               "role_name": "case-manager",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
+                "Own","Claim",
                 "Cancel"
               ],
               "authorisations": [
@@ -438,9 +429,8 @@
               "role_name": "senior-tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
-                "Manage",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete","Unclaim",
                 "Cancel"
               ],
               "authorisations": [
@@ -450,9 +440,8 @@
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute",
-                "Manage",
+                "Manage","Unassign","Assign","Complete","Unclaim",
+                "Execute","Claim",
                 "Cancel"
               ],
               "authorisations": [
@@ -463,9 +452,8 @@
               "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
-                "Manage",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete","Unclaim",
                 "Cancel"
               ],
               "authorisations": [
