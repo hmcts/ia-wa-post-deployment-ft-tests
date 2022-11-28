@@ -1,5 +1,5 @@
 {
-  "description": "prepareForHearing post event state should create a caseSummaryHearingBundleStartDecision task",
+  "description": "submitAppeal event with remission applicable and post event state appealSubmitted should create a reviewRemissionApplication task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -16,7 +16,8 @@
           "template": "minimal-appeal-started.json",
           "replacements": {
             "appealType": "protection",
-            "homeOfficeDecisionDate": "{$TODAY-14}"
+            "homeOfficeDecisionDate": "{$TODAY-14}",
+            "remissionType": "exceptionalCircumstancesRemission"
           }
         }
       }
@@ -30,11 +31,12 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "listCase",
-              "NewStateId": "prepareForHearing",
+              "EventId": "submitAppeal",
+              "NewStateId": "appealSubmitted",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "protection",
+                  "remissionType": "exceptionalCircumstancesRemission"
                 }
               }
             }
@@ -44,24 +46,24 @@
     },
     "expectations": [
       {
-        "credentials": "IACaseworker",
+        "credentials": "CTSCAdmin",
         "status": 200,
-        "numberOfTasksAvailable": 2,
+        "numberOfTasksAvailable": 1,
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
             "tasks": [
               {
-                "name": "Create Hearing Bundle",
-                "type": "caseSummaryHearingBundleStartDecision",
-                "task_title": "Create Hearing Bundle",
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
+                "name": "Review Remission Application",
+                "type": "reviewRemissionApplication",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
+                "task_title": "Review Remission Application",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
@@ -72,54 +74,19 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
+                "role_category": "CTSC",
                 "warning_list": {
                   "values": [
 
                   ]
                 },
                 "case_management_category": "Protection",
+                "work_type_id": "routine_work",
                 "permissions": {
                   "values": [
                     "Read",
                     "Own","Claim",
                     "Manage","Unassign","Assign","Complete","Unclaim",
-                    "Execute",
-                    "Cancel"
-                  ]
-                }
-              },
-              {
-                "name": "Upload hearing recording",
-                "type": "uploadHearingRecording",
-                "task_title": "Upload hearing recording",
-                "id": "{$VERIFIER-UUID}",
-                "case_name": "Functional PostDeployment",
-                "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
-                "task_state": "unassigned",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "execution_type": "Case Management Task",
-                "jurisdiction": "IA",
-                "case_type_id": "Asylum",
-                "region": "1",
-                "location": "765324",
-                "location_name": "Taylor House",
-                "auto_assigned": false,
-                "warnings": false,
-                "warning_list": {
-                  "values": [
-
-                  ]
-                },
-                "case_management_category": "Protection",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Manage","Unassign","Assign","Complete","Unclaim",
-                    "Execute","Claim",
                     "Cancel"
                   ]
                 }
@@ -127,53 +94,42 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
+        "numberOfRolesAvailable": 3,
         "roleData": {
-          "roles": [
+          "roles":[
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "case-manager",
-              "permissions": [
-                "Read",
-                "Own","Claim",
-                "Cancel"
-              ],
-              "authorisations": [
-              ]
-            },
-            {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "senior-tribunal-caseworker",
-              "permissions": [
+              "role_category":"CTSC",
+              "role_name":"ctsc",
+              "permissions":[
                 "Read",
                 "Own","Claim",
                 "Manage","Unassign","Assign","Complete","Unclaim",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
               ]
             },
             {
-              "role_name": "task-supervisor",
-              "permissions": [
+              "role_category":"CTSC",
+              "role_name":"ctsc-team-leader",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete","Unclaim",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_name":"task-supervisor",
+              "permissions":[
                 "Read",
                 "Manage","Unassign","Assign","Complete","Unclaim",
                 "Execute","Claim",
                 "Cancel"
               ],
-              "authorisations": [
-              ]
-            },
-            {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "tribunal-caseworker",
-              "permissions": [
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete","Unclaim",
-                "Cancel"
-              ],
-              "authorisations": [
+              "authorisations":[
               ]
             }
           ]

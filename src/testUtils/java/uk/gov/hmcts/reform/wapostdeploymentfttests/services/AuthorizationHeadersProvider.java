@@ -55,6 +55,13 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
         );
     }
 
+    public Headers getCTSCAdminAuthorization() {
+        return new Headers(
+            getCTSCAdminAuthorizationOnly(),
+            getServiceAuthorizationHeader()
+        );
+    }
+
     public Headers getAdminOfficerAuthorization() {
         return new Headers(
             getAdminOfficerAuthorizationOnly(),
@@ -86,6 +93,13 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
         return getUserAuthorizationOnly("TEST_WA_CASEOFFICER_PUBLIC_A_USERNAME",
                                         "TEST_WA_CASEOFFICER_PUBLIC_A_PASSWORD",
                                         "Caseworker A");
+    }
+
+    public Header getCTSCAdminAuthorizationOnly() {
+
+        return getUserAuthorizationOnly("TEST_CTSC_ADMIN_USERNAME",
+                                        "TEST_CTSC_ADMIN_PASSWORD",
+                                        "CTSCAdmin");
     }
 
     public Header getAdminOfficerAuthorizationOnly() {
@@ -148,6 +162,8 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
                 return getLegalRepAuthorization();
             case "IACaseworker":
                 return getTribunalCaseworkerAAuthorization();
+            case "CTSCAdmin":
+                return getCTSCAdminAuthorization();
             case "AdminOfficer":
                 return getAdminOfficerAuthorization();
             case "WaSystemUser":

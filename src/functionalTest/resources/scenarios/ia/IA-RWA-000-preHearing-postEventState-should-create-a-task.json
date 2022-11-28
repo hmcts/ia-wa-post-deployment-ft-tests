@@ -80,9 +80,8 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
-                    "Manage",
-                    "Execute",
+                    "Manage","Unassign","Assign","Complete","Unclaim",
+                    "Execute","Claim",
                     "Cancel"
                   ]
                 }
@@ -98,9 +97,8 @@
               "role_name":"hearing-centre-admin",
               "permissions":[
                 "Read",
-                "Refer",
-                "Own",
-                "Manage",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete","Unclaim",
                 "Cancel"
               ],
               "authorisations":[
@@ -111,9 +109,8 @@
               "role_name":"task-supervisor",
               "permissions":[
                 "Read",
-                "Refer",
-                "Manage",
-                "Execute",
+                "Manage","Unassign","Assign","Complete","Unclaim",
+                "Execute","Claim",
                 "Cancel"
               ],
               "authorisations":[
