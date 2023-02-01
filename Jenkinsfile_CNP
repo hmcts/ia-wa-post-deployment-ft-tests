@@ -14,8 +14,8 @@ def component = "wa-post-deployment-ft-tests"
 def secrets = [
   'ia-${env}' : [
     secret('idam-redirect-uri', 'IA_IDAM_REDIRECT_URI'),
-
-    secret('idam-secret', 'WA_IDAM_CLIENT_SECRET'),
+    secret('idam-client-id', 'IA_IDAM_CLIENT_ID'),
+    secret('idam-secret', 'IA_IDAM_CLIENT_SECRET'),
 
     secret('ccd-shared-servicebus-connection-string', 'AZURE_SERVICE_BUS_CONNECTION_STRING'),
 
