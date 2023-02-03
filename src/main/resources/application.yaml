@@ -13,7 +13,7 @@ management:
 
 spring:
   application:
-    name: WA post deployment functional test
+    name: IA WA post deployment functional test
   main:
     allow-bean-definition-overriding: true
   security:
@@ -21,8 +21,8 @@ spring:
       client:
         registration:
           oidc:
-            client-id: ${WA_IDAM_CLIENT_ID:wa}
-            client-secret: ${WA_IDAM_CLIENT_SECRET:something}
+            client-id: ${IA_IDAM_CLIENT_ID:ia}
+            client-secret: ${IA_IDAM_CLIENT_SECRET:something}
 azure:
   application-insights:
     instrumentation-key: ${wa.AppInsightsInstrumentationKey:00000000-0000-0000-0000-000000000000}
@@ -42,7 +42,7 @@ camunda:
   url: ${CAMUNDA_URL:http://camunda-local-bpm/engine-rest}
 
 role-assignment-service:
-  url: ${ROLE_ASSIGNMENT_URL:http://role-assignment}
+  url: ${ROLE_ASSIGNMENT_URL:http://am-role-assignment-service:4096}
 
 logging:
   level:

@@ -95,7 +95,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private CcdCaseCreator ccdCaseCreator;
     @Autowired
     private RestMessageService restMessageService;
-    @Value("${wa-post-deployment-test.environment}")
+    @Value("${ia-wa-post-deployment-test.environment}")
     protected String postDeploymentTestEnvironment;
 
     @Before
@@ -246,7 +246,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
     private void updateBaseCcdCase(TestScenario scenario) {
         Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
-        String requestCredentials = extractOrThrow(scenarioValues, "required.credentials");
+        String requestCredentials = extractOrThrow(scenarioValues, "requiredUpdate.credentials");
 
         Headers requestAuthorizationHeaders = authorizationHeadersProvider
             .getAuthorizationHeaders(requestCredentials);
@@ -258,13 +258,22 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         ccdCaseToUpdate.forEach(caseValues -> {
             try {
+                Headers customRequestAuthorizationHeaders = null;
+                String customRequestCredentials =
+                    MapValueExtractor.extractOrDefault(caseValues, "credentials", null);
+                if (customRequestCredentials != null) {
+                    customRequestAuthorizationHeaders =
+                        authorizationHeadersProvider.getAuthorizationHeaders(customRequestCredentials);
+                }
+
                 String caseId = CaseIdUtil.extractAssignedCaseIdOrDefault(caseValues, scenario);
                 ccdCaseCreator.updateCase(
                     caseId,
                     caseValues,
                     scenario.getJurisdiction(),
                     scenario.getCaseType(),
-                    requestAuthorizationHeaders
+                    customRequestAuthorizationHeaders == null
+                        ? requestAuthorizationHeaders : customRequestAuthorizationHeaders
                 );
                 addAssignedCaseId(caseValues, caseId, scenario);
             } catch (IOException e) {

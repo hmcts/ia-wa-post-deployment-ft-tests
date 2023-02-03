@@ -8,31 +8,28 @@ properties([
 @Library("Infrastructure")
 
 def type = "java"
-def product = "wa"
-def component = "post-deployment-ft-tests"
+def product = "ia"
+def component = "wa-post-deployment-ft-tests"
 
 def secrets = [
-  'wa-${env}' : [
+  'ia-${env}' : [
     secret('idam-redirect-uri', 'IA_IDAM_REDIRECT_URI'),
-
-    secret('wa-idam-client-secret', 'WA_IDAM_CLIENT_SECRET'),
+    secret('idam-client-id', 'IA_IDAM_CLIENT_ID'),
+    secret('idam-secret', 'IA_IDAM_CLIENT_SECRET'),
 
     secret('ccd-shared-servicebus-connection-string', 'AZURE_SERVICE_BUS_CONNECTION_STRING'),
 
-    secret('wa-test-law-firm-a-username', 'TEST_WA_LAW_FIRM_USERNAME'),
-    secret('wa-test-law-firm-a-password', 'TEST_WA_LAW_FIRM_PASSWORD'),
-
-    secret('wa-test-dlq-username', 'TEST_WA_DLQ_PROCESS_USERNAME'),
-    secret('wa-test-dlq-password', 'TEST_WA_DLQ_PROCESS_PASSWORD'),
+    secret('test-law-firm-a-username', 'TEST_WA_LAW_FIRM_USERNAME'),
+    secret('test-law-firm-a-password', 'TEST_WA_LAW_FIRM_PASSWORD'),
 
     secret('wa-test-caseofficer-a-username', 'TEST_WA_CASEOFFICER_PUBLIC_A_USERNAME'),
     secret('wa-test-caseofficer-a-password', 'TEST_WA_CASEOFFICER_PUBLIC_A_PASSWORD'),
 
-    secret('wa-system-username', 'WA_SYSTEM_USERNAME'),
-    secret('wa-system-password', 'WA_SYSTEM_PASSWORD'),
+    secret('system-username', 'WA_SYSTEM_USERNAME'),
+    secret('system-password', 'WA_SYSTEM_PASSWORD'),
 
-    secret('wa-caseofficer-username', 'WA_CASEOFFICER_USERNAME'),
-    secret('wa-caseofficer-password', 'WA_CASEOFFICER_PASSWORD'),
+    secret('wa-test-adminofficer-username', 'TEST_ADMINOFFICER_USERNAME'),
+    secret('wa-test-adminofficer-password', 'TEST_ADMINOFFICER_PASSWORD')
   ],
   's2s-${env}': [
     secret('microservicekey-wa-task-management-api', 'S2S_SECRET_TASK_MANAGEMENT_API'),

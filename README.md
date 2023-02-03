@@ -1,6 +1,6 @@
-# wa-post-deployment-ft-tests
+# ia-wa-post-deployment-ft-tests
 
-[![Build Status](https://travis-ci.org/hmcts/wa-post-deployment-ft-tests.svg?branch=master)](https://travis-ci.org/hmcts/wa-post-deployment-ft-tests)
+[![Build Status](https://travis-ci.org/hmcts/ia-wa-post-deployment-ft-tests.svg?branch=master)](https://travis-ci.org/hmcts/wa-post-deployment-ft-tests)
 
 ## Purpose
 This repository contains a set of functional tests which are designed to run periodically or after a helm deployment as a post deployment job to ensure regression.

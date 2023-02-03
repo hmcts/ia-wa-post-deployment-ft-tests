@@ -55,6 +55,13 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
         );
     }
 
+    public Headers getAdminOfficerAuthorization() {
+        return new Headers(
+            getAdminOfficerAuthorizationOnly(),
+            getServiceAuthorizationHeader()
+        );
+    }
+
     public Headers getWaSystemUserAuthorization() {
         return new Headers(
             getUserAuthorizationOnly(
@@ -65,18 +72,6 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
             getServiceAuthorizationHeader()
         );
     }
-
-    public Headers getWaCaseOfficerAuthorization() {
-        return new Headers(
-            getUserAuthorizationOnly(
-                "WA_CASEOFFICER_USERNAME",
-                "WA_CASEOFFICER_PASSWORD",
-                "WaCaseOfficer"
-            ),
-            getServiceAuthorizationHeader()
-        );
-    }
-
     public Headers getLegalRepAuthorization() {
         Header requiredHeader = getLawFirmAuthorizationOnly();
 
@@ -93,6 +88,13 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
                                         "Caseworker A");
     }
 
+    public Header getAdminOfficerAuthorizationOnly() {
+
+        return getUserAuthorizationOnly("TEST_ADMINOFFICER_USERNAME",
+                                        "TEST_ADMINOFFICER_PASSWORD",
+                                        "AdminOfficer");
+    }
+
     public Header getUserAuthorizationOnly(String username, String password, String key) {
         return getAuthorization(key, System.getenv(username), System.getenv(password));
     }
@@ -102,14 +104,6 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
             "TEST_WA_LAW_FIRM_USERNAME",
             "TEST_WA_LAW_FIRM_PASSWORD",
             "LawFirm"
-        );
-    }
-
-    public Header getWaDlqSystemUserAuthorization() {
-        return getUserAuthorizationOnly(
-            "TEST_WA_DLQ_PROCESS_USERNAME",
-            "TEST_WA_DLQ_PROCESS_PASSWORD",
-            "WaDlqSystemUser"
         );
     }
 
@@ -154,10 +148,10 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
                 return getLegalRepAuthorization();
             case "IACaseworker":
                 return getTribunalCaseworkerAAuthorization();
+            case "AdminOfficer":
+                return getAdminOfficerAuthorization();
             case "WaSystemUser":
                 return getWaSystemUserAuthorization();
-            case "WaCaseOfficer":
-                return getWaCaseOfficerAuthorization();
             default:
                 throw new IllegalStateException("Credentials implementation for '" + credentials + "' not found");
         }

@@ -1,8 +1,9 @@
 {
-  "description": "Given two events sent using REST endpoint, first one DLQ and second to subscription, we should see two tasks produced",
+  "description": "editAppealAfterSubmit event should trigger reconfiguration",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
+  "testType": "Reconfiguration",
   "options": {
     "taskRetrievalApi": "task-management-api"
   },
@@ -15,42 +16,25 @@
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "deprivation",
+            "appealType": "protection",
             "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
       }
     ]
   },
-  "test": {
+  "before": {
     "request": {
-      "credentials": "IALegalRepresentative",
       "input": {
         "eventMessages": [
           {
             "template": "minimal-ccd-event-message.json",
-            "destination": "RestEndpointFromDLQ",
-            "replacements": {
-              "EventId": "requestRespondentEvidence",
-              "NewStateId": "awaitingRespondentEvidence",
-              "EventTimeStamp": "{$LOCAL_DATETIME_TODAY-2HOURS}",
-              "AdditionalData": {
-                "Data": {
-                  "appealType": "deprivation"
-                }
-              }
-            }
-          },
-          {
-            "template": "minimal-ccd-event-message.json",
-            "destination": "RestEndpoint",
             "replacements": {
               "EventId": "submitAppeal",
               "NewStateId": "appealSubmitted",
-              "EventTimeStamp": "{$LOCAL_DATETIME_TODAY-1HOURS}",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "deprivation"
+                  "appealType": "revocationOfProtection"
                 }
               }
             }
@@ -62,22 +46,22 @@
       {
         "credentials": "IACaseworker",
         "status": 200,
-        "numberOfTasksAvailable": 2,
+        "numberOfTasksAvailable": 1,
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
             "tasks": [
               {
-                "name": "Follow-up overdue respondent evidence",
-                "type": "followUpOverdueRespondentEvidence",
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "DoC",
+                "case_category": "Protection",
+                "name": "Review the appeal",
+                "type": "reviewTheAppeal",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Follow-up overdue respondent evidence",
+                "task_title": "Review the appeal",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
@@ -94,7 +78,7 @@
 
                   ]
                 },
-                "case_management_category": "DoC",
+                "case_management_category": "Protection",
                 "work_type_id": "decision_making_work",
                 "permissions": {
                   "values": [
@@ -106,23 +90,138 @@
                     "Cancel"
                   ]
                 }
-              },
+              }
+            ]
+          }
+        },
+        "roleData": {
+          "roles": [
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "case-manager",
+              "permissions": [
+                "Read",
+                "Refer",
+                "Own",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "senior-tribunal-caseworker",
+              "permissions": [
+                "Read",
+                "Refer",
+                "Own",
+                "Manage",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_name": "task-supervisor",
+              "permissions": [
+                "Read",
+                "Refer",
+                "Execute",
+                "Manage",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "tribunal-caseworker",
+              "permissions": [
+                "Read",
+                "Refer",
+                "Own",
+                "Manage",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "postRoleAssignments" : {
+    "credentials": "IACaseworker",
+    "roleData": {
+      "template": "set-organisational-role-assignment-request.json",
+      "replacements": {
+        "roleName": "tribunal-caseworker",
+        "caseType": "Asylum",
+        "jurisdiction": "IA",
+        "grantType": "SPECIFIC",
+        "roleType": "CASE",
+        "classification": "PUBLIC",
+        "roleCategory": "LEGAL_OPERATIONS"
+      }
+    }
+  },
+  "requiredUpdate": {
+    "credentials": "IACaseworker",
+    "ccd": [
+      {
+        "eventId": "editAppealAfterSubmit",
+        "state": "appealSubmitted",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "waDummyPostcode": "M3 1AR",
+            "appellantGivenNames": "E2E",
+            "appellantFamilyName": "Tests"
+          }
+        }
+      }
+    ]
+  },
+  "test": {
+    "request": {
+      "credentials": "IACaseworker",
+      "input": {
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json",
+            "replacements": {
+              "EventId": "editAppealAfterSubmit"
+            }
+          }
+        ]
+      }
+    },
+    "expectations": [
+      {
+        "credentials": "IACaseworker",
+        "status": 200,
+        "numberOfTasksAvailable": 1,
+        "taskData": {
+          "template": "minimal-task-response.json",
+          "replacements": {
+            "tasks": [
               {
-                "name": "Review the appeal",
-                "type": "reviewTheAppeal",
                 "id": "{$VERIFIER-UUID}",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "case_id": "{$GENERATED_CASE_ID}",
-                "case_name": "Functional PostDeployment",
+                "case_name": "E2E Tests",
+                "type": "reviewTheAppeal",
+                "name": "Review the appeal",
                 "task_title": "Review the appeal",
                 "task_state": "unassigned",
                 "case_type_id": "Asylum",
-                "case_category": "DoC",
+                "case_category": "Protection",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "location_name": "Taylor House",
-                "location": "765324",
+                "location_name": "Manchester",
+                "location": "512401",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "region": "1",
@@ -131,7 +230,7 @@
                 "warning_list": {
                   "values": []
                 },
-                "case_management_category": "DoC",
+                "case_management_category": "Protection",
                 "work_type_id": "decision_making_work",
                 "permissions": {
                   "values": [
