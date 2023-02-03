@@ -6,6 +6,9 @@
   "homeOfficeReferenceNumber": "000123456",
   "homeOfficeDecisionDate": "2019-08-01",
   "appealType": "protection",
+  "appealTypeForDisplay": "protection",
+  "isOutOfCountryEnabled": "Yes",
+  "appellantInUk": "Yes",
   "submissionOutOfTime": "No",
   "subscriptions": [
     {

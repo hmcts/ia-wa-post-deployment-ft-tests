@@ -34,7 +34,7 @@
               "NewStateId": "appealSubmitted",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "revocationOfProtection"
+                  "appealType": "protection"
                 }
               }
             }

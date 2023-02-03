@@ -1,5 +1,5 @@
 {
-  "description": "submitAppeal event with remission applicable and post event state pendingPayment should create a reviewRemissionApplication task",
+  "description": "submitAppeal with ADA appeal submitted post event state should create an adaReviewTheAppeal task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -15,10 +15,9 @@
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "refusalOfHumanRights",
-            "appealTypeForDisplay": "refusalOfHumanRights",
-            "homeOfficeDecisionDate": "{$TODAY-14}",
-            "remissionType": "hoWaiverRemission"
+            "appealType": "protection",
+            "isAcceleratedDetainedAppeal": "Yes",
+            "decisionLetterReceivedDate": "{$TODAY-3}"
           }
         }
       }
@@ -33,11 +32,11 @@
             "template": "minimal-ccd-event-message.json",
             "replacements": {
               "EventId": "submitAppeal",
-              "NewStateId": "pendingPayment",
+              "NewStateId": "appealSubmitted",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "refusalOfHumanRights",
-                  "remissionType": "hoWaiverRemission"
+                  "appealType": "protection",
+                  "isAcceleratedDetainedAppeal": "Yes"
                 }
               }
             }
@@ -47,7 +46,7 @@
     },
     "expectations": [
       {
-        "credentials": "CTSCAdmin",
+        "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskData": {
@@ -58,36 +57,37 @@
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Human rights",
-                "name": "Review Remission Application",
-                "type": "reviewRemissionApplication",
+                "case_category": "Protection",
+                "name": "ADA-Review the appeal",
+                "type": "adaReviewTheAppeal",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Review Remission Application",
+                "task_title": "ADA-Review the appeal",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
                 "region": "1",
-                "location": "765324",
-                "location_name": "Taylor House",
+                "location": "28837",
+                "location_name": "Harmondsworth",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "CTSC",
+                "role_category": "LEGAL_OPERATIONS",
                 "warning_list": {
                   "values": [
 
                   ]
                 },
-                "case_management_category": "Human rights",
-                "work_type_id": "routine_work",
+                "case_management_category": "Protection",
+                "work_type_id": "decision_making_work",
                 "permissions": {
                   "values": [
                     "Read",
                     "Own","Claim",
                     "Manage","Unassign","Assign","Complete","Unclaim",
+                    "Execute",
                     "Cancel"
                   ]
                 }
@@ -95,42 +95,52 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 3,
         "roleData": {
-          "roles":[
+          "roles": [
             {
-              "role_category":"CTSC",
-              "role_name":"ctsc",
-              "permissions":[
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "case-manager",
+              "permissions": [
+                "Read",
+                "Own","Claim",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "senior-tribunal-caseworker",
+              "permissions": [
                 "Read",
                 "Own","Claim",
                 "Manage","Unassign","Assign","Complete","Unclaim",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             },
             {
-              "role_category":"CTSC",
-              "role_name":"ctsc-team-leader",
-              "permissions":[
+              "role_name": "task-supervisor",
+              "permissions": [
                 "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete","Unclaim",
-                "Cancel"
-              ],
-              "authorisations":[
-              ]
-            },
-            {
-              "role_name":"task-supervisor",
-              "permissions":[
-                "Read",
-                "Manage","Unassign","Assign","Complete","Unclaim",
                 "Execute","Claim",
+                "Manage","Unassign","Assign","Complete","Unclaim",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "tribunal-caseworker",
+              "permissions": [
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete","Unclaim",
+                "Cancel"
+              ],
+              "authorisations": [
               ]
             }
           ]
@@ -139,4 +149,3 @@
     ]
   }
 }
-
