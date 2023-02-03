@@ -84,7 +84,7 @@
                   "values": [
                     "Read",
                     "Own","Claim",
-                    "Manage","Unassign","Assign","Complete","Unclaim",
+                    "Manage","Unassign","Assign","Complete",
                     "Execute",
                     "Cancel"
                   ]
@@ -112,7 +112,7 @@
               "permissions": [
                 "Read",
                 "Own","Claim",
-                "Manage","Unassign","Assign","Complete","Unclaim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations": [
@@ -123,7 +123,7 @@
               "permissions": [
                 "Read",
                 "Execute","Claim",
-                "Manage","Unassign","Assign","Complete","Unclaim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations": [
@@ -135,7 +135,7 @@
               "permissions": [
                 "Read",
                 "Own","Claim",
-                "Manage","Unassign","Assign","Complete","Unclaim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations": [

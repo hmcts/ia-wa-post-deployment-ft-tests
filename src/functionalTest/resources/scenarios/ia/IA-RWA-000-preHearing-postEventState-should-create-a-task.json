@@ -80,7 +80,7 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Manage","Unassign","Assign","Complete","Unclaim",
+                    "Manage","Unassign","Assign","Complete",
                     "Execute","Claim",
                     "Cancel"
                   ]
@@ -98,7 +98,7 @@
               "permissions":[
                 "Read",
                 "Own","Claim",
-                "Manage","Unassign","Assign","Complete","Unclaim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations":[
@@ -109,7 +109,7 @@
               "role_name":"task-supervisor",
               "permissions":[
                 "Read",
-                "Manage","Unassign","Assign","Complete","Unclaim",
+                "Manage","Unassign","Assign","Complete",
                 "Execute","Claim",
                 "Cancel"
               ],
