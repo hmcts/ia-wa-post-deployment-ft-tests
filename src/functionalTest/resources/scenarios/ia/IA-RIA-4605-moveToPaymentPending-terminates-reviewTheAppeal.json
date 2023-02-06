@@ -46,6 +46,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
+        "taskTypes": ["reviewTheAppeal"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -79,9 +80,8 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
-                    "Own",
-                    "Manage",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete",
                     "Execute",
                     "Cancel"
                   ]
@@ -98,8 +98,7 @@
               "role_name": "case-manager",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
+                "Own","Claim",
                 "Cancel"
               ],
               "authorisations": [
@@ -110,9 +109,8 @@
               "role_name": "senior-tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
-                "Manage",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations": [
@@ -122,9 +120,8 @@
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute",
-                "Manage",
+                "Execute","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations": [
@@ -135,9 +132,8 @@
               "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
-                "Manage",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations": [
@@ -173,6 +169,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
+        "taskTypes": ["reviewTheAppeal"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -206,9 +203,8 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
-                    "Own",
-                    "Manage",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete",
                     "Execute",
                     "Cancel"
                   ]
@@ -225,8 +221,7 @@
               "role_name": "case-manager",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
+                "Own","Claim",
                 "Cancel"
               ],
               "authorisations": [
@@ -237,9 +232,8 @@
               "role_name": "senior-tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
-                "Manage",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations": [
@@ -249,9 +243,8 @@
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
-                "Refer",
-                "Execute",
-                "Manage",
+                "Execute","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations": [
@@ -262,9 +255,8 @@
               "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Refer",
-                "Own",
-                "Manage",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations": [

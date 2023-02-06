@@ -47,6 +47,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
+        "taskTypes": ["allocateHearingJudge"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -80,9 +81,8 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Refer",
-                    "Manage",
-                    "Execute",
+                    "Manage","Unassign","Assign","Complete",
+                    "Execute","Claim",
                     "Cancel"
                   ]
                 }
@@ -98,9 +98,8 @@
               "role_name":"hearing-centre-admin",
               "permissions":[
                 "Read",
-                "Refer",
-                "Own",
-                "Manage",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations":[
@@ -111,9 +110,8 @@
               "role_name":"task-supervisor",
               "permissions":[
                 "Read",
-                "Refer",
-                "Manage",
-                "Execute",
+                "Manage","Unassign","Assign","Complete",
+                "Execute","Claim",
                 "Cancel"
               ],
               "authorisations":[

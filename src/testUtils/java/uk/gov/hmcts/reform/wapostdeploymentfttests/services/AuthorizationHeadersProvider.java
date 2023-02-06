@@ -72,6 +72,7 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
             getServiceAuthorizationHeader()
         );
     }
+
     public Headers getLegalRepAuthorization() {
         Header requiredHeader = getLawFirmAuthorizationOnly();
 

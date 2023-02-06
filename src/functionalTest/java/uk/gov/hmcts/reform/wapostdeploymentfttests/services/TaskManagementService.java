@@ -49,7 +49,17 @@ public class TaskManagementService {
             "values", caseIds
         );
 
+        List<String> expectedTaskList = MapValueExtractor.extractOrThrow(
+            clauseValues, "taskTypes");
+
+        Map<String, Object> searchParameter2 = Map.of(
+            "key", "task_type",
+            "operator", "IN",
+            "values", expectedTaskList
+        );
+
         scenario.addSearchMap(searchParameter);
+        scenario.addSearchMap(searchParameter2);
         Map<String, Set<Map<String, Object>>> requestBody = Map.of("search_parameters", scenario.getSearchMap());
 
         //Also trigger (CRON) Jobs programmatically
