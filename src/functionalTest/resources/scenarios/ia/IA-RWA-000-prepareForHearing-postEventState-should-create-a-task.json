@@ -47,6 +47,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 2,
+        "taskTypes": ["caseSummaryHearingBundleStartDecision", "uploadHearingRecording"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {

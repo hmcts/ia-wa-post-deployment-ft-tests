@@ -47,6 +47,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
+        "taskTypes": ["followUpOverdueClarifyingAnswers"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
