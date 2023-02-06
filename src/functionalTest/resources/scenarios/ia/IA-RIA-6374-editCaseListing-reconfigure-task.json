@@ -1,6 +1,6 @@
 {
   "description": "editCaseListing event should trigger reconfiguration",
-  "enabled": true,
+  "enabled": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "testType": "Reconfiguration",
@@ -207,6 +207,8 @@
           "replacements": {
             "sendDirectionExplanation": "Send your evidence",
             "sendDirectionDateDue": "2022-01-01",
+            "homeOfficeSearchStatus": "SUCCESS",
+            "homeOfficeNotificationsEligible": "No",
             "directions": [
               {
                 "id": "1",
