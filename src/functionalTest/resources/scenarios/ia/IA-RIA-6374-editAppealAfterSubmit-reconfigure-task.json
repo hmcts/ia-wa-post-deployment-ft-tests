@@ -34,7 +34,7 @@
               "NewStateId": "appealSubmitted",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "revocationOfProtection"
+                  "appealType": "protection"
                 }
               }
             }
@@ -198,6 +198,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
+        "taskTypes": ["reviewTheAppeal"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {

@@ -17,6 +17,7 @@
           "template": "minimal-appeal-started.json",
           "replacements": {
             "appealType": "refusalOfHumanRights",
+            "appealTypeForDisplay": "refusalOfHumanRights",
             "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
