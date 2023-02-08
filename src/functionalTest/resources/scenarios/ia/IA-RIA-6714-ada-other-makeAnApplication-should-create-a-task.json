@@ -1,5 +1,5 @@
 {
-  "description": "makeAnApplication event with ADA and Withdraw application type should create a adaProcessApplicationToWithdraw task",
+  "description": "makeAnApplication event with ADA and Other application type should create a adaProcessApplicationToOther task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -38,7 +38,7 @@
                   "appealType": "protection",
                   "isAcceleratedDetainedAppeal": "Yes",
                   "lastModifiedApplication": {
-                    "type": "Withdraw",
+                    "type": "Other",
                     "decision": ""
                   }
                 }
@@ -50,10 +50,10 @@
     },
     "expectations": [
       {
-        "credentials": "Judge",
+        "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["adaProcessApplicationToWithdraw"],
+        "taskTypes": ["adaProcessApplicationToOther"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -63,12 +63,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "ADA-Process Application to Withdraw",
-                "type": "adaProcessApplicationToWithdraw",
+                "name": "ADA-Process Other Application",
+                "type": "adaProcessApplicationToOther",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "ADA-Process Application to Withdraw",
+                "task_title": "ADA-Process Other Application",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
@@ -79,7 +79,7 @@
                 "location_name": "Harmondsworth",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "JUDICIAL",
+                "role_category": "LEGAL_OPERATIONS",
                 "warning_list": {
                   "values": [
 
@@ -100,16 +100,15 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 3,
+        "numberOfRolesAvailable": 4,
         "roleData": {
           "roles":[
             {
-              "role_category":"JUDICIAL",
-              "role_name":"hearing-judge",
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"case-manager",
               "permissions":[
                 "Read",
-                "Own",
-                "Claim",
+                "Own","Claim",
                 "Cancel"
               ],
               "authorisations":[
@@ -117,17 +116,16 @@
               ]
             },
             {
-              "role_category":"JUDICIAL",
-              "role_name":"judge",
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
               "permissions":[
                 "Read",
-                "Own",
+                "Own","Claim",
                 "Manage","Unassign","Assign","Complete",
-                "Claim",
                 "Cancel"
               ],
               "authorisations":[
-                "373"
+
               ]
             },
             {
@@ -136,6 +134,19 @@
                 "Read",
                 "Manage","Unassign","Assign","Complete",
                 "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations":[

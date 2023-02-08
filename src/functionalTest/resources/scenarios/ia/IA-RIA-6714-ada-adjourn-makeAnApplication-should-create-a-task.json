@@ -1,5 +1,5 @@
 {
-  "description": "makeAnApplication event with ADA and Adjourn application type should create a adaProcessApplicationAdjourn task",
+  "description": "makeAnApplication event with ADA and Adjourn application type should create a adaProcessApplicationToAdjourn task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -53,7 +53,7 @@
         "credentials": "Judge",
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["adaProcessApplicationAdjourn"],
+        "taskTypes": ["adaProcessApplicationToAdjourn"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -64,7 +64,7 @@
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
                 "name": "ADA-Process Application to Adjourn",
-                "type": "adaProcessApplicationAdjourn",
+                "type": "adaProcessApplicationToAdjourn",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
