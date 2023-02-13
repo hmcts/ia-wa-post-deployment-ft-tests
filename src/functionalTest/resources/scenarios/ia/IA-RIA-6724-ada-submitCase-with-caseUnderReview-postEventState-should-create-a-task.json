@@ -1,5 +1,5 @@
 {
-  "description": "submitCase with caseUnderReview post event state should create a reviewAppealSkeletonArgument task",
+  "description": "submitCase with ADA caseUnderReview post event state should create a adaReviewAppealSkeletonArgument task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
