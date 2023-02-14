@@ -47,7 +47,7 @@
     },
     "expectations": [
       {
-        "credentials": "IACaseworker",
+        "credentials": "judge",
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["adaReviewAddendumEvidence"],
@@ -87,7 +87,7 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
+                    "Claim",
                     "Manage","Unassign","Assign","Complete",
                     "Execute",
                     "Cancel"
