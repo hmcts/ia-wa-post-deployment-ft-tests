@@ -76,7 +76,7 @@
                 "location_name": "Harmondsworth",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": null,
+                "role_category": "LEGAL_OPERATIONS",
                 "warning_list": {
                   "values": [
 
@@ -97,7 +97,7 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 3,
+        "numberOfRolesAvailable": 4,
         "roleData": {
           "roles": [
             {
@@ -116,6 +116,18 @@
               "permissions": [
                 "Read",
                 "Execute","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "senior-tribunal-caseworker",
+              "permissions": [
+                "Read",
+                "Own","Claim",
                 "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
