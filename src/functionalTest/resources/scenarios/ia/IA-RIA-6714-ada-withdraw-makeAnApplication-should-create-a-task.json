@@ -36,7 +36,7 @@
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "isAcceleratedDetainedAppeal": "Yes",
+                  "isAcceleratedDetainedAppeal": true,
                   "lastModifiedApplication": {
                     "type": "Withdraw",
                     "decision": ""
