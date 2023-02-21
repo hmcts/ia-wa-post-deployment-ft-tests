@@ -86,7 +86,7 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Claim",
+                    "Own","Claim",
                     "Manage","Unassign","Assign","Complete",
                     "Execute",
                     "Cancel"
@@ -101,6 +101,19 @@
           "roles":[
             {
               "role_category":"JUDICIAL",
+              "role_name":"FTPA-judge",
+              "permissions":[
+                "Read",
+                "Own",
+                "Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+
+              ]
+            },
+            {
+              "role_category":"JUDICIAL",
               "role_name":"judge",
               "permissions":[
                 "Read",
@@ -111,19 +124,6 @@
               ],
               "authorisations":[
                 "373"
-              ]
-            },
-            {
-              "role_category":"JUDICIAL",
-              "role_name":"FTPA-judge",
-              "permissions":[
-                "Read",
-                "Own",
-                "Claim",
-                "Cancel"
-              ],
-              "authorisations":[
-
               ]
             },
             {
