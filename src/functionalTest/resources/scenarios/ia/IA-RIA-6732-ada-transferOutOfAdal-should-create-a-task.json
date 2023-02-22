@@ -1,0 +1,153 @@
+{
+  "description": "transferOutOfAda should create a reviewCaseTransferredOutOfADA task",
+  "enabled": true,
+  "jurisdiction": "IA",
+  "caseType": "Asylum",
+  "options": {
+    "taskRetrievalApi": "task-management-api"
+  },
+  "required": {
+    "credentials": "IALegalRepresentative",
+    "ccd": [
+      {
+        "eventId": "submitAppeal",
+        "state": "appealStarted",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "appealType": "protection",
+            "isAcceleratedDetainedAppeal": "Yes",
+            "appellantInDetention": "Yes",
+            "decisionLetterReceivedDate": "{$TODAY-3}"
+          }
+        }
+      }
+    ]
+  },
+  "test": {
+    "request": {
+      "credentials": "IALegalRepresentative",
+      "input": {
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json",
+            "replacements": {
+              "EventId": "transferOutOfAda",
+              "NewStateId": "appealSubmitted",
+              "AdditionalData": {
+                "Data": {
+                  "appealType": "protection"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "expectations": [
+      {
+        "credentials": "IACaseworker",
+        "status": 200,
+        "numberOfTasksAvailable": 1,
+        "taskTypes": ["reviewCaseTransferredOutOfADA"],
+        "taskData": {
+          "template": "minimal-task-response.json",
+          "replacements": {
+            "tasks": [
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "name": "Review Case Transferred Out Of ADA",
+                "type": "reviewCaseTransferredOutOfADA",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "Review Case Transferred Out Of ADA",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "28837",
+                "location_name": "Harmondsworth",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "LEGAL_OPERATIONS",
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "routine_work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete",
+                    "Execute",
+                    "Cancel"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "numberOfRolesAvailable": 4,
+        "roleData": {
+          "roles": [
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "case-manager",
+              "permissions": [
+                "Read",
+                "Own","Claim",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "senior-tribunal-caseworker",
+              "permissions": [
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_name": "task-supervisor",
+              "permissions": [
+                "Read",
+                "Execute","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "tribunal-caseworker",
+              "permissions": [
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
