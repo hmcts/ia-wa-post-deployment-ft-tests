@@ -1,5 +1,5 @@
 {
-  "description": "makeAnApplication event with ADA and Judge's review of application decision application type should create a adaProcessApplicationToReviewDecision task",
+  "description": "makeAnApplication event with ADA and Judge's review of Legal Officer decision application type should create a adaProcessApplicationToReviewDecision task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -38,7 +38,7 @@
                   "appealType": "protection",
                   "isAcceleratedDetainedAppeal": true,
                   "lastModifiedApplication": {
-                    "type": "Judge's review of application decision",
+                    "type": "Judge's review of Legal Officer decision",
                     "decision": ""
                   }
                 }
