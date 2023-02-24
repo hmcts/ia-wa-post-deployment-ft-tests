@@ -83,7 +83,7 @@
                   ]
                 },
                 "case_management_category": "Protection",
-                "work_type_id": "hearing_work",
+                "work_type_id": "routine_work",
                 "permissions": {
                   "values": [
                     "Read",
