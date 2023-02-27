@@ -47,7 +47,7 @@
     },
     "expectations": [
       {
-        "credentials": "judge",
+        "credentials": "Judge",
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["adaReviewAddendumEvidence"],
@@ -87,7 +87,7 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Claim",
+                    "Own","Claim",
                     "Manage","Unassign","Assign","Complete",
                     "Execute",
                     "Cancel"
@@ -97,7 +97,7 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 2,
+        "numberOfRolesAvailable": 3,
         "roleData": {
           "roles":[
             {
@@ -111,6 +111,20 @@
               ],
               "authorisations":[
 
+              ]
+            },
+            {
+              "role_category":"JUDICIAL",
+              "role_name":"judge",
+              "permissions":[
+                "Read",
+                "Own",
+                "Manage","Unassign","Assign","Complete",
+                "Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+                "373"
               ]
             },
             {
