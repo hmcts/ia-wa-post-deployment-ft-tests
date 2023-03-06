@@ -1,5 +1,5 @@
 {
-  "description": "adaSuitabilityReview with respondentReview post event state should create an reviewCaseMarkedUnsuitableForADA task",
+  "description": "decideAnApplication with Adjourn application type should create an adaEditListing task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -10,7 +10,7 @@
     "credentials": "IALegalRepresentative",
     "ccd": [
       {
-        "eventId": "adaSuitabilityReview",
+        "eventId": "submitAppeal",
         "state": "appealStarted",
         "caseData": {
           "template": "minimal-appeal-started.json",
@@ -32,11 +32,16 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "adaSuitabilityReview",
-              "NewStateId": "respondentReview",
+              "EventId": "decideAnApplication",
+              "NewStateId": "appealSubmitted",
               "AdditionalData": {
                 "Data": {
-                  "suitabilityReviewDecision": "unsuitable"
+                  "appealType": "protection",
+                  "lastModifiedApplication": {
+                    "type": "Adjourn",
+                    "decision": "Granted"
+                  },
+                  "isAcceleratedDetainedAppeal": true
                 }
               }
             }
@@ -49,7 +54,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["reviewCaseMarkedUnsuitableForADA"],
+        "taskTypes": ["adaEditListing"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -59,12 +64,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Review Case Marked Unsuitable For ADA",
-                "type": "reviewCaseMarkedUnsuitableForADA",
+                "name": "ADA-Edit Listing",
+                "type": "adaEditListing",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Review Case Marked Unsuitable For ADA",
+                "task_title": "ADA-Edit Listing",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
@@ -75,20 +80,19 @@
                 "location_name": "Harmondsworth",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "LEGAL_OPERATIONS",
+                "role_category": "ADMIN",
                 "warning_list": {
                   "values": [
 
                   ]
                 },
                 "case_management_category": "Protection",
-                "work_type_id": "routine_work",
+                "work_type_id": "hearing_work",
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
                     "Manage","Unassign","Assign","Complete",
-                    "Execute",
+                    "Execute","Claim",
                     "Cancel"
                   ]
                 }
@@ -96,67 +100,32 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 5,
+        "numberOfRolesAvailable": 2,
         "roleData": {
           "roles": [
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "case-manager",
-              "permissions": [
-                "Read",
-                "Own","Claim",
-                "Cancel"
-              ],
-              "authorisations": [
-              ]
-            },
-            {
-              "role_category":"JUDICIAL",
-              "role_name":"judge",
+              "role_category":"ADMIN",
+              "role_name":"hearing-centre-admin",
               "permissions":[
                 "Read",
-                "Own",
+                "Own","Claim",
                 "Manage","Unassign","Assign","Complete",
-                "Claim",
                 "Cancel"
               ],
               "authorisations":[
-                "373"
+
               ]
             },
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "senior-tribunal-caseworker",
-              "permissions": [
+              "role_name":"task-supervisor",
+              "permissions":[
                 "Read",
-                "Own","Claim",
                 "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations": [
-              ]
-            },
-            {
-              "role_name": "task-supervisor",
-              "permissions": [
-                "Read",
                 "Execute","Claim",
-                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
-              "authorisations": [
-              ]
-            },
-            {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "tribunal-caseworker",
-              "permissions": [
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations": [
+              "authorisations":[
+
               ]
             }
           ]
