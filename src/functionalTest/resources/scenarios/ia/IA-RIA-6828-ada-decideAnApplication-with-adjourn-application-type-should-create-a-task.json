@@ -100,7 +100,7 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 2,
+        "numberOfRolesAvailable": 4,
         "roleData": {
           "roles": [
             {
@@ -117,6 +117,18 @@
               ]
             },
             {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "senior-tribunal-caseworker",
+              "permissions": [
+                "Read",
+                "Execute","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
               "role_name":"task-supervisor",
               "permissions":[
                 "Read",
@@ -126,6 +138,18 @@
               ],
               "authorisations":[
 
+              ]
+            },
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "tribunal-caseworker",
+              "permissions": [
+                "Read",
+                "Execute","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations": [
               ]
             }
           ]
