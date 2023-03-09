@@ -1,0 +1,132 @@
+{
+  "description": "submitAppeal with ADA appealSubmitted post event state should create an adaAllocateHearingJudge task",
+  "enabled": true,
+  "jurisdiction": "IA",
+  "caseType": "Asylum",
+  "options": {
+    "taskRetrievalApi": "task-management-api"
+  },
+  "required": {
+    "credentials": "IALegalRepresentative",
+    "ccd": [
+      {
+        "eventId": "submitAppeal",
+        "state": "appealStarted",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "appealType": "protection",
+            "isAcceleratedDetainedAppeal": "Yes",
+            "appellantInDetention": "Yes",
+            "decisionLetterReceivedDate": "{$TODAY-3}"
+          }
+        }
+      }
+    ]
+  },
+  "test": {
+    "request": {
+      "credentials": "IALegalRepresentative",
+      "input": {
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json",
+            "replacements": {
+              "EventId": "submitAppeal",
+              "NewStateId": "appealSubmitted",
+              "AdditionalData": {
+                "Data": {
+                  "appealType": "protection",
+                  "isAcceleratedDetainedAppeal": true
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "expectations": [
+      {
+        "credentials": "IACaseworker",
+        "status": 200,
+        "numberOfTasksAvailable": 1,
+        "taskTypes": ["adaAllocateHearingJudge"],
+        "taskData": {
+          "template": "minimal-task-response.json",
+          "replacements": {
+            "tasks": [
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "name": "ADA-Allocate Hearing Judge",
+                "type": "adaAllocateHearingJudge",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "ADA-Allocate Hearing Judge",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "28837",
+                "location_name": "Harmondsworth",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "ADMIN",
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "hearing_work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Manage","Unassign","Assign","Complete",
+                    "Execute","Claim",
+                    "Cancel"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "numberOfRolesAvailable": 2,
+        "roleData": {
+          "roles": [
+            {
+              "role_category":"ADMIN",
+              "role_name":"hearing-centre-admin",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+
+              ]
+            },
+            {
+              "role_name":"task-supervisor",
+              "permissions":[
+                "Read",
+                "Manage","Unassign","Assign","Complete",
+                "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
