@@ -1,5 +1,5 @@
 {
-  "description": "decideAnApplication with Adjourn application type should create an adaEditListing task",
+  "description": "submitAppeal with ADA appealSubmitted post event state should create an adaAllocateHearingJudge task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -32,15 +32,11 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "decideAnApplication",
+              "EventId": "submitAppeal",
               "NewStateId": "appealSubmitted",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "lastModifiedApplication": {
-                    "type": "Adjourn",
-                    "decision": "Granted"
-                  },
                   "isAcceleratedDetainedAppeal": true
                 }
               }
@@ -54,7 +50,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["adaEditListing"],
+        "taskTypes": ["adaAllocateHearingJudge"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -64,12 +60,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "ADA-Edit Listing",
-                "type": "adaEditListing",
+                "name": "ADA-Allocate Hearing Judge",
+                "type": "adaAllocateHearingJudge",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "ADA-Edit Listing",
+                "task_title": "ADA-Allocate Hearing Judge",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
@@ -100,7 +96,7 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
+        "numberOfRolesAvailable": 2,
         "roleData": {
           "roles": [
             {
@@ -117,18 +113,6 @@
               ]
             },
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "senior-tribunal-caseworker",
-              "permissions": [
-                "Read",
-                "Execute","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations": [
-              ]
-            },
-            {
               "role_name":"task-supervisor",
               "permissions":[
                 "Read",
@@ -138,18 +122,6 @@
               ],
               "authorisations":[
 
-              ]
-            },
-            {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "tribunal-caseworker",
-              "permissions": [
-                "Read",
-                "Execute","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations": [
               ]
             }
           ]
