@@ -1,5 +1,5 @@
 {
-  "description": "listCase with ADA prepareForHearing post event state should create a adaCaseSummaryHearingBundleStartDecision task",
+  "description": "listCase with ADA awaitingRespondentEvidence post event state should create a adaCaseSummaryHearingBundleStartDecision task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -33,7 +33,7 @@
             "template": "minimal-ccd-event-message.json",
             "replacements": {
               "EventId": "listCase",
-              "NewStateId": "prepareForHearing",
+              "NewStateId": "awaitingRespondentEvidence",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",

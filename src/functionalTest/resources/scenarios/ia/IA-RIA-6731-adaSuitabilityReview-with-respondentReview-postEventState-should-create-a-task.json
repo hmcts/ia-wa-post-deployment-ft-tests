@@ -115,7 +115,7 @@
               "role_name":"judge",
               "permissions":[
                 "Read",
-                "Own",
+                "Execute",
                 "Manage","Unassign","Assign","Complete",
                 "Claim",
                 "Cancel"
