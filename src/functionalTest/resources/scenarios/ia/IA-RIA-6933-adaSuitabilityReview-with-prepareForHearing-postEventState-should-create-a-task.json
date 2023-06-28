@@ -1,5 +1,5 @@
 {
-  "description": "adaSuitabilityReview with prepareForHearing post event state should create an adaCreateHearingBundle task",
+  "description": "adaSuitabilityReview with prepareForHearing post event state should create an adaCaseSummaryHearingBundleStartDecision task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -13,7 +13,7 @@
         "eventId": "adaSuitabilityReview",
         "state": "appealStarted",
         "caseData": {
-          "template": "minimal-appeal-started.json",
+          "template": "minimal-appeal-started-ada.json",
           "replacements": {
             "appealType": "protection",
             "isAcceleratedDetainedAppeal": "Yes",
@@ -49,7 +49,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["adaCreateHearingBundle"],
+        "taskTypes": ["adaCaseSummaryHearingBundleStartDecision"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -60,7 +60,7 @@
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
                 "name": "ADA-Create Hearing Bundle",
-                "type": "adaCreateHearingBundle",
+                "type": "adaCaseSummaryHearingBundleStartDecision",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
