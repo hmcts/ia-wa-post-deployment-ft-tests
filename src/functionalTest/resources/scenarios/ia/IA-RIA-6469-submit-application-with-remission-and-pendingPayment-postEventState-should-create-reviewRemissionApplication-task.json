@@ -11,7 +11,7 @@
     "ccd": [
       {
         "eventId": "submitAppeal",
-        "state": "appealStarted",
+        "state": "pendingPayment",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
