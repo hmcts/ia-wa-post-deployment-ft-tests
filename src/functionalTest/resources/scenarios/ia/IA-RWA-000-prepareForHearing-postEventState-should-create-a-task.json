@@ -34,7 +34,8 @@
               "NewStateId": "prepareForHearing",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "protection",
+                  "listCaseHearingDate": "{$LOCAL_DATETIME_TODAY}"
                 }
               }
             }

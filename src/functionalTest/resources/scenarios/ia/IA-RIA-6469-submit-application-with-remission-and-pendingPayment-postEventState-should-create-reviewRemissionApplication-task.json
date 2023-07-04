@@ -1,5 +1,5 @@
 {
-  "description": "customiseHearingBundle with finalBundling post event state should create a allocateHearingJudge task",
+  "description": "submitAppeal event with remission applicable and post event state pendingPayment should create a reviewRemissionApplication task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -11,12 +11,13 @@
     "ccd": [
       {
         "eventId": "submitAppeal",
-        "state": "appealStarted",
+        "state": "pendingPayment",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection",
-            "homeOfficeDecisionDate": "{$TODAY-14}"
+            "appealType": "refusalOfHumanRights",
+            "homeOfficeDecisionDate": "{$TODAY-14}",
+            "remissionType": "hoWaiverRemission"
           }
         }
       }
@@ -30,11 +31,12 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "customiseHearingBundle",
-              "NewStateId": "finalBundling",
+              "EventId": "submitAppeal",
+              "NewStateId": "pendingPayment",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "refusalOfHumanRights",
+                  "remissionType": "hoWaiverRemission"
                 }
               }
             }
@@ -44,27 +46,27 @@
     },
     "expectations": [
       {
-        "credentials": "IACaseworker",
+        "credentials": "CTSCAdmin",
         "status": 200,
-        "numberOfTasksAvailable": 2,
-        "taskTypes": ["allocateHearingJudge", "reviewHearingBundle"],
+        "numberOfTasksAvailable": 1,
+        "taskTypes": ["reviewRemissionApplication"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
             "tasks": [
               {
-                "name": "Allocate Hearing Judge",
-                "type": "allocateHearingJudge",
-                "task_title": "Allocate Hearing Judge",
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
+                "case_category": "Human rights",
+                "name": "Review Remission Application",
+                "type": "reviewRemissionApplication",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
+                "task_title": "Review Remission Application",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+3_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -73,55 +75,19 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
+                "role_category": "CTSC",
                 "warning_list": {
                   "values": [
 
                   ]
                 },
-                "case_management_category": "Protection",
-                "work_type_id": "hearing_work",
+                "case_management_category": "Human rights",
+                "work_type_id": "routine_work",
                 "permissions": {
                   "values": [
                     "Read",
+                    "Own","Claim",
                     "Manage","Unassign","Assign","Complete",
-                    "Execute","Claim",
-                    "Cancel"
-                  ]
-                }
-              },
-              {
-                "name": "Review Hearing bundle",
-                "type": "reviewHearingBundle",
-                "task_title": "Review Hearing bundle",
-                "id": "{$VERIFIER-UUID}",
-                "case_name": "Functional PostDeployment",
-                "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
-                "task_state": "unassigned",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
-                "execution_type": "Case Management Task",
-                "jurisdiction": "IA",
-                "case_type_id": "Asylum",
-                "region": "1",
-                "location": "765324",
-                "location_name": "Taylor House",
-                "auto_assigned": false,
-                "warnings": false,
-                "warning_list": {
-                  "values": [
-
-                  ]
-                },
-                "case_management_category": "Protection",
-                "work_type_id": "hearing_work",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Manage","Unassign","Assign","Complete",
-                    "Execute","Claim",
                     "Cancel"
                   ]
                 }
@@ -129,12 +95,24 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 2,
+        "numberOfRolesAvailable": 3,
         "roleData": {
           "roles":[
             {
-              "role_category":"ADMIN",
-              "role_name":"hearing-centre-admin",
+              "role_category":"CTSC",
+              "role_name":"ctsc",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"CTSC",
+              "role_name":"ctsc-team-leader",
               "permissions":[
                 "Read",
                 "Own","Claim",
