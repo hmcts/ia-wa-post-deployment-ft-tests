@@ -8,4 +8,8 @@
     <cpe regex="true">^.*$</cpe>
     <vulnerabilityName regex="true">^*$</vulnerabilityName>
   </suppress>
+  <suppress until="2023-08-31">
+  <cve>CVE-2023-35116</cve><!-- 2023-08-03 jackson-databind 2.15.2 (latest at time of writing) is still vulnerable.
+   Check again once a new version becomes available. -->
+  </suppress>
 </suppressions>
