@@ -48,7 +48,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 2,
-        "taskTypes": ["caseSummaryHearingBundleStartDecision", "uploadHearingRecording"],
+        "taskTypes": ["caseSummaryHearingBundleStartDecision", "postHearingAttendeesDurationAndRecording"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -91,9 +91,9 @@
                 }
               },
               {
-                "name": "Upload hearing recording",
-                "type": "uploadHearingRecording",
-                "task_title": "Upload hearing recording",
+                "name": "Post hearing – attendees, duration and recording",
+                "type": "postHearingAttendeesDurationAndRecording",
+                "task_title": "Post hearing – attendees, duration and recording",
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
