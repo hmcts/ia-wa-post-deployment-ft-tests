@@ -1,0 +1,32 @@
+{
+  "appellantTitle": "Mr",
+  "appellantGivenNames": "Functional",
+  "appellantFamilyName": "PostDeployment",
+  "appellantDateOfBirth": "1990-12-07",
+  "homeOfficeReferenceNumber": "000123456",
+  "homeOfficeDecisionDate": "{$TODAY}",
+  "appealType": "protection",
+  "appealTypeForDisplay": "protection",
+  "isOutOfCountryEnabled": "Yes",
+  "appellantInUk": "Yes",
+  "submissionOutOfTime": "No",
+  "waDummyPostcode": "BN2 1RF",
+  "uploadTheNoticeOfDecisionDocs": [
+    {
+      "id": "1",
+      "value": {
+        "description": "some notice of decision description",
+        "document": "{$NOTICE_OF_DECISION_DOCUMENT}"
+      }
+    }
+  ],
+  "uploadTheAppealFormDocs": [
+    {
+      "id": "1",
+      "value": {
+        "description": "some notice of decision description",
+        "document": "{$NOTICE_OF_DECISION_DOCUMENT}"
+      }
+    }
+  ]
+}
