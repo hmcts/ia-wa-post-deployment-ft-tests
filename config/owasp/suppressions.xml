@@ -7,4 +7,5 @@
     <gav regex="true">^.*$</gav>
     <cpe regex="true">^.*$</cpe>
     <vulnerabilityName regex="true">^*$</vulnerabilityName>
+  </suppress>
 </suppressions>
