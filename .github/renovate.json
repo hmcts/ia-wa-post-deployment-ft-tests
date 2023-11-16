@@ -17,10 +17,6 @@
       "automerge": true
     },
     {
-      "matchPackageNames": ["com.github.hmcts:ccd-case-document-am-client"],
-      "enabled": false
-    },
-    {
       "matchUpdateTypes": ["major"],
       "enabled": false
     }
