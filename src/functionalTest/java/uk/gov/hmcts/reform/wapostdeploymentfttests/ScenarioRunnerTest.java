@@ -146,20 +146,20 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         for (String scenarioSource : scenarioSources) {
             for (int i = 0; i < 5; i++) {
-                try {
 
-                    Map<String, Object> scenarioValues = deserializeValuesUtil
-                        .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
+                Map<String, Object> scenarioValues = deserializeValuesUtil
+                    .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
 
-                    String description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
-                    String testType = extractOrDefault(scenarioValues, "testType", "default");
+                String description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
+                String testType = extractOrDefault(scenarioValues, "testType", "default");
 
-                    Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
+                Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
 
-                    if (!scenarioEnabled) {
-                        Logger.say(SCENARIO_DISABLED, description);
-                        continue;
-                    } else {
+                if (!scenarioEnabled) {
+                    Logger.say(SCENARIO_DISABLED, description);
+                    continue;
+                } else {
+                    try {
                         Logger.say(SCENARIO_ENABLED, description);
 
                         Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
@@ -209,10 +209,10 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
                         Logger.say(SCENARIO_SUCCESSFUL, description);
                         Logger.say(SCENARIO_FINISHED);
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("retrying failed scenario: " + description);
                     }
-                    break;
-                } catch (Exception e) {
-                    System.out.println("retrying failed scenario: " + scenarioSource);
                 }
             }
         }
