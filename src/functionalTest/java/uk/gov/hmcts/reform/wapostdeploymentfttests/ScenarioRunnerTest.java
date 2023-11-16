@@ -209,7 +209,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                         Logger.say(SCENARIO_FINISHED);
                     }
                     break;
-                } catch (Exception e) {
+                } catch (Exception|ExceptionInInitializerError e) {
                     System.out.println("Retrying failed scenario:" + description);
                 }
             }
