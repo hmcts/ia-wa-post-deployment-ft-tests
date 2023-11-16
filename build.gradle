@@ -183,9 +183,9 @@ dependencyManagement {
       dependency group: 'org.glassfish', name: 'jakarta.el', version: '4.0.1'
 
       // CVE-2020-36518
-      dependency group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.2'
-      dependency group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.15.2'
-      dependency group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.15.2'
+      dependency group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.3'
+      dependency group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.15.3'
+      dependency group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.15.3'
 
       //CVE-2021-42550
       dependencySet(group: 'ch.qos.logback', version: '1.2.10') {
@@ -204,7 +204,7 @@ repositories {
 def versions = [
         junit           : '5.7.1',
         junitPlatform   : '1.7.1',
-        reformLogging   : '5.1.9',
+        reformLogging   : '6.0.1',
         springfoxSwagger: '3.0.0',
         serenity        : '2.2.12',
         tomcat          : '9.0.58'
