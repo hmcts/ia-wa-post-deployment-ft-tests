@@ -203,12 +203,12 @@ repositories {
 }
 
 def versions = [
-        junit           : '5.7.1',
-        junitPlatform   : '1.7.1',
+        junit           : '5.8.2',
+        junitPlatform   : '1.7.2',
         reformLogging   : '6.0.1',
         springfoxSwagger: '3.0.0',
-        serenity        : '2.2.12',
-        tomcat          : '9.0.58'
+        serenity        : '3.6.22',
+        tomcat          : '9.0.81'
 ]
 
 ext.libraries = [
@@ -257,7 +257,7 @@ dependencies {
 
     testImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
     testImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
-
+    testImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
     testImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit}"
 
