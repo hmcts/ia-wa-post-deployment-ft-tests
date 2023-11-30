@@ -1,5 +1,5 @@
 {
-  "description": "handleCmrUpdated should create a CrmUpdate task",
+  "description": "decideAnApplication with Transfer application Granted should create a editListing task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -24,18 +24,18 @@
   },
   "test": {
     "request": {
-      "credentials": "WaSystemUser",
+      "credentials": "IACaseworker",
       "input": {
         "eventMessages": [
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "handleCmrUpdated",
+              "EventId": "decideAnApplication",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
                   "lastModifiedApplication": {
-                    "type": "Adjourn",
+                    "type": "Transfer",
                     "decision": "Granted"
                   }
                 }
@@ -50,7 +50,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["cmrUpdated"],
+        "taskTypes": ["editListing"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -60,14 +60,14 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Update CMR notification",
-                "type": "cmrUpdated",
+                "name": "Edit Listing",
+                "type": "editListing",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Update CMR notification",
+                "task_title": "Edit Listing",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -86,7 +86,7 @@
                 "work_type_id": "hearing_work",
                 "permissions": {
                   "values": [
-                    "Read", "Own",
+                    "Read",
                     "Claim",
                     "Manage","Unassign","Assign","Complete",
                     "Execute",
@@ -97,7 +97,6 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
         "roleData": {
           "roles": [
             {
@@ -111,6 +110,18 @@
               ],
               "authorisations":[
 
+              ]
+            },
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "senior-tribunal-caseworker",
+              "permissions": [
+                "Read",
+                "Execute","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations": [
               ]
             },
             {
@@ -129,19 +140,7 @@
               "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations": [
-              ]
-            },
-            {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "senior-tribunal-caseworker",
-              "permissions": [
-                "Read",
-                "Own","Claim",
+                "Execute","Claim",
                 "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
