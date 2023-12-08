@@ -1,5 +1,5 @@
 {
-  "description": "Should create Send CMR notification task when CMR is listed",
+  "description": "decideAnApplication with Transfer application Granted should create a editListing task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -24,16 +24,20 @@
   },
   "test": {
     "request": {
-      "credentials": "WaSystemUser",
+      "credentials": "IACaseworker",
       "input": {
         "eventMessages": [
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "triggerCmrListed",
+              "EventId": "decideAnApplication",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "protection",
+                  "lastModifiedApplication": {
+                    "type": "Transfer",
+                    "decision": "Granted"
+                  }
                 }
               }
             }
@@ -46,7 +50,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["cmrListed"],
+        "taskTypes": ["editListing"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -56,14 +60,14 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Send CMR notification",
-                "type": "cmrListed",
+                "name": "Edit Listing",
+                "type": "editListing",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Send CMR notification",
+                "task_title": "Edit Listing",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -83,7 +87,7 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
+                    "Claim",
                     "Manage","Unassign","Assign","Complete",
                     "Execute",
                     "Cancel"
@@ -93,9 +97,8 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
         "roleData": {
-          "roles":[
+          "roles": [
             {
               "role_category":"ADMIN",
               "role_name":"hearing-centre-admin",
@@ -106,19 +109,19 @@
                 "Cancel"
               ],
               "authorisations":[
+
               ]
             },
             {
-              "role_category":"LEGAL_OPERATIONS",
-              "role_name":"senior-tribunal-caseworker",
-              "permissions":[
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "senior-tribunal-caseworker",
+              "permissions": [
                 "Read",
-                "Own",
+                "Execute","Claim",
                 "Manage","Unassign","Assign","Complete",
-                "Claim",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             },
             {
@@ -133,15 +136,15 @@
               ]
             },
             {
-              "role_category":"LEGAL_OPERATIONS",
-              "role_name":"tribunal-caseworker",
-              "permissions":[
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "tribunal-caseworker",
+              "permissions": [
                 "Read",
-                "Own","Claim",
+                "Execute","Claim",
                 "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             }
           ]
