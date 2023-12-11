@@ -1,5 +1,5 @@
 {
-  "description": "decideAnApplication with Transfer application Granted should create a editListing task",
+  "description": "Should create Update CMR notification task when CMR is updated",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -30,12 +30,12 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "decideAnApplication",
+              "EventId": "triggerCmrUpdated",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
                   "lastModifiedApplication": {
-                    "type": "Transfer",
+                    "type": "Adjourn",
                     "decision": "Granted"
                   }
                 }
@@ -50,7 +50,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["editListing"],
+        "taskTypes": ["cmrUpdated"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -60,14 +60,14 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Edit Listing",
-                "type": "editListing",
+                "name": "Update CMR notification",
+                "type": "cmrUpdated",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Edit Listing",
+                "task_title": "Update CMR notification",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -87,7 +87,7 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Claim",
+                    "Own","Claim",
                     "Manage","Unassign","Assign","Complete",
                     "Execute",
                     "Cancel"
@@ -97,8 +97,33 @@
             ]
           }
         },
+        "numberOfRolesAvailable": 6,
         "roleData": {
-          "roles": [
+          "roles":[
+            {
+              "role_category":"CTSC",
+              "role_name":"ctsc",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"CTSC",
+              "role_name":"ctsc-team-leader",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
             {
               "role_category":"ADMIN",
               "role_name":"hearing-centre-admin",
@@ -109,19 +134,19 @@
                 "Cancel"
               ],
               "authorisations":[
-
               ]
             },
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "senior-tribunal-caseworker",
-              "permissions": [
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
+              "permissions":[
                 "Read",
-                "Execute","Claim",
+                "Own",
                 "Manage","Unassign","Assign","Complete",
+                "Claim",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
               ]
             },
             {
@@ -136,15 +161,15 @@
               ]
             },
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "tribunal-caseworker",
-              "permissions": [
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
                 "Read",
-                "Execute","Claim",
+                "Own","Claim",
                 "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
               ]
             }
           ]
