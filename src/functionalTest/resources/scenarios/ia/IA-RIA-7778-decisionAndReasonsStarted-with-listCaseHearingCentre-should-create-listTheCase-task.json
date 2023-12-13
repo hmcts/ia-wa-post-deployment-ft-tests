@@ -1,5 +1,5 @@
 {
-  "description": "decisionAndReasonsStarted with decisionHearingFeeOption should create listTheCase task",
+  "description": "decisionAndReasonsStarted with listCaseHearingCentre should create listTheCase task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -34,8 +34,7 @@
               "NewStateId": "decision",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "refusalOfHumanRights",
-                  "decisionHearingFeeOption": "decisionWithoutHearing"
+                  "listCaseHearingCentre": "decisionWithoutHearing"
                 }
               }
             }
