@@ -1,5 +1,5 @@
 {
-  "description": "Should create restore state from adjourn when a case is restored from adjourn state",
+  "description": "Should create restore state from adjourn when a case is restored from adjourn state and it is integrated",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -37,7 +37,8 @@
                   "lastModifiedApplication": {
                     "type": "Adjourn",
                     "decision": "Granted"
-                  }
+                  },
+                  "isIntegrated": true
                 }
               }
             }
