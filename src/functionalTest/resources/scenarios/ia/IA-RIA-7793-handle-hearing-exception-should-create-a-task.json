@@ -1,5 +1,5 @@
 {
-  "description": "prepareForHearing post event state should create a caseSummaryHearingBundleStartDecision task",
+  "description": "handleHearingException with should create a hearingException task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -24,18 +24,20 @@
   },
   "test": {
     "request": {
-      "credentials": "IALegalRepresentative",
+      "credentials": "WaSystemUser",
       "input": {
         "eventMessages": [
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "listCase",
-              "NewStateId": "prepareForHearing",
+              "EventId": "handleHearingException",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "listCaseHearingDate": "{$LOCAL_DATETIME_TODAY}"
+                  "lastModifiedApplication": {
+                    "type": "Adjourn",
+                    "decision": "Granted"
+                  }
                 }
               }
             }
@@ -47,25 +49,25 @@
       {
         "credentials": "IACaseworker",
         "status": 200,
-        "numberOfTasksAvailable": 2,
-        "taskTypes": ["caseSummaryHearingBundleStartDecision", "postHearingAttendeesDurationAndRecording"],
+        "numberOfTasksAvailable": 1,
+        "taskTypes": ["hearingException"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
             "tasks": [
               {
-                "name": "Create Hearing Bundle",
-                "type": "caseSummaryHearingBundleStartDecision",
-                "task_title": "Create Hearing Bundle",
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
+                "name": "Hearing exception",
+                "type": "hearingException",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
+                "task_title": "Hearing exception",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -74,54 +76,20 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
+                "role_category": "ADMIN",
                 "warning_list": {
                   "values": [
 
                   ]
                 },
                 "case_management_category": "Protection",
+                "work_type_id": "hearing_work",
                 "permissions": {
                   "values": [
-                    "Read",
-                    "Own","Claim",
+                    "Read", "Own",
+                    "Claim",
                     "Manage","Unassign","Assign","Complete",
                     "Execute",
-                    "Cancel"
-                  ]
-                }
-              },
-              {
-                "name": "Post hearing – attendees,duration and recording",
-                "type": "postHearingAttendeesDurationAndRecording",
-                "task_title": "Post hearing – attendees,duration and recording",
-                "id": "{$VERIFIER-UUID}",
-                "case_name": "Functional PostDeployment",
-                "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
-                "task_state": "unassigned",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "execution_type": "Case Management Task",
-                "jurisdiction": "IA",
-                "case_type_id": "Asylum",
-                "region": "1",
-                "location": "765324",
-                "location_name": "Taylor House",
-                "auto_assigned": false,
-                "warnings": false,
-                "warning_list": {
-                  "values": [
-
-                  ]
-                },
-                "case_management_category": "Protection",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Manage","Unassign","Assign","Complete",
-                    "Execute","Claim",
                     "Cancel"
                   ]
                 }
@@ -129,38 +97,28 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
+        "numberOfRolesAvailable": 3,
         "roleData": {
           "roles": [
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "case-manager",
-              "permissions": [
-                "Read",
-                "Own","Claim",
-                "Cancel"
-              ],
-              "authorisations": [
-              ]
-            },
-            {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "senior-tribunal-caseworker",
-              "permissions": [
+              "role_category":"ADMIN",
+              "role_name":"hearing-centre-admin",
+              "permissions":[
                 "Read",
                 "Own","Claim",
                 "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+
               ]
             },
             {
               "role_name": "task-supervisor",
               "permissions": [
                 "Read",
-                "Manage","Unassign","Assign","Complete",
                 "Execute","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations": [
@@ -184,4 +142,3 @@
     ]
   }
 }
-
