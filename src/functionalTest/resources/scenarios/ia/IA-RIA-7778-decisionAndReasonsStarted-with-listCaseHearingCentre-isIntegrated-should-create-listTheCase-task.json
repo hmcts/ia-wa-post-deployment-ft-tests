@@ -1,5 +1,5 @@
 {
-  "description": "decisionAndReasonsStarted with listCaseHearingCentre should create listTheCase task",
+  "description": "decisionAndReasonsStarted with listCaseHearingCentre and isIntegrated should create listTheCase task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -34,7 +34,8 @@
               "NewStateId": "decision",
               "AdditionalData": {
                 "Data": {
-                  "listCaseHearingCentre": "decisionWithoutHearing"
+                  "listCaseHearingCentre": "decisionWithoutHearing",
+                  "isIntegrated": false
                 }
               }
             }

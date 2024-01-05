@@ -1,5 +1,5 @@
 {
-  "description": "reviewHearingRequirements event should create a listTheCase task",
+  "description": "listCaseWithoutHearingRequirements with isIntegrated should create listTheCase task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -10,7 +10,7 @@
     "credentials": "IALegalRepresentative",
     "ccd": [
       {
-        "eventId": "reviewHearingRequirements",
+        "eventId": "listCaseWithoutHearingRequirements",
         "state": "listing",
         "caseData": {
           "template": "minimal-appeal-started.json",
@@ -23,13 +23,13 @@
   },
   "test": {
     "request": {
-      "credentials": "IALegalRepresentative",
+      "credentials": "IACaseworker",
       "input": {
         "eventMessages": [
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "reviewHearingRequirements",
+              "EventId": "listCaseWithoutHearingRequirements",
               "NewStateId": "listing",
               "AdditionalData": {
                 "Data": {
