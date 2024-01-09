@@ -1,5 +1,5 @@
 {
-  "description": "decisionAndReasonsStarted with listCaseHearingCentre should create listTheCase task",
+  "description": "decisionAndReasonsStarted with listCaseHearingCentre and isIntegrated should create listTheCase task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -16,7 +16,8 @@
           "template": "minimal-appeal-started.json",
           "replacements": {
             "appealType": "refusalOfHumanRights",
-            "homeOfficeDecisionDate": "{$TODAY-14}"
+            "homeOfficeDecisionDate": "{$TODAY-14}",
+            "isIntegrated": "Yes"
           }
         }
       }
@@ -34,7 +35,8 @@
               "NewStateId": "decision",
               "AdditionalData": {
                 "Data": {
-                  "listCaseHearingCentre": "decisionWithoutHearing"
+                  "listCaseHearingCentre": "decisionWithoutHearing",
+                  "isIntegrated": true
                 }
               }
             }
@@ -93,7 +95,7 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 3,
+        "numberOfRolesAvailable": 6,
         "roleData": {
           "roles":[
             {
@@ -121,11 +123,47 @@
               ]
             },
             {
+              "role_category":"ADMIN",
+              "role_name":"hearing-centre-admin",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
               "role_name":"task-supervisor",
               "permissions":[
                 "Read",
                 "Manage","Unassign","Assign","Complete",
                 "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations":[
