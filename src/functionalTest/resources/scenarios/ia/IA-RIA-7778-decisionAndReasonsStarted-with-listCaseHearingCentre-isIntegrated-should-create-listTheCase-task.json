@@ -16,7 +16,8 @@
           "template": "minimal-appeal-started.json",
           "replacements": {
             "appealType": "refusalOfHumanRights",
-            "homeOfficeDecisionDate": "{$TODAY-14}"
+            "homeOfficeDecisionDate": "{$TODAY-14}",
+            "isIntegrated": "Yes"
           }
         }
       }
@@ -35,7 +36,7 @@
               "AdditionalData": {
                 "Data": {
                   "listCaseHearingCentre": "decisionWithoutHearing",
-                  "isIntegrated": false
+                  "isIntegrated": true
                 }
               }
             }
@@ -94,7 +95,7 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 3,
+        "numberOfRolesAvailable": 6,
         "roleData": {
           "roles":[
             {
@@ -122,11 +123,47 @@
               ]
             },
             {
+              "role_category":"ADMIN",
+              "role_name":"hearing-centre-admin",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
               "role_name":"task-supervisor",
               "permissions":[
                 "Read",
                 "Manage","Unassign","Assign","Complete",
                 "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations":[
