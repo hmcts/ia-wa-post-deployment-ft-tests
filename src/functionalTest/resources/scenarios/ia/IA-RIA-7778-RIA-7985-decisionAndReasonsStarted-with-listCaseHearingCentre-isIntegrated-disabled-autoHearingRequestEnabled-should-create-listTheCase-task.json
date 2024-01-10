@@ -1,5 +1,5 @@
 {
-  "description": "listCaseWithoutHearingRequirements with isIntegrated should create listTheCase task",
+  "description": "decisionAndReasonsStarted with listCaseHearingCentre, isIntegrated and disabled autoHearingRequestEnabled should create listTheCase task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -10,12 +10,14 @@
     "credentials": "IALegalRepresentative",
     "ccd": [
       {
-        "eventId": "listCaseWithoutHearingRequirements",
-        "state": "listing",
+        "eventId": "submitAppeal",
+        "state": "appealStarted",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection"
+            "appealType": "refusalOfHumanRights",
+            "homeOfficeDecisionDate": "{$TODAY-14}",
+            "isIntegrated": "Yes"
           }
         }
       }
@@ -29,12 +31,13 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "listCaseWithoutHearingRequirements",
-              "NewStateId": "listing",
+              "EventId": "decisionAndReasonsStarted",
+              "NewStateId": "decision",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection",
-                  "isIntegrated": false
+                  "listCaseHearingCentre": "decisionWithoutHearing",
+                  "isIntegrated": true,
+                  "autoHearingRequestEnabled": false
                 }
               }
             }
@@ -56,7 +59,7 @@
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
+                "case_category": "Human rights",
                 "name": "List the case",
                 "type": "listTheCase",
                 "task_state": "unassigned",
@@ -79,7 +82,7 @@
 
                   ]
                 },
-                "case_management_category": "Protection",
+                "case_management_category": "Human rights",
                 "work_type_id": "hearing_work",
                 "permissions": {
                   "values": [
@@ -93,7 +96,7 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 3,
+        "numberOfRolesAvailable": 6,
         "roleData": {
           "roles":[
             {
@@ -121,11 +124,47 @@
               ]
             },
             {
+              "role_category":"ADMIN",
+              "role_name":"hearing-centre-admin",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
               "role_name":"task-supervisor",
               "permissions":[
                 "Read",
                 "Manage","Unassign","Assign","Complete",
                 "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations":[

@@ -1,5 +1,5 @@
 {
-  "description": "decisionAndReasonsStarted with listCaseHearingCentre and isIntegrated should create listTheCase task",
+  "description": "listCaseWithoutHearingRequirements event with disabled autoHearingRequestEnabled should create a listTheCase task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -10,14 +10,12 @@
     "credentials": "IALegalRepresentative",
     "ccd": [
       {
-        "eventId": "submitAppeal",
-        "state": "appealStarted",
+        "eventId": "reviewHearingRequirements",
+        "state": "listing",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "refusalOfHumanRights",
-            "homeOfficeDecisionDate": "{$TODAY-14}",
-            "isIntegrated": "Yes"
+            "appealType": "protection"
           }
         }
       }
@@ -31,12 +29,12 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "decisionAndReasonsStarted",
-              "NewStateId": "decision",
+              "EventId": "listCaseWithoutHearingRequirements",
+              "NewStateId": "listing",
               "AdditionalData": {
                 "Data": {
-                  "listCaseHearingCentre": "decisionWithoutHearing",
-                  "isIntegrated": true
+                  "appealType": "protection",
+                  "autoHearingRequestEnabled": false
                 }
               }
             }
@@ -58,7 +56,7 @@
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Human rights",
+                "case_category": "Protection",
                 "name": "List the case",
                 "type": "listTheCase",
                 "task_state": "unassigned",
@@ -81,7 +79,7 @@
 
                   ]
                 },
-                "case_management_category": "Human rights",
+                "case_management_category": "Protection",
                 "work_type_id": "hearing_work",
                 "permissions": {
                   "values": [
