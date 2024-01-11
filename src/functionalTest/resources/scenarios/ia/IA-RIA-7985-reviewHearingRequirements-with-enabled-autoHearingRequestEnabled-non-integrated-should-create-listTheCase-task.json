@@ -34,8 +34,8 @@
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "isIntegrated": false,
-                  "autoHearingRequestEnabled": true
+                  "isIntegrated": "No",
+                  "autoHearingRequestEnabled": "Yes"
                 }
               }
             }

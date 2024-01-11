@@ -16,8 +16,7 @@
           "template": "minimal-appeal-started.json",
           "replacements": {
             "appealType": "refusalOfHumanRights",
-            "homeOfficeDecisionDate": "{$TODAY-14}",
-            "isIntegrated": "Yes"
+            "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
       }
@@ -36,8 +35,8 @@
               "AdditionalData": {
                 "Data": {
                   "listCaseHearingCentre": "decisionWithoutHearing",
-                  "isIntegrated": true,
-                  "autoHearingRequestEnabled": false
+                  "isIntegrated": "Yes",
+                  "autoHearingRequestEnabled": "No"
                 }
               }
             }

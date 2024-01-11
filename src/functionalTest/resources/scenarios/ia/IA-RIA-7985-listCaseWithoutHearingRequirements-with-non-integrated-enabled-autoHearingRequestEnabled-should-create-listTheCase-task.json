@@ -1,5 +1,5 @@
 {
-  "description": "listCaseWithoutHearingRequirements event with disabled autoHearingRequestEnabled should create a listTheCase task",
+  "description": "listCaseWithoutHearingRequirements event with non integrated and enabled autoHearingRequestEnabled should create a listTheCase task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -34,8 +34,8 @@
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "isIntegrated": false,
-                  "autoHearingRequestEnabled": true
+                  "isIntegrated": "No",
+                  "autoHearingRequestEnabled": "Yes"
                 }
               }
             }
