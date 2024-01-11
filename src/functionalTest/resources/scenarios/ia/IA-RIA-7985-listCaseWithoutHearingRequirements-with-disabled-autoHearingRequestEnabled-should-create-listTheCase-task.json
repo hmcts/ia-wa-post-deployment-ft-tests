@@ -1,5 +1,5 @@
 {
-  "description": "recordAdjournmentDetails with hearingAdjournmentWhen and relistCaseImmediately should create listTheCase task",
+  "description": "listCaseWithoutHearingRequirements event with disabled autoHearingRequestEnabled should create a listTheCase task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -10,7 +10,7 @@
     "credentials": "IALegalRepresentative",
     "ccd": [
       {
-        "eventId": "recordAdjournmentDetails",
+        "eventId": "reviewHearingRequirements",
         "state": "listing",
         "caseData": {
           "template": "minimal-appeal-started.json",
@@ -23,19 +23,18 @@
   },
   "test": {
     "request": {
-      "credentials": "AdminOfficer",
+      "credentials": "IACaseworker",
       "input": {
         "eventMessages": [
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "recordAdjournmentDetails",
+              "EventId": "listCaseWithoutHearingRequirements",
               "NewStateId": "listing",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "hearingAdjournmentWhen": "onHearingDate",
-                  "relistCaseImmediately": true
+                  "autoHearingRequestEnabled": false
                 }
               }
             }
@@ -94,7 +93,7 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 3,
+        "numberOfRolesAvailable": 6,
         "roleData": {
           "roles":[
             {
@@ -122,11 +121,47 @@
               ]
             },
             {
+              "role_category":"ADMIN",
+              "role_name":"hearing-centre-admin",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
               "role_name":"task-supervisor",
               "permissions":[
                 "Read",
                 "Manage","Unassign","Assign","Complete",
                 "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations":[

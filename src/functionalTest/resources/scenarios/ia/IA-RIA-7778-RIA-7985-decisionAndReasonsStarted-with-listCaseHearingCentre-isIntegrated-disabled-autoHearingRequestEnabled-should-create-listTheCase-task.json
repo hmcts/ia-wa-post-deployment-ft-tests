@@ -1,5 +1,5 @@
 {
-  "description": "decisionAndReasonsStarted with listCaseHearingCentre and isIntegrated should create listTheCase task",
+  "description": "decisionAndReasonsStarted with listCaseHearingCentre, isIntegrated and disabled autoHearingRequestEnabled should create listTheCase task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -36,7 +36,8 @@
               "AdditionalData": {
                 "Data": {
                   "listCaseHearingCentre": "decisionWithoutHearing",
-                  "isIntegrated": true
+                  "isIntegrated": true,
+                  "autoHearingRequestEnabled": false
                 }
               }
             }
