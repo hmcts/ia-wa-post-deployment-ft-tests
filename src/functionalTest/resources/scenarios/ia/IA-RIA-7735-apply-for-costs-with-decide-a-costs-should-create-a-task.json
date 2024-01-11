@@ -1,0 +1,135 @@
+{
+  "description": "applyForCosts event should create a reviewCosts task",
+  "enabled": true,
+  "jurisdiction": "IA",
+  "caseType": "Asylum",
+  "options": {
+    "taskRetrievalApi": "task-management-api"
+  },
+  "required": {
+    "credentials": "IALegalRepresentative",
+    "ccd": [
+      {
+        "eventId": "applyForCosts",
+        "state": "*",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "appellantInUk": "Yes",
+            "appellantInDetention": "No",
+            "appealType": "protection",
+            "decisionLetterReceivedDate": "{$TODAY}"
+          }
+        }
+      }
+    ]
+  },
+  "test": {
+    "request": {
+      "credentials": "IALegalRepresentative",
+      "input": {
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json",
+            "replacements": {
+              "EventId": "applyForCosts"
+            }
+          }
+        ]
+      }
+    },
+    "expectations": [
+      {
+        "credentials": "Judge",
+        "status": 200,
+        "numberOfTasksAvailable": 1,
+        "taskTypes": [
+          "reviewCosts"
+        ],
+        "taskData": {
+          "template": "minimal-task-response.json",
+          "replacements": {
+            "tasks": [
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "name": "Review costs",
+                "type": "reviewCosts",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "Review costs",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+14}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "28837",
+                "location_name": "Harmondsworth",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "JUDICIAL",
+                "warning_list": {
+                  "values": [
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "applications",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Own",
+                    "Claim",
+                    "Manage",
+                    "Unassign",
+                    "Assign",
+                    "Complete",
+                    "Execute",
+                    "Cancel"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "numberOfRolesAvailable": 2,
+        "roleData": {
+          "roles": [
+            {
+              "role_category": "JUDICIAL",
+              "role_name": "hearing-judge",
+              "permissions": [
+                "Read",
+                "Own",
+                "Claim",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "JUDICIAL",
+              "role_name": "judge",
+              "permissions": [
+                "Read",
+                "Own",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
+                "Claim",
+                "Cancel"
+              ],
+              "authorisations": [
+                "373"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
