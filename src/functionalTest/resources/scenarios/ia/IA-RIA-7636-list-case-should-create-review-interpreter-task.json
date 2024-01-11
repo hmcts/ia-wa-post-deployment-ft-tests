@@ -1,5 +1,5 @@
 {
-  "description": "Should create review interpreter details task when List Case event is submitted with flag (shouldTriggerReviewInterpreterTask) on",
+  "description": "Should create review interpreter details task when List Case event is submitted",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -33,7 +33,6 @@
               "EventId": "listCase",
               "AdditionalData": {
                 "Data": {
-                  "shouldTriggerReviewInterpreterTask": "Yes",
                   "appealType": "protection",
                   "lastModifiedApplication": {
                     "type": "Adjourn",
