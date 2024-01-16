@@ -38,7 +38,7 @@
                     "type": "Adjourn",
                     "decision": "Granted"
                   },
-                  "isIntegrated": "Yes"
+                  "isIntegrated": true
                 }
               }
             }

@@ -16,7 +16,12 @@
           "template": "minimal-appeal-started.json",
           "replacements": {
             "appealType": "refusalOfHumanRights",
+<<<<<<< Updated upstream:src/functionalTest/resources/scenarios/ia/IA-RIA-7778-RIA-7985-decisionAndReasonsStarted-with-listCaseHearingCentre-isIntegrated-disabled-autoHearingRequestEnabled-should-create-listTheCase-task.json
             "homeOfficeDecisionDate": "{$TODAY-14}"
+=======
+            "homeOfficeDecisionDate": "{$TODAY-14}",
+            "isIntegrated": true
+>>>>>>> Stashed changes:src/functionalTest/resources/scenarios/ia/IA-RIA-7778-decisionAndReasonsStarted-with-listCaseHearingCentre-isIntegrated-should-create-listTheCase-task.json
           }
         }
       }
