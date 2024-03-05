@@ -23,6 +23,8 @@ spring:
           oidc:
             client-id: ${IA_IDAM_CLIENT_ID:ia}
             client-secret: ${IA_IDAM_CLIENT_SECRET:something}
+  mvc.pathmatch.matching-strategy: ant_path_matcher
+
 azure:
   application-insights:
     instrumentation-key: ${wa.AppInsightsInstrumentationKey:00000000-0000-0000-0000-000000000000}

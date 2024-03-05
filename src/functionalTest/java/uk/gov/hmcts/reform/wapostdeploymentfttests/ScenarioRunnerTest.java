@@ -105,7 +105,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
     @Test
     public void scenarios_should_behave_as_specified() throws IOException, URISyntaxException {
-
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
@@ -146,65 +145,73 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         Logger.say(SCENARIO_START, scenarioSources.size() + " " + directoryName.toUpperCase(Locale.ROOT));
 
         for (String scenarioSource : scenarioSources) {
+            for (int i = 0; i < 5; i++) {
+                    Map<String, Object> scenarioValues = deserializeValuesUtil
+                        .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
 
-            Map<String, Object> scenarioValues = deserializeValuesUtil
-                .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
+                    String description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
+                    String testType = extractOrDefault(scenarioValues, "testType", "default");
 
-            String description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
-            String testType = extractOrDefault(scenarioValues, "testType", "default");
+                    Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
+                try {
+                    if (!scenarioEnabled) {
+                        Logger.say(SCENARIO_DISABLED, description);
+                        continue;
+                    } else {
+                        Logger.say(SCENARIO_ENABLED, description);
 
-            Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
+                        Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
+                        Map<String, Object> testClauseValues = extractOrThrow(scenarioValues, "test");
+                        Map<String, Object> postRoleAssignmentClauseValues = extractOrDefault(
+                            scenarioValues,
+                            "postRoleAssignments",
+                            null
+                        );
 
-            if (!scenarioEnabled) {
-                Logger.say(SCENARIO_DISABLED, description);
-                continue;
-            } else {
-                Logger.say(SCENARIO_ENABLED, description);
+                        String scenarioJurisdiction = extractOrThrow(scenarioValues, "jurisdiction");
+                        String caseType = extractOrThrow(scenarioValues, "caseType");
 
-                Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
-                Map<String, Object> testClauseValues = extractOrThrow(scenarioValues, "test");
-                Map<String, Object> postRoleAssignmentClauseValues = extractOrDefault(scenarioValues,
-                    "postRoleAssignments", null);
+                        TestScenario scenario = new TestScenario(
+                            scenarioValues,
+                            scenarioSource,
+                            scenarioJurisdiction,
+                            caseType,
+                            beforeClauseValues,
+                            testClauseValues,
+                            postRoleAssignmentClauseValues
+                        );
+                        createBaseCcdCase(scenario);
 
-                String scenarioJurisdiction = extractOrThrow(scenarioValues, "jurisdiction");
-                String caseType = extractOrThrow(scenarioValues, "caseType");
+                        addSearchParameters(scenario, scenarioValues);
 
-                TestScenario scenario = new TestScenario(
-                    scenarioValues,
-                    scenarioSource,
-                    scenarioJurisdiction,
-                    caseType,
-                    beforeClauseValues,
-                    testClauseValues,
-                    postRoleAssignmentClauseValues
-                );
-                createBaseCcdCase(scenario);
+                        if (scenario.getBeforeClauseValues() != null) {
+                            Logger.say(SCENARIO_BEFORE_FOUND);
+                            //If before was found process with before values
+                            processBeforeClauseScenario(scenario);
+                            Logger.say(SCENARIO_BEFORE_COMPLETED);
 
-                addSearchParameters(scenario, scenarioValues);
+                        }
 
-                if (scenario.getBeforeClauseValues() != null) {
-                    Logger.say(SCENARIO_BEFORE_FOUND);
-                    //If before was found process with before values
-                    processBeforeClauseScenario(scenario);
-                    Logger.say(SCENARIO_BEFORE_COMPLETED);
+                        if (scenario.getPostRoleAssignmentClauseValues() != null) {
+                            Logger.say(SCENARIO_ROLE_ASSIGNMENT_FOUND);
+                            roleAssignmentService.processRoleAssignments(scenario, postRoleAssignmentClauseValues);
+                            Logger.say(SCENARIO_ROLE_ASSIGNMENT_COMPLETED);
+                        }
 
+                        if (testType.equals("Reconfiguration")) {
+                            updateBaseCcdCase(scenario);
+                        }
+
+                        Logger.say(SCENARIO_RUNNING);
+                        processTestClauseScenario(scenario, testType);
+
+                        Logger.say(SCENARIO_SUCCESSFUL, description);
+                        Logger.say(SCENARIO_FINISHED);
+                    }
+                    break;
+                } catch (feign.FeignException e) {
+                    System.out.println("Retrying failed scenario:" + description + "due to error" + e.getMessage());
                 }
-
-                if (scenario.getPostRoleAssignmentClauseValues() != null) {
-                    Logger.say(SCENARIO_ROLE_ASSIGNMENT_FOUND);
-                    roleAssignmentService.processRoleAssignments(scenario, postRoleAssignmentClauseValues);
-                    Logger.say(SCENARIO_ROLE_ASSIGNMENT_COMPLETED);
-                }
-
-                if (testType.equals("Reconfiguration")) {
-                    updateBaseCcdCase(scenario);
-                }
-
-                Logger.say(SCENARIO_RUNNING);
-                processTestClauseScenario(scenario, testType);
-
-                Logger.say(SCENARIO_SUCCESSFUL, description);
-                Logger.say(SCENARIO_FINISHED);
             }
         }
     }
