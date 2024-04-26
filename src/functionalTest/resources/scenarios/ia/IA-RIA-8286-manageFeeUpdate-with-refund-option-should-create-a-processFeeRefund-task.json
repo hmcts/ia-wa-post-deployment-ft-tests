@@ -7,7 +7,7 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IACaseworker",
+    "credentials": "IALegalRepresentative",
     "ccd": [
       {
         "eventId": "submitAppeal",
@@ -34,7 +34,7 @@
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "feeUpdateTribunalActions": "refund"
+                  "feeUpdateTribunalAction": "refund"
                 }
               }
             }
