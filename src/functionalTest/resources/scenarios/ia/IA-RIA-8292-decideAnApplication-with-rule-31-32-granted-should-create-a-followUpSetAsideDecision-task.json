@@ -1,5 +1,5 @@
 {
-  "description": "decideAnApplication with rule 31 and 32 Granted should create a delayed followUpSetAsideDecision task",
+  "description": "decideAnApplication with set aside a decision Granted should create a delayed followUpSetAsideDecision task",
   "enabled": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -35,7 +35,7 @@
                 "Data": {
                   "appealType": "protection",
                   "lastModifiedApplication": {
-                    "type": "Application under rule 31 or rule 32",
+                    "type": "Set aside a decision",
                     "decision": "Granted"
                   }
                 }

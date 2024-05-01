@@ -1,5 +1,5 @@
 {
-  "description": "makeAnApplication event with rule 31 and 32 should create a reviewSetAsideDecisionApplication task",
+  "description": "makeAnApplication event with set aside a decision should create a reviewSetAsideDecisionApplication task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -35,7 +35,7 @@
                 "Data": {
                   "appealType": "protection",
                   "lastModifiedApplication": {
-                    "type": "Application under rule 31 or rule 32",
+                    "type": "Set aside a decision",
                     "decision": ""
                   }
                 }
