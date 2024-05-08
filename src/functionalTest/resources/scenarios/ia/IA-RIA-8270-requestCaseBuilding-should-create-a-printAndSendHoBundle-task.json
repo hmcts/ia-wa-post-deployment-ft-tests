@@ -1,6 +1,6 @@
 {
-  "description": "startAppeal event should create a delayed reviewDraftAppeal task after 14 days",
-  "enabled": false,
+  "description": "requestCaseBuilding event should create a delayed printAndSendHoBundle task",
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
@@ -23,17 +23,18 @@
   },
   "test": {
     "request": {
-      "credentials": "AdminOfficer",
+      "credentials": "IACaseworker",
       "input": {
         "eventMessages": [
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "startAppeal",
-              "NewStateId": "appealStartedByAdmin",
+              "EventId": "requestCaseBuilding",
+              "NewStateId": "caseBuilding",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection"
+                  "appealType": "protection",
+                  "isAdmin": true
                 }
               }
             }
@@ -43,10 +44,10 @@
     },
     "expectations": [
       {
-        "credentials": "CTSCAdmin",
+        "credentials": "NBCAdmin",
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["reviewDraftAppeal"],
+        "taskTypes": ["printAndSendHoBundle"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -56,14 +57,14 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Review draft appeal",
-                "type": "reviewDraftAppeal",
+                "name": "Print and send HO bundle and appeal reasons form",
+                "type": "printAndSendHoBundle",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Review draft appeal",
+                "task_title": "Print and send HO bundle and appeal reasons form",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -72,7 +73,7 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "CTSC",
+                "role_category": "ADMIN",
                 "warning_list": {
                   "values": [
 
@@ -92,24 +93,12 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 3,
+        "numberOfRolesAvailable": 2,
         "roleData": {
           "roles":[
             {
-              "role_category":"CTSC",
-              "role_name":"ctsc",
-              "permissions":[
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations":[
-              ]
-            },
-            {
-              "role_category":"CTSC",
-              "role_name":"ctsc-team-leader",
+              "role_category":"ADMIN",
+              "role_name":"national-business-centre",
               "permissions":[
                 "Read",
                 "Own","Claim",
