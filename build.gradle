@@ -197,9 +197,6 @@ dependencyManagement {
       dependency group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
 
 
-
-      dependency group: 'org.springframework', name: 'spring-web', version: '5.3.34'
-
     }
 }
 
@@ -255,7 +252,7 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.9'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.0.3'
 
     implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '3.1.4'
     implementation group: 'com.github.hmcts', name: 'core-case-data-store-client', version: '4.7.6'
