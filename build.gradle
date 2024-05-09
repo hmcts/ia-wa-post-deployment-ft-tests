@@ -196,7 +196,7 @@ dependencyManagement {
       //CVE-2023-24998
       dependency group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
 
-      dependency group: 'org.yaml', name: 'snakeyaml', version: '2.2'
+
 
       dependency group: 'org.springframework', name: 'spring-web', version: '5.3.34'
 
