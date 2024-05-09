@@ -189,11 +189,6 @@ dependencyManagement {
       dependency group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.2'
       dependency group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.2'
 
-      //CVE-2021-42550
-      dependencySet(group: 'ch.qos.logback', version: '1.5.5') {
-        entry 'logback-classic'
-        entry 'logback-core'
-      }
       dependencySet(group: 'com.google.guava', version: '32.0.0-jre') {
         entry 'guava'
       }
