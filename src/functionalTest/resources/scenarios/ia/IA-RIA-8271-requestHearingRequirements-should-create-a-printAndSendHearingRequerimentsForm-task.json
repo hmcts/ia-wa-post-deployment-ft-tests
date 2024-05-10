@@ -29,7 +29,7 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "requestHearingRequirements",
+              "EventId": "requestHearingRequirementsFeature",
               "NewStateId": "list",
               "AdditionalData": {
                 "Data": {
