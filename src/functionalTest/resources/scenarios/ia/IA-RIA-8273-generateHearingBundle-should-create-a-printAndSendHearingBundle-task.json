@@ -29,7 +29,7 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "generateHearingBundle",
+              "EventId": "asyncStitchingComplete",
               "NewStateId": "finalBundling",
               "AdditionalData": {
                 "Data": {
