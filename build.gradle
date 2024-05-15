@@ -193,6 +193,8 @@ dependencyManagement {
         entry 'logback-classic'
         entry 'logback-core'
       }
+
+      dependency group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
     }
 }
 
