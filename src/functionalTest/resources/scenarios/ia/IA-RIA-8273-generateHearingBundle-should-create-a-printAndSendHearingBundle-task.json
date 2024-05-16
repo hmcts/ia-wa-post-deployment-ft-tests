@@ -30,7 +30,7 @@
             "template": "minimal-ccd-event-message.json",
             "replacements": {
               "EventId": "asyncStitchingComplete",
-              "NewStateId": "finalBundling",
+              "NewStateId": "preHearing",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
@@ -57,12 +57,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Print and send Hearing Bundle",
+                "name": "Print and send hearing bundle",
                 "type": "printAndSendHearingBundle",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Print and send Hearing Bundle",
+                "task_title": "Print and send hearing bundle",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
