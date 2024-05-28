@@ -18,17 +18,17 @@
   <cve>CVE-2022-38752</cve>
   <cve>CVE-2022-41854</cve>
   <cve>CVE-2022-38750</cve>
-  <cve>CVE-2022-29885</cve>
-  <cve>CVE-2022-42252</cve>
-  <cve>CVE-2022-45143</cve>
-  <cve>CVE-2023-44487</cve>
-  <cve>CVE-2023-46589</cve>
-  <cve>CVE-2022-34305</cve>
-  <cve>CVE-2023-41080</cve>
-  <cve>CVE-2023-42795</cve>
-  <cve>CVE-2023-45648</cve>
-  <cve>CVE-2023-28708</cve>
-  <cve>CVE-2021-43980</cve>
+<!--  <cve>CVE-2022-29885</cve>-->
+<!--  <cve>CVE-2022-42252</cve>-->
+<!--  <cve>CVE-2022-45143</cve>-->
+<!--  <cve>CVE-2023-44487</cve>-->
+<!--  <cve>CVE-2023-46589</cve>-->
+<!--  <cve>CVE-2022-34305</cve>-->
+<!--  <cve>CVE-2023-41080</cve>-->
+<!--  <cve>CVE-2023-42795</cve>-->
+<!--  <cve>CVE-2023-45648</cve>-->
+<!--  <cve>CVE-2023-28708</cve>-->
+<!--  <cve>CVE-2021-43980</cve>-->
   <cve>CVE-2022-40152</cve>
 </suppress>
 

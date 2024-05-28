@@ -172,7 +172,8 @@ dependencyCheck {
 
 dependencyManagement {
     dependencies {
-        dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.68'
+        //dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.68'
+      //dependency group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.78.1'
         // CVE-2018-10237 - Unbounded memory allocation
         dependencySet(group: 'com.google.guava', version: '30.1.1-jre') {
             entry 'guava'
@@ -184,15 +185,18 @@ dependencyManagement {
       dependency group: 'org.glassfish', name: 'jakarta.el', version: '4.0.1'
 
       // CVE-2020-36518
-      dependency group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.5'
-      dependency group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.2'
-      dependency group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.2'
+      dependency group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.1'
+      dependency group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.17.1'
+      dependency group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.17.1'
 
       //CVE-2021-42550
       dependencySet(group: 'ch.qos.logback', version: '1.2.10') {
         entry 'logback-classic'
         entry 'logback-core'
       }
+
+      //dependency group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.6.2'
+
 
       dependency group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
     }
@@ -210,7 +214,7 @@ def versions = [
         reformLogging   : '5.1.9',
         springfoxSwagger: '3.0.0',
         serenity        : '2.2.12',
-        tomcat          : '9.0.58'
+        tomcat          : '9.0.86'
 ]
 
 ext.libraries = [
