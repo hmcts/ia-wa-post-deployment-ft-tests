@@ -195,7 +195,7 @@ dependencyManagement {
         entry 'logback-core'
       }
 
-      //dependency group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.6.2'
+      dependency group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: '6.6.2'
 
 
       dependency group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
