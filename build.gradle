@@ -224,6 +224,10 @@ dependencyManagement {
         entry 'netty-transport-native-unix-common'
 
       }
+
+      dependency group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: '1.0.45'
+      dependency group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: '1.0.45'
+
     }
 }
 
