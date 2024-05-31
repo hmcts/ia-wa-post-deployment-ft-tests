@@ -35,6 +35,7 @@
                 "Data": {
                   "appealType": "protection",
                   "isAdmin": true,
+                  "isDecisionRule31Changed": true,
                   "updateTribunalDecisionList": "underRule31"
                 }
               }
