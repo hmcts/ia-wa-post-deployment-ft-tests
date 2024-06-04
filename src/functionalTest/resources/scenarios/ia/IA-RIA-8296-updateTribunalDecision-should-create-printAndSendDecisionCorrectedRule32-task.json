@@ -1,5 +1,5 @@
 {
-  "description": "updateTribunalDecision event should create a delayed printAndSendDecisionCorrectedRule31 task",
+  "description": "updateTribunalDecision event should create a delayed printAndSendDecisionCorrectedRule32 task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -35,7 +35,7 @@
                 "Data": {
                   "appealType": "protection",
                   "isAdmin": true,
-                  "updateTribunalDecisionList": "underRule31"
+                  "updateTribunalDecisionList": "underRule32"
                 }
               }
             }
@@ -48,7 +48,7 @@
         "credentials": "NBCAdmin",
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["printAndSendDecisionCorrectedRule31"],
+        "taskTypes": ["printAndSendDecisionCorrectedRule32"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -58,12 +58,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Print and send decision corrected under rule 31",
-                "type": "printAndSendDecisionCorrectedRule31",
+                "name": "Print and send decision corrected under rule 32",
+                "type": "printAndSendDecisionCorrectedRule32",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Print and send decision corrected under rule 31",
+                "task_title": "Print and send decision corrected under rule 32",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
