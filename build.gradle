@@ -228,7 +228,10 @@ dependencyManagement {
       dependency group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: '1.0.45'
       dependency group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: '1.0.45'
 
-      dependency group: 'org.springframework', name: 'spring-web', version: '6.0.21'
+
+      dependency group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.5.8'
+      dependency group: 'org.springframework.security', name: 'spring-security-rsa', version: '1.1.3'
+
 
     }
 }
