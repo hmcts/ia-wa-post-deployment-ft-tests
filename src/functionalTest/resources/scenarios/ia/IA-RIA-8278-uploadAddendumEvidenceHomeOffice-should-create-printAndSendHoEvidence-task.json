@@ -1,5 +1,5 @@
 {
-  "description": "requestResponseReview event should create a printAndSendHoResponse task",
+  "description": "uploadAddendumEvidenceHomeOffice event should create a printAndSendHoEvidence task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -29,8 +29,7 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "requestResponseReview",
-              "NewStateId": "respondentReview",
+              "EventId": "uploadAddendumEvidenceHomeOffice",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
@@ -47,7 +46,7 @@
         "credentials": "NBCAdmin",
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["printAndSendHoResponse"],
+        "taskTypes": ["printAndSendHoEvidence"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -57,12 +56,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Print and send HO response",
-                "type": "printAndSendHoResponse",
+                "name": "Print and send new HO evidence",
+                "type": "printAndSendHoEvidence",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Print and send HO response",
+                "task_title": "Print and send new HO evidence",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
