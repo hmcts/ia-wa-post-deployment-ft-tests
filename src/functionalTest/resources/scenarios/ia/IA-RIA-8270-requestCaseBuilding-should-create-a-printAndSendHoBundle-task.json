@@ -1,5 +1,5 @@
 {
-  "description": "requestCaseBuilding event should create a delayed printAndSendHoBundle task",
+  "description": "requestCaseBuilding event should create a printAndSendHoBundle task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

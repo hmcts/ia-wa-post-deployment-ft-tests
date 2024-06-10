@@ -1,5 +1,5 @@
 {
-  "description": "requestHearingRequirements event should create a delayed printAndSendHearingRequirementsForm task",
+  "description": "requestHearingRequirements event should create a printAndSendHearingRequirementsForm task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

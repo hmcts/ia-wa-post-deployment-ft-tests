@@ -1,5 +1,5 @@
 {
-  "description": "updateTribunalDecision event should create a delayed printAndSendHoApplication task",
+  "description": "makeAnApplication event should create a printAndSendHoApplication task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

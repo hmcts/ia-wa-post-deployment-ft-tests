@@ -1,5 +1,5 @@
 {
-  "description": "updateTribunalDecision event should create a delayed printAndSendDecisionCorrectedRule31 task",
+  "description": "updateTribunalDecision event should create a printAndSendDecisionCorrectedRule31 task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
