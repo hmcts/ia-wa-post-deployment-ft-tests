@@ -30,7 +30,7 @@
             "template": "minimal-ccd-event-message.json",
             "replacements": {
               "EventId": "requestHearingRequirementsFeature",
-              "NewStateId": "list",
+              "NewStateId": "submitHearingRequirements",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
