@@ -42,5 +42,6 @@
         "document": "{$NOTICE_OF_DECISION_DOCUMENT}"
       }
     }
-  ]
+  ],
+  "appellantInUk": "Yes"
 }

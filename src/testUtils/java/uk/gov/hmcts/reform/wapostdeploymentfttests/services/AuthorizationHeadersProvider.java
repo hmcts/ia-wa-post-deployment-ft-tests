@@ -110,6 +110,20 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
                                         "AdminOfficer");
     }
 
+    public Headers getNbcAdminAuthorization() {
+        return new Headers(
+            getNbcAdminOfficerAuthorizationOnly(),
+            getServiceAuthorizationHeader()
+        );
+    }
+
+    public Header getNbcAdminOfficerAuthorizationOnly() {
+
+        return getUserAuthorizationOnly("TEST_NBC_ADMIN_USERNAME",
+                                        "TEST_NBC_ADMIN_PASSWORD",
+                                        "NBCAdmin");
+    }
+
     public Header getUserAuthorizationOnly(String username, String password, String key) {
         return getAuthorization(key, System.getenv(username), System.getenv(password));
     }
@@ -169,6 +183,8 @@ public class AuthorizationHeadersProvider  implements AuthorizationHeaders {
                 return getAdminOfficerAuthorization();
             case "WaSystemUser":
                 return getWaSystemUserAuthorization();
+            case "NBCAdmin":
+                return getNbcAdminAuthorization();
             default:
                 throw new IllegalStateException("Credentials implementation for '" + credentials + "' not found");
         }
