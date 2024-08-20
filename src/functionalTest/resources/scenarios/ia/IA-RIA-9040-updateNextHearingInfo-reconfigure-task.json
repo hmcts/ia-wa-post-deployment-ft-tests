@@ -1,0 +1,285 @@
+{
+  "description": "updateNextHearingInfo event should trigger reconfiguration",
+  "enabled": true,
+  "jurisdiction": "IA",
+  "caseType": "Asylum",
+  "testType": "Reconfiguration",
+  "options": {
+    "taskRetrievalApi": "task-management-api"
+  },
+  "required": {
+    "credentials": "IALegalRepresentative",
+    "ccd": [
+      {
+        "eventId": "listCase",
+        "state": "listing",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "appealType": "protection",
+            "homeOfficeDecisionDate": "{$TODAY-14}",
+            "appellantInUk": "Yes",
+            "ariaListingReference": "LP/12345/2019",
+            "listCaseHearingCentre": "taylorHouse",
+            "listCaseHearingLength": "300"
+          }
+        }
+      }
+    ]
+  },
+  "before": {
+    "request": {
+      "input": {
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json",
+            "replacements": {
+              "EventId": "listCase",
+              "NewStateId": "prepareForHearing",
+              "AdditionalData": {
+                "Data": {
+                  "listCaseHearingDate": "2020-10-28T10:30:00.000"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "expectations": [
+      {
+        "credentials": "IACaseworker",
+        "status": 200,
+        "numberOfTasksAvailable": 2,
+        "taskTypes": ["postHearingAttendeesDurationAndRecording","caseSummaryHearingBundleStartDecision"],
+        "taskData": {
+          "template": "minimal-task-response.json",
+          "replacements": {
+            "tasks": [
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "name": "Create Hearing Bundle",
+                "type": "caseSummaryHearingBundleStartDecision",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "LEGAL_OPERATIONS",
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "routine_work",
+                "permissions": {
+                  "values": [
+                    "Read","Own","Claim","Manage","Unassign","Assign","Complete","Execute","Cancel"
+                  ]
+                }
+              },
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "type": "postHearingAttendeesDurationAndRecording",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "ADMIN",
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "hearing_work",
+                "permissions": {
+                  "values": [
+                    "Read","Claim","Manage","Unassign","Assign","Complete","Execute","Cancel"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "roleData": {
+          "roles":[{"role_category":"LEGAL_OPERATIONS","role_name":"case-manager","permissions":["Read","Own","Cancel","Claim"],"authorisations":[]},{"role_category":"LEGAL_OPERATIONS","role_name":"senior-tribunal-caseworker","permissions":["Read","Own","Manage","Cancel","Complete","Claim","Assign","Unassign"],"authorisations":[]},{"role_name":"task-supervisor","permissions":["Read","Manage","Execute","Cancel","Complete","Claim","Assign","Unassign"],"authorisations":[]},{"role_category":"LEGAL_OPERATIONS","role_name":"tribunal-caseworker","permissions":["Read","Own","Manage","Cancel","Complete","Claim","Assign","Unassign"],"authorisations":[]}]
+        }
+      }
+    ]
+  },
+  "postRoleAssignments" : {
+    "credentials": "IACaseworker",
+    "roleData": {
+      "template": "set-organisational-role-assignment-request.json",
+      "replacements": {
+        "roleName": "tribunal-caseworker",
+        "caseType": "Asylum",
+        "jurisdiction": "IA",
+        "grantType": "SPECIFIC",
+        "roleType": "CASE",
+        "classification": "PUBLIC",
+        "roleCategory": "LEGAL_OPERATIONS"
+      }
+    }
+  },
+  "requiredUpdate": {
+    "credentials": "WaSystemUser",
+    "ccd": [
+      {
+        "eventId": "updateNextHearingInfo",
+        "state": "prepareForHearing",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "nextHearingDetails": {
+              "hearingID": "999",
+              "hearingDateTime": "2020-10-28T10:30:00.000",
+              "AdditionalData": {
+                "Data": {
+                  "listCaseHearingDate": "2020-10-28T10:30:00.000"
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "test": {
+    "request": {
+      "credentials": "IACaseworker",
+      "input": {
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json",
+            "replacements": {
+              "EventId": "updateNextHearingInfo",
+              "AdditionalData": {
+                "Data": {
+                  "listCaseHearingDate": "2020-10-28T10:30:00.000"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "expectations": [
+      {
+        "credentials": "IACaseworker",
+        "status": 200,
+        "numberOfTasksAvailable": 2,
+        "taskTypes": ["postHearingAttendeesDurationAndRecording","caseSummaryHearingBundleStartDecision"],
+        "taskData": {
+          "template": "minimal-task-response.json",
+          "replacements": {
+            "tasks": [
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "name": "Create Hearing Bundle",
+                "type": "caseSummaryHearingBundleStartDecision",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "LEGAL_OPERATIONS",
+                "next_hearing_id": "999",
+                "next_hearing_date": "2020-10-28T10:30:00+0000",
+                "warning_list": {
+                  "values": [
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "routine_work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Own",
+                    "Claim",
+                    "Manage",
+                    "Unassign",
+                    "Assign",
+                    "Complete",
+                    "Execute",
+                    "Cancel"
+                  ]
+                }
+              },
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "type": "postHearingAttendeesDurationAndRecording",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "ADMIN",
+                "next_hearing_id": "999",
+                "next_hearing_date": "2020-10-28T10:30:00+0000",
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "hearing_work",
+                "permissions": {
+                  "values": [
+                    "Read","Claim","Manage","Unassign","Assign","Complete","Execute","Cancel"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "roleData": {
+          "roles":[{"role_category":"LEGAL_OPERATIONS","role_name":"case-manager","permissions":["Read","Own","Cancel","Claim"],"authorisations":[]},{"role_category":"LEGAL_OPERATIONS","role_name":"senior-tribunal-caseworker","permissions":["Read","Own","Manage","Cancel","Complete","Claim","Assign","Unassign"],"authorisations":[]},{"role_name":"task-supervisor","permissions":["Read","Manage","Execute","Cancel","Complete","Claim","Assign","Unassign"],"authorisations":[]},{"role_category":"LEGAL_OPERATIONS","role_name":"tribunal-caseworker","permissions":["Read","Own","Manage","Cancel","Complete","Claim","Assign","Unassign"],"authorisations":[]}]
+        }
+      }
+    ]
+  }
+}
