@@ -1,0 +1,499 @@
+{
+    "description": "cmrListing should trigger reconfiguration",
+    "enabled": false,
+    "jurisdiction": "IA",
+    "caseType": "Asylum",
+    "testType": "Reconfiguration",
+    "options": {
+        "taskRetrievalApi": "task-management-api"
+    },
+    "required": {
+        "credentials": "IALegalRepresentative",
+        "ccd": [
+            {
+                "eventId": "submitAppeal",
+                "state": "appealStarted",
+                "caseData": {
+                    "template": "minimal-appeal-started.json",
+                    "replacements": {
+                        "appealType": "protection",
+                        "homeOfficeDecisionDate": "{$TODAY-14}"
+                    }
+                }
+            }
+        ]
+    },
+    "before": {
+        "request": {
+            "input": {
+                "eventMessages": [
+                    {
+                        "template": "minimal-ccd-event-message.json",
+                        "replacements": {
+                            "EventId": "listCase",
+                            "NewStateId": "prepareForHearing",
+                            "AdditionalData": {
+                                "Data": {
+                                    "appealType": "protection"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "expectations": [
+            {
+                "credentials": "IACaseworker",
+                "status": 200,
+                "numberOfTasksAvailable": 2,
+                "taskData": {
+                    "template": "minimal-task-response.json",
+                    "replacements": {
+                        "tasks": [
+                            {
+                                "name": "Create Hearing Bundle",
+                                "type": "caseSummaryHearingBundleStartDecision",
+                                "task_title": "Create Hearing Bundle",
+                                "id": "{$VERIFIER-UUID}",
+                                "case_name": "Functional PostDeployment",
+                                "case_id": "{$GENERATED_CASE_ID}",
+                                "case_category": "Protection",
+                                "task_state": "unassigned",
+                                "task_system": "SELF",
+                                "security_classification": "PUBLIC",
+                                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                                "execution_type": "Case Management Task",
+                                "jurisdiction": "IA",
+                                "case_type_id": "Asylum",
+                                "region": "1",
+                                "location": "765324",
+                                "location_name": "Taylor House",
+                                "auto_assigned": false,
+                                "warnings": false,
+                                "warning_list": {
+                                    "values": []
+                                },
+                                "case_management_category": "Protection",
+                                "permissions": {
+                                    "values": [
+                                        "Read",
+                                        "Own",
+                                        "Claim",
+                                        "Manage",
+                                        "Unassign",
+                                        "Assign",
+                                        "Complete",
+                                        "Execute",
+                                        "Cancel"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "Upload hearing recording",
+                                "type": "uploadHearingRecording",
+                                "task_title": "Upload hearing recording",
+                                "id": "{$VERIFIER-UUID}",
+                                "case_name": "Functional PostDeployment",
+                                "case_id": "{$GENERATED_CASE_ID}",
+                                "case_category": "Protection",
+                                "task_state": "unassigned",
+                                "task_system": "SELF",
+                                "security_classification": "PUBLIC",
+                                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                                "execution_type": "Case Management Task",
+                                "jurisdiction": "IA",
+                                "case_type_id": "Asylum",
+                                "region": "1",
+                                "location": "765324",
+                                "location_name": "Taylor House",
+                                "auto_assigned": false,
+                                "warnings": false,
+                                "warning_list": {
+                                    "values": []
+                                },
+                                "case_management_category": "Protection",
+                                "permissions": {
+                                    "values": [
+                                        "Read",
+                                        "Manage",
+                                        "Unassign",
+                                        "Assign",
+                                        "Complete",
+                                        "Execute",
+                                        "Claim",
+                                        "Cancel"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                "numberOfRolesAvailable": 4,
+                "roleData": {
+                    "roles": [
+                        {
+                            "role_category": "LEGAL_OPERATIONS",
+                            "role_name": "case-manager",
+                            "permissions": [
+                                "Read",
+                                "Own",
+                                "Claim",
+                                "Cancel"
+                            ],
+                            "authorisations": []
+                        },
+                        {
+                            "role_category": "LEGAL_OPERATIONS",
+                            "role_name": "senior-tribunal-caseworker",
+                            "permissions": [
+                                "Read",
+                                "Own",
+                                "Claim",
+                                "Manage",
+                                "Unassign",
+                                "Assign",
+                                "Complete",
+                                "Cancel"
+                            ],
+                            "authorisations": []
+                        },
+                        {
+                            "role_name": "task-supervisor",
+                            "permissions": [
+                                "Read",
+                                "Manage",
+                                "Unassign",
+                                "Assign",
+                                "Complete",
+                                "Execute",
+                                "Claim",
+                                "Cancel"
+                            ],
+                            "authorisations": []
+                        },
+                        {
+                            "role_category": "LEGAL_OPERATIONS",
+                            "role_name": "tribunal-caseworker",
+                            "permissions": [
+                                "Read",
+                                "Own",
+                                "Claim",
+                                "Manage",
+                                "Unassign",
+                                "Assign",
+                                "Complete",
+                                "Cancel"
+                            ],
+                            "authorisations": []
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "postRoleAssignments": {
+        "credentials": "IACaseworker",
+        "roleData": {
+            "template": "set-organisational-role-assignment-request.json",
+            "replacements": {
+                "roleName": "tribunal-caseworker",
+                "caseType": "Asylum",
+                "jurisdiction": "IA",
+                "grantType": "SPECIFIC",
+                "roleType": "CASE",
+                "classification": "PUBLIC",
+                "roleCategory": "LEGAL_OPERATIONS"
+            }
+        }
+    },
+    "requiredUpdate": {
+        "credentials": "IACaseworker",
+        "ccd": [
+            {
+                "eventId": "requestRespondentEvidence",
+                "state": "appealSubmitted",
+                "caseData": {
+                    "template": "minimal-appeal-started.json",
+                    "replacements": {
+                        "sendDirectionExplanation": "Send your evidence",
+                        "sendDirectionDateDue": "2022-01-01",
+                        "homeOfficeSearchStatus": "SUCCESS",
+                        "homeOfficeNotificationsEligible": "No",
+                        "directions": [
+                            {
+                                "id": "1",
+                                "value": {
+                                    "explanation": "Do the first thing",
+                                    "parties": "legalRepresentative",
+                                    "dateDue": "2018-12-31",
+                                    "dateSent": "2018-12-25",
+                                    "tag": ""
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "eventId": "forceRequestCaseBuilding",
+                "state": "awaitingRespondentEvidence",
+                "caseData": {
+                    "template": "minimal-appeal-started.json",
+                    "replacements": {
+                        "sendDirectionExplanation": "You must now build your case by uploading your Appeal Skeleton Argument and evidence. You have 42 days from the date you submitted the appeal, or 28 days from the date of this email, whichever occurs later.\n\nYou must write a full skeleton argument that references:\n\n- all the evidence you have (or plan) to rely on, including witness statements\n- the grounds and issues of the case\n- any new matters\n- any legal authorities you plan to rely on and why they are applicable to your case\n\nYour argument must explain why you believe the respondent's decision is wrong. You must provide all the information for the respondent to conduct a thorough review of their decision.\n\n# Next steps\n\nOnce you have uploaded your appeal argument and evidence, you should submit your case. The Tribunal case worker will review everything you've added.\n\nIf your case looks ready, the Tribunal case worker will send it to the respondent to review.",
+                        "sendDirectionDateDue": "{$TODAY+28}",
+                        "uploadHomeOfficeBundleAvailable": "Yes",
+                        "reasonToForceRequestCaseBuilding": "some reasons to force the case progression"
+                    }
+                }
+            },
+            {
+                "eventId": "forceCaseToCaseUnderReview",
+                "state": "caseBuilding",
+                "caseData": {
+                    "template": "minimal-appeal-started.json",
+                    "replacements": {
+                        "reasonToForceCaseToCaseUnderReview": "some reason"
+                    }
+                }
+            },
+            {
+                "eventId": "requestRespondentReview",
+                "state": "caseUnderReview",
+                "caseData": {
+                    "template": "minimal-appeal-started.json",
+                    "replacements": {
+                        "homeOfficeReferenceNumber": "1212-0099-0062-8083",
+                        "sendDirectionExplanation": "You have 14 days to review the appellant's argument and evidence. You must explain whether the appellant makes a valid case for overturning the original decision.\\n\\nYou must respond to the Tribunal and tell them:\\n\\n- whether you oppose all or parts of the appellant's case\\n- what your grounds are for opposing the case\\n- which of the issues are agreed or not agreed\\n- whether there are any further issues you wish to raise\\n- whether you are prepared to withdraw to grant\\n- whether the appeal can be resolved without a hearing\\n\\nNext steps\\n\\nIf you do not respond in time the Tribunal will decide how the case should proceed.",
+                        "sendDirectionParties": "respondent",
+                        "sendDirectionDateDue": "{$TODAY+14}"
+                    }
+                }
+            },
+            {
+                "eventId": "requestResponseReview",
+                "state": "respondentReview",
+                "caseData": {
+                    "template": "minimal-appeal-started.json",
+                    "replacements": {
+                        "sendDirectionExplanation": "The Home Office has replied to your Appeal Skeleton Argument and evidence. You should review their response.\n\n# Next steps\n\nReview the Home Office response. If you want to respond to what they have said, you should email the Tribunal.\n\nIf you do not respond by the date indicated below, the case will automatically go to hearing.",
+                        "sendDirectionDateDue": "{$TODAY+5}"
+                    }
+                }
+            },
+            {
+                "eventId": "requestHearingRequirementsFeature",
+                "state": "respondentReview",
+                "caseData": {
+                    "template": "minimal-appeal-started.json"
+                }
+            },
+            {
+                "eventId": "listCaseWithoutHearingRequirements",
+                "state": "submitHearingRequirements",
+                "caseData": {
+                    "template": "minimal-appeal-started.json",
+                    "replacements": {
+                        "listCaseHearingLength": "90"
+                    }
+                }
+            },
+            {
+                "credentials": "AdminOfficer",
+                "eventId": "listCase",
+                "state": "listing",
+                "caseData": {
+                    "template": "minimal-appeal-started-blank.json",
+                    "replacements": {
+                        "ariaListingReference": "LP/12345/2019",
+                        "listCaseHearingCentre": "taylorHouse",
+                        "listCaseHearingLength": "300",
+                        "listCaseHearingDate": "2020-10-28T10:30:00.000"
+                    }
+                }
+            },
+            {
+                "eventId": "cmrListing",
+                "state": "prepareForHearing",
+                "caseData": {
+                    "template": "minimal-appeal-started-blank.json",
+                    "replacements": {
+                        "listCaseHearingCentre": "hattonCross"
+                    }
+                }
+            }
+        ]
+    },
+    "test": {
+        "request": {
+            "credentials": "IACaseworker",
+            "input": {
+                "eventMessages": [
+                    {
+                        "template": "minimal-ccd-event-message.json",
+                        "replacements": {
+                            "EventId": "cmrListing"
+                        }
+                    }
+                ]
+            }
+        },
+        "expectations": [
+            {
+                "credentials": "IACaseworker",
+                "status": 200,
+                "numberOfTasksAvailable": 2,
+                "taskTypes": [
+                    "caseSummaryHearingBundleStartDecision",
+                    "uploadHearingRecording"
+                ],
+                "taskData": {
+                    "template": "minimal-task-response.json",
+                    "replacements": {
+                        "tasks": [
+                            {
+                                "name": "Create Hearing Bundle",
+                                "type": "caseSummaryHearingBundleStartDecision",
+                                "task_title": "Create Hearing Bundle",
+                                "id": "{$VERIFIER-UUID}",
+                                "case_name": "Functional PostDeployment",
+                                "case_id": "{$GENERATED_CASE_ID}",
+                                "case_category": "Protection",
+                                "task_state": "unassigned",
+                                "task_system": "SELF",
+                                "security_classification": "PUBLIC",
+                                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                                "execution_type": "Case Management Task",
+                                "jurisdiction": "IA",
+                                "case_type_id": "Asylum",
+                                "region": "1",
+                                "location": "386417",
+                                "location_name": "Hatton Cross",
+                                "auto_assigned": false,
+                                "warnings": false,
+                                "warning_list": {
+                                    "values": []
+                                },
+                                "case_management_category": "Protection",
+                                "permissions": {
+                                    "values": [
+                                        "Read",
+                                        "Own",
+                                        "Claim",
+                                        "Manage",
+                                        "Unassign",
+                                        "Assign",
+                                        "Complete",
+                                        "Execute",
+                                        "Cancel"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "Upload hearing recording",
+                                "type": "uploadHearingRecording",
+                                "task_title": "Upload hearing recording",
+                                "id": "{$VERIFIER-UUID}",
+                                "case_name": "Functional PostDeployment",
+                                "case_id": "{$GENERATED_CASE_ID}",
+                                "case_category": "Protection",
+                                "task_state": "unassigned",
+                                "task_system": "SELF",
+                                "security_classification": "PUBLIC",
+                                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                                "execution_type": "Case Management Task",
+                                "jurisdiction": "IA",
+                                "case_type_id": "Asylum",
+                                "region": "1",
+                                "location": "386417",
+                                "location_name": "Hatton Cross",
+                                "auto_assigned": false,
+                                "warnings": false,
+                                "warning_list": {
+                                    "values": []
+                                },
+                                "case_management_category": "Protection",
+                                "permissions": {
+                                    "values": [
+                                        "Read",
+                                        "Manage",
+                                        "Unassign",
+                                        "Assign",
+                                        "Complete",
+                                        "Execute",
+                                        "Claim",
+                                        "Cancel"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                "roleData": {
+                    "roles": [
+                        {
+                            "role_category": "LEGAL_OPERATIONS",
+                            "role_name": "case-manager",
+                            "permissions": [
+                                "Read",
+                                "Own",
+                                "Claim",
+                                "Cancel"
+                            ],
+                            "authorisations": []
+                        },
+                        {
+                            "role_category": "LEGAL_OPERATIONS",
+                            "role_name": "senior-tribunal-caseworker",
+                            "permissions": [
+                                "Read",
+                                "Own",
+                                "Claim",
+                                "Manage",
+                                "Unassign",
+                                "Assign",
+                                "Complete",
+                                "Cancel"
+                            ],
+                            "authorisations": []
+                        },
+                        {
+                            "role_name": "task-supervisor",
+                            "permissions": [
+                                "Read",
+                                "Manage",
+                                "Unassign",
+                                "Assign",
+                                "Complete",
+                                "Execute",
+                                "Claim",
+                                "Cancel"
+                            ],
+                            "authorisations": []
+                        },
+                        {
+                            "role_category": "LEGAL_OPERATIONS",
+                            "role_name": "tribunal-caseworker",
+                            "permissions": [
+                                "Read",
+                                "Own",
+                                "Claim",
+                                "Manage",
+                                "Unassign",
+                                "Assign",
+                                "Complete",
+                                "Cancel"
+                            ],
+                            "authorisations": []
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
