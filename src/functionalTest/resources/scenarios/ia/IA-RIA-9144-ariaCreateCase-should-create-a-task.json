@@ -1,5 +1,5 @@
 {
-  "description": "Should create Send CMR notification task when CMR is listed",
+  "description": "ariaCreateCase event should create a reviewMigratedCase task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -10,13 +10,14 @@
     "credentials": "IALegalRepresentative",
     "ccd": [
       {
-        "eventId": "submitAppeal",
-        "state": "appealStarted",
+        "eventId": "ariaCreateCase",
+        "state": "migrated",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
             "appealType": "protection",
-            "homeOfficeDecisionDate": "{$TODAY-14}"
+            "homeOfficeDecisionDate": "{$TODAY-14}",
+            "ariaMigrationTaskDueDays": "5"
           }
         }
       }
@@ -30,7 +31,8 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "triggerCmrListed",
+              "EventId": "ariaCreateCase",
+              "NewStateId": "migrated",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection"
@@ -46,7 +48,7 @@
         "credentials": "IACaseworker",
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["cmrListed"],
+        "taskTypes": ["reviewMigratedCase"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -56,14 +58,14 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Send CMR notification",
-                "type": "cmrListed",
+                "name": "Review migrated case",
+                "type": "reviewMigratedCase",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Send CMR notification",
+                "task_title": "Review migrated case",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -75,17 +77,15 @@
                 "role_category": "ADMIN",
                 "warning_list": {
                   "values": [
-
                   ]
                 },
                 "case_management_category": "Protection",
-                "work_type_id": "hearing_work",
+                "work_type_id": "review_case",
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
                     "Manage","Unassign","Assign","Complete",
-                    "Execute",
+                    "Execute","Claim",
                     "Cancel"
                   ]
                 }
@@ -93,33 +93,9 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 6,
+        "numberOfRolesAvailable": 2,
         "roleData": {
-          "roles":[
-            {
-              "role_category":"CTSC",
-              "role_name":"ctsc",
-              "permissions":[
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations":[
-              ]
-            },
-            {
-              "role_category":"CTSC",
-              "role_name":"ctsc-team-leader",
-              "permissions":[
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations":[
-              ]
-            },
+          "roles": [
             {
               "role_category":"ADMIN",
               "role_name":"hearing-centre-admin",
@@ -130,42 +106,19 @@
                 "Cancel"
               ],
               "authorisations":[
+
               ]
             },
             {
-              "role_category":"LEGAL_OPERATIONS",
-              "role_name":"senior-tribunal-caseworker",
+              "role_name":"task-supervisor",
               "permissions":[
                 "Read",
-                "Own",
                 "Manage","Unassign","Assign","Complete",
-                "Claim",
-                "Cancel"
-              ],
-              "authorisations":[
-              ]
-            },
-            {
-              "role_name": "task-supervisor",
-              "permissions": [
-                "Read",
                 "Execute","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations": [
-              ]
-            },
-            {
-              "role_category":"LEGAL_OPERATIONS",
-              "role_name":"tribunal-caseworker",
-              "permissions":[
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations":[
+
               ]
             }
           ]
@@ -174,3 +127,4 @@
     ]
   }
 }
+

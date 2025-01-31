@@ -249,7 +249,7 @@ def versions = [
         junitPlatform   : '1.7.1',
         reformLogging   : '5.1.9',
         springfoxSwagger: '3.0.0',
-        serenity        : '2.2.12',
+        serenity        : '2.3.26',
         tomcat          : '9.0.86'
 ]
 
