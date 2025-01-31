@@ -183,7 +183,7 @@ dependencyManagement {
       dependency group: 'org.yaml', name: 'snakeyaml', version: '2.2'
 
       //CVE-2021-28170
-      dependency group: 'org.glassfish', name: 'jakarta.el', version: '4.0.1'
+      dependency group: 'org.glassfish', name: 'jakarta.el', version: '4.0.2'
 
       // CVE-2020-36518, CVE-2022-42003, CVE-2022-42004, CVE-2023-35116
       dependency group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.1'
