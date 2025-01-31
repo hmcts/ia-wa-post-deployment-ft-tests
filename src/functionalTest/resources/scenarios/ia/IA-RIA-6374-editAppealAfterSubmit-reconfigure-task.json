@@ -17,7 +17,8 @@
           "template": "minimal-appeal-started.json",
           "replacements": {
             "appealType": "protection",
-            "homeOfficeDecisionDate": "{$TODAY-14}"
+            "homeOfficeDecisionDate": "{$TODAY-14}",
+            "appellantInUk": "Yes"
           }
         }
       }

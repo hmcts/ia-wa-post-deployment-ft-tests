@@ -16,7 +16,8 @@
           "template": "minimal-appeal-started.json",
           "replacements": {
             "appealType": "protection",
-            "remissionType": "noRemission"
+            "remissionType": "noRemission",
+            "appellantInUk": "Yes"
           }
         }
       }
