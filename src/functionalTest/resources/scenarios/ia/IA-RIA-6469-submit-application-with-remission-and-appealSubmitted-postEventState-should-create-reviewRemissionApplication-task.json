@@ -17,7 +17,8 @@
           "replacements": {
             "appealType": "protection",
             "homeOfficeDecisionDate": "{$TODAY-14}",
-            "remissionType": "exceptionalCircumstancesRemission"
+            "remissionType": "exceptionalCircumstancesRemission",
+            "appellantInUk": "Yes"
           }
         }
       }

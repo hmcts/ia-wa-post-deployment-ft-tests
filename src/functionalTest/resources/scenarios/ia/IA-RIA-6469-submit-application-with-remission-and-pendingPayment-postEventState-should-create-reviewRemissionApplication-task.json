@@ -17,7 +17,8 @@
           "replacements": {
             "appealType": "refusalOfHumanRights",
             "homeOfficeDecisionDate": "{$TODAY-14}",
-            "remissionType": "hoWaiverRemission"
+            "remissionType": "hoWaiverRemission",
+            "appellantInUk": "Yes"
           }
         }
       }

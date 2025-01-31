@@ -15,7 +15,8 @@
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection"
+            "appealType": "protection",
+            "appellantInUk": "Yes"
           }
         }
       }
