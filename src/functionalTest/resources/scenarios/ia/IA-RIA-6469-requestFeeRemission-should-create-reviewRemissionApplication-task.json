@@ -84,7 +84,7 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
+                    "Own","Claim", "Execute",
                     "Manage","Unassign","Assign","Complete",
                     "Cancel"
                   ]
@@ -101,7 +101,7 @@
               "role_name":"ctsc",
               "permissions":[
                 "Read",
-                "Own","Claim","Execute",
+                "Own","Claim",
                 "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
