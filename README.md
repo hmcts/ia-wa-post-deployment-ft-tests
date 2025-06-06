@@ -103,11 +103,11 @@ export DM_STORE_URL=“http://dm-store-aat.service.core-compute-aat.internal”
 export CCD_GW_URL=“https://gateway-ia-case-api-<PR>.preview.platform.hmcts.net”
 
 export IA_IDAM_CLIENT_ID=iac
-export IA_IDAM_CLIENT_SECRET=NDPH6DFQBIPA9UP7
+export IA_IDAM_CLIENT_SECRET=<AAT IA IDAM Secret> (ex: NDPH6DFQBIPA9UP7)
 export OPEN_ID_IDAM_URL=“https://idam-web-public.aat.platform.hmcts.net”
 export IA_IDAM_REDIRECT_URI=“https://ia-case-api-aat.service.core-compute-aat.internal/oauth2/callback”
 export S2S_URL=“http://rpe-service-auth-provider-aat.service.core-compute-aat.internal”
-export S2S_SECRET_TASK_MANAGEMENT_API=UYIEF2FUGBFE666Y
+export S2S_SECRET_TASK_MANAGEMENT_API=<AAT WA S2S Secret for Task Management> (ex: UYIEF2FUGBFE666Y)
 export S2S_NAME_TASK_MANAGEMENT_API=wa_task_management_api
 export IDAM_URL=“https://idam-web-public.aat.platform.hmcts.net”
 export CAMUNDA_URL=“https://camunda-ia-case-api-<PR>.preview.platform.hmcts.net/engine-rest”
