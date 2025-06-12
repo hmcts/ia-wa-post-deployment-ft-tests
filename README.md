@@ -84,46 +84,7 @@ This repository is still under development and so changes may occur in the futur
 We will update this Readme file anytime we modify the structure or the underlying framework.
 If you are unsure about something, please check with the team for clarification.
 
-# Running against Preview
-Please replace <PR> with the actual preview PR number (e.g., pr-2500) in the terminal and then execute the functional tests. These tests are expected to user all containers in preview for both CCD and WA.
 
-User profile variables are currently assigned to active AAT user profiles. If you encounter any test failures related to user profiles, it might be because they've been deactivated or removed from AAT. In such cases, please update the variables with new, active profiles.
-
-By adjusting the URLs below, the functional tests can be executed against any desired environment. Make sure user profiles are updated relevant to the environment as well.
-
-export WA_TASK_MANAGEMENT_URL=“https://wa-task-management-api-ia-case-api-<PR>.preview.platform.hmcts.net”
-export WA_CASE_EVENT_HANDLER_URL=“https://wa-case-event-handler-ia-case-api-<PR>.preview.platform.hmcts.net”
-export WA_TASK_MONITOR_URL=“https://wa-task-monitor-ia-case-api-<PR>.preview.platform.hmcts.net”
-export CCD_URL=“https://ccd-data-store-api-ia-case-api-<PR>.preview.platform.hmcts.net”
-export WA_POST_DEPLOYMENT_TEST_ENVIRONMENT=local
-export AZURE_SERVICE_BUS_CONNECTION_STRING=“Endpoint=sb://ia-sb-preview.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=bo/fiSRbwJ9fjEnklyX90t+WyEEBea+GA+ASbK0idNI=“
-export AZURE_SERVICE_BUS_TOPIC_NAME=“ia-case-api-<PR>-ccd-case-events”
-export AZURE_SERVICE_BUS_MESSAGE_AUTHOR=<PR>
-export DM_STORE_URL=“http://dm-store-aat.service.core-compute-aat.internal”
-export CCD_GW_URL=“https://gateway-ia-case-api-<PR>.preview.platform.hmcts.net”
-
-export IA_IDAM_CLIENT_ID=iac
-export IA_IDAM_CLIENT_SECRET=<AAT IA IDAM Secret> (ex: NDPH6DFQBIPA9UP7)
-export OPEN_ID_IDAM_URL=“https://idam-web-public.aat.platform.hmcts.net”
-export IA_IDAM_REDIRECT_URI=“https://ia-case-api-aat.service.core-compute-aat.internal/oauth2/callback”
-export S2S_URL=“http://rpe-service-auth-provider-aat.service.core-compute-aat.internal”
-export S2S_SECRET_TASK_MANAGEMENT_API=<AAT WA S2S Secret for Task Management> (ex: UYIEF2FUGBFE666Y)
-export S2S_NAME_TASK_MANAGEMENT_API=wa_task_management_api
-export IDAM_URL=“https://idam-web-public.aat.platform.hmcts.net”
-export CAMUNDA_URL=“https://camunda-ia-case-api-<PR>.preview.platform.hmcts.net/engine-rest”
-export ROLE_ASSIGNMENT_URL=“https://am-role-assignment-ia-case-api-<PR>.preview.platform.hmcts.net”
-
-
-export TEST_WA_CASEOFFICER_PUBLIC_A_USERNAME=“CRD_func_test_aat_stcw@justice.gov.uk”
-export TEST_WA_CASEOFFICER_PUBLIC_A_PASSWORD=“AldgateT0wer”
-export TEST_CTSC_ADMIN_USERNAME=“CRD_func_test_aat_adm66@justice.gov.uk”
-export TEST_CTSC_ADMIN_PASSWORD=“AldgateT0wer”
-export TEST_ADMINOFFICER_USERNAME=“CRD_func_test_aat_adm66@justice.gov.uk”
-export TEST_ADMINOFFICER_PASSWORD=“AldgateT0wer”
-export TEST_NBC_ADMIN_USERNAME=“CRD_func_test_aat_adm66@justice.gov.uk”
-export TEST_NBC_ADMIN_PASSWORD=“AldgateT0wer”
-export TEST_WA_LAW_FIRM_USERNAME=“ialegalreporgcreator12@mailnesia.com”
-export TEST_WA_LAW_FIRM_PASSWORD=“Aldg@teT0wer”
 
 ## License
 
