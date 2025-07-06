@@ -250,7 +250,7 @@ def versions = [
         reformLogging   : '5.1.9',
         springfoxSwagger: '3.0.0',
         serenity        : '2.3.26',
-        tomcat          : '9.0.86'
+        tomcat          : '9.0.107'
 ]
 
 ext.libraries = [
