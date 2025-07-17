@@ -7,7 +7,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "recordAdjournmentDetails",
@@ -23,7 +25,9 @@
   },
   "test": {
     "request": {
-      "credentials": "AdminOfficer",
+      "credentials": {
+        "key": "AdminOfficer"
+      },
       "input": {
         "eventMessages": [
           {
@@ -45,7 +49,9 @@
     },
     "expectations": [
       {
-        "credentials": "CTSCAdmin",
+        "credentials": {
+          "key": "CTSCAdmin"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["listTheCase"],

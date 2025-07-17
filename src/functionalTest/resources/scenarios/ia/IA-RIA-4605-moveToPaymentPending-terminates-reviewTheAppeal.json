@@ -7,7 +7,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "payAndSubmitAppeal",
@@ -24,6 +26,10 @@
   },
   "before": {
     "request": {
+      "credentials": {
+        "key": "IACaseworker",
+        "granularPermission": true
+      },
       "input": {
         "eventMessages": [
           {
@@ -43,7 +49,10 @@
     },
     "expectations": [
       {
-        "credentials": "IACaseworker",
+        "credentials": {
+          "key": "IACaseworker",
+          "granularPermission": true
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["reviewTheAppeal"],
@@ -146,7 +155,9 @@
   },
   "test": {
     "request": {
-      "credentials": "IALegalRepresentative",
+      "credentials": {
+        "key": "IALegalRepresentative"
+      },
       "input": {
         "eventMessages": [
           {
@@ -166,7 +177,9 @@
     },
     "expectations": [
       {
-        "credentials": "IACaseworker",
+        "credentials": {
+          "key": "IACaseworker"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["reviewTheAppeal"],

@@ -8,7 +8,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "listCase",
@@ -48,7 +50,9 @@
     },
     "expectations": [
       {
-        "credentials": "IACaseworker",
+        "credentials": {
+          "key": "IACaseworker"
+        },
         "status": 200,
         "numberOfTasksAvailable": 2,
         "taskTypes": ["postHearingAttendeesDurationAndRecording","caseSummaryHearingBundleStartDecision"],
@@ -131,7 +135,9 @@
     ]
   },
   "postRoleAssignments" : {
-    "credentials": "IACaseworker",
+    "credentials": {
+      "key": "IACaseworker"
+    },
     "roleData": {
       "template": "set-organisational-role-assignment-request.json",
       "replacements": {
@@ -146,7 +152,9 @@
     }
   },
   "requiredUpdate": {
-    "credentials": "WaSystemUser",
+    "credentials": {
+      "key": "WaSystemUser"
+    },
     "ccd": [
       {
         "eventId": "updateNextHearingInfo",
@@ -170,7 +178,9 @@
   },
   "test": {
     "request": {
-      "credentials": "IACaseworker",
+      "credentials": {
+        "key": "IACaseworker"
+      },
       "input": {
         "eventMessages": [
           {
@@ -189,7 +199,9 @@
     },
     "expectations": [
       {
-        "credentials": "IACaseworker",
+        "credentials": {
+          "key": "IACaseworker"
+        },
         "status": 200,
         "numberOfTasksAvailable": 2,
         "taskTypes": ["postHearingAttendeesDurationAndRecording","caseSummaryHearingBundleStartDecision"],

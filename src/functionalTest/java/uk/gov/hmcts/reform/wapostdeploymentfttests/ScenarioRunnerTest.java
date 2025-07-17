@@ -3,21 +3,26 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
-import feign.RetryableException;
 import io.restassured.http.Headers;
-import java.util.stream.Collectors;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.StopWatch;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestRequestType;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam.CredentialRequest;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam.UserInfo;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.taskretriever.TaskRetrieverEnum;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.preparers.Preparer;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider;
@@ -25,10 +30,12 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.services.CcdCaseCreator;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.MessageInjector;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.RestMessageService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.RoleAssignmentService;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.services.TaskManagementService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.CamundaTaskRetrieverService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.TaskMgmApiRetrieverService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
+import uk.gov.hmcts.reform.wapostdeploymentfttests.util.JsonUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.Logger;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapSerializer;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor;
@@ -38,7 +45,6 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.Verifier;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +59,8 @@ import static java.util.Collections.emptyMap;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertFalse;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.AUTHORIZATION;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.SERVICE_AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil.addAssignedCaseId;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_BEFORE_COMPLETED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_BEFORE_FOUND;
@@ -65,51 +73,76 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCE
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_RUNNING_TIME;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_START;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_SUCCESSFUL;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_UPDATE_CASE_COMPLETED;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_UPDATE_CASE_FOUND;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.ENVIRONMENT_PROPERTIES;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrDefault;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrThrow;
 
 @Slf4j
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = Application.class)
 public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
-    @Autowired
     protected MessageInjector messageInjector;
-    @Autowired
     protected TaskDataVerifier taskDataVerifier;
-    @Autowired
     protected AuthorizationHeadersProvider authorizationHeadersProvider;
-    @Autowired
-    private CamundaTaskRetrieverService camundaTaskRetrievableService;
-    @Autowired
-    private TaskMgmApiRetrieverService taskMgmApiRetrievableService;
-    @Autowired
-    private RoleAssignmentService roleAssignmentService;
-    @Autowired
-    private Environment environment;
-    @Autowired
-    private DeserializeValuesUtil deserializeValuesUtil;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private List<Verifier> verifiers;
-    @Autowired
-    private List<Preparer> preparers;
-    @Autowired
-    private CcdCaseCreator ccdCaseCreator;
-    @Autowired
-    private RestMessageService restMessageService;
+    private final CamundaTaskRetrieverService camundaTaskRetrievableService;
+    private final TaskMgmApiRetrieverService taskMgmApiRetrievableService;
+    private final RoleAssignmentService roleAssignmentService;
+    private final TaskManagementService taskManagementService;
+    private final Environment environment;
+    private final DeserializeValuesUtil deserializeValuesUtil;
+    private final ObjectMapper objectMapper;
+    private final List<Verifier> verifiers;
+    private final List<Preparer> preparers;
+    private final CcdCaseCreator ccdCaseCreator;
+    private final RestMessageService restMessageService;
     @Value("${ia-wa-post-deployment-test.environment}")
     protected String postDeploymentTestEnvironment;
-    private boolean haveAllPassed = true;
     private final ArrayList<String> failedScenarios = new ArrayList<>();
 
-    @Before
+    @Autowired
+    public ScenarioRunnerTest(
+        MessageInjector messageInjector,
+        TaskDataVerifier taskDataVerifier,
+        AuthorizationHeadersProvider authorizationHeadersProvider,
+        CamundaTaskRetrieverService camundaTaskRetrievableService,
+        TaskMgmApiRetrieverService taskMgmApiRetrievableService,
+        RoleAssignmentService roleAssignmentService,
+        TaskManagementService taskManagementService,
+        Environment environment,
+        DeserializeValuesUtil deserializeValuesUtil,
+        ObjectMapper objectMapper,
+        List<Verifier> verifiers,
+        List<Preparer> preparers,
+        CcdCaseCreator ccdCaseCreator,
+        RestMessageService restMessageService
+    ) {
+        this.messageInjector = messageInjector;
+        this.taskDataVerifier = taskDataVerifier;
+        this.authorizationHeadersProvider = authorizationHeadersProvider;
+        this.camundaTaskRetrievableService = camundaTaskRetrievableService;
+        this.taskMgmApiRetrievableService = taskMgmApiRetrievableService;
+        this.roleAssignmentService = roleAssignmentService;
+        this.taskManagementService = taskManagementService;
+        this.environment = environment;
+        this.deserializeValuesUtil = deserializeValuesUtil;
+        this.objectMapper = objectMapper;
+        this.verifiers = verifiers;
+        this.preparers = preparers;
+        this.ccdCaseCreator = ccdCaseCreator;
+        this.restMessageService = restMessageService;
+    }
+
+    @BeforeEach
     public void setUp() {
         MapSerializer.setObjectMapper(objectMapper);
+        JsonUtil.setObjectMapper(objectMapper);
     }
 
     @Test
-    public void scenarios_should_behave_as_specified() throws IOException, URISyntaxException {
+    public void scenarios_should_behave_as_specified() throws Exception {
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -127,15 +160,24 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         File[] directories = new File(path.toURI()).listFiles(File::isDirectory);
         Objects.requireNonNull(directories, "No directories found under 'scenarios'");
 
-        for (File directory : directories) {
-            runAllScenariosFor(directory.getName());
+        Exception testException = null;
+        try {
+            for (File directory : directories) {
+                runAllScenariosFor(directory.getName());
+            }
+        } catch (Exception ex) {
+            testException = ex;
+        } finally {
+            if (testException != null) {
+                throw testException;
+            }
         }
 
         stopWatch.stop();
         Logger.say(SCENARIO_RUNNING_TIME, stopWatch.getTotalTimeSeconds());
     }
 
-    private void runAllScenariosFor(String directoryName) throws IOException {
+    private void runAllScenariosFor(String directoryName) throws Exception {
         String scenarioPattern = System.getProperty("scenario");
         if (scenarioPattern == null) {
             scenarioPattern = "*.json";
@@ -150,106 +192,110 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         Logger.say(SCENARIO_START, scenarioSources.size() + " " + directoryName.toUpperCase(Locale.ROOT));
 
-        int maxRetries = 3;
         for (String scenarioSource : scenarioSources) {
             String description = "";
-            for (int i = 0; i < maxRetries; i++) {
-                try {
-                    Map<String, Object> scenarioValues = deserializeValuesUtil
-                        .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
+            try {
+                Map<String, Object> scenarioValues = deserializeValuesUtil
+                    .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
 
-                    description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
-                    String testType = extractOrDefault(scenarioValues, "testType", "default");
+                description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
 
-                    Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
+                Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
 
-                    if (!scenarioEnabled) {
-                        Logger.say(SCENARIO_DISABLED, description);
-                        continue;
-                    } else {
-                        Logger.say(SCENARIO_ENABLED, description);
+                if (!scenarioEnabled) {
+                    Logger.say(SCENARIO_DISABLED, description);
+                } else {
+                    Logger.say(SCENARIO_ENABLED, description);
 
-                        Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
-                        Map<String, Object> testClauseValues = extractOrThrow(scenarioValues, "test");
-                        Map<String, Object> postRoleAssignmentClauseValues = extractOrDefault(
-                            scenarioValues,
-                            "postRoleAssignments", null
-                        );
+                    Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
+                    Map<String, Object> testClauseValues = Objects.requireNonNull(
+                        MapValueExtractor.extract(scenarioValues, "test"));
+                    Map<String, Object> postRoleAssignmentClauseValues = extractOrDefault(
+                        scenarioValues,
+                        "postRoleAssignments", null
+                    );
+                    Map<String, Object> updateCaseClauseValues = extractOrDefault(scenarioValues, "updateCase", null);
 
-                        String scenarioJurisdiction = extractOrThrow(scenarioValues, "jurisdiction");
-                        String caseType = extractOrThrow(scenarioValues, "caseType");
+                    String scenarioJurisdiction = extractOrThrow(scenarioValues, "jurisdiction");
+                    String caseType = extractOrThrow(scenarioValues, "caseType");
 
-                        TestScenario scenario = new TestScenario(
-                            scenarioValues,
-                            scenarioSource,
-                            scenarioJurisdiction,
-                            caseType,
-                            beforeClauseValues,
-                            testClauseValues,
-                            postRoleAssignmentClauseValues
-                        );
-                        createBaseCcdCase(scenario);
+                    TestScenario scenario = new TestScenario(
+                        scenarioValues,
+                        scenarioSource,
+                        scenarioJurisdiction,
+                        caseType,
+                        beforeClauseValues,
+                        testClauseValues,
+                        postRoleAssignmentClauseValues,
+                        updateCaseClauseValues
+                    );
+                    createBaseCcdCase(scenario);
 
-                        addSearchParameters(scenario, scenarioValues);
+                    addSearchParameters(scenario, scenarioValues);
 
-                        if (scenario.getBeforeClauseValues() != null) {
-                            Logger.say(SCENARIO_BEFORE_FOUND);
-                            //If before was found process with before values
-                            processBeforeClauseScenario(scenario);
-                            Logger.say(SCENARIO_BEFORE_COMPLETED);
+                    if (scenario.getBeforeClauseValues() != null) {
+                        Logger.say(SCENARIO_BEFORE_FOUND);
+                        //If before was found process with before values
+                        processBeforeClauseScenario(scenario);
+                        Logger.say(SCENARIO_BEFORE_COMPLETED);
 
-                        }
-
-                        if (scenario.getPostRoleAssignmentClauseValues() != null) {
-                            Logger.say(SCENARIO_ROLE_ASSIGNMENT_FOUND);
-                            roleAssignmentService.processRoleAssignments(scenario, postRoleAssignmentClauseValues);
-                            Logger.say(SCENARIO_ROLE_ASSIGNMENT_COMPLETED);
-                        }
-
-                        if (testType.equals("Reconfiguration")) {
-                            updateBaseCcdCase(scenario);
-                        }
-
-                        Logger.say(SCENARIO_RUNNING);
-                        processTestClauseScenario(scenario, testType);
-
-                        Logger.say(SCENARIO_SUCCESSFUL, description);
-                        Logger.say(SCENARIO_FINISHED);
                     }
-                } catch (Error | FeignException | NullPointerException e) {
-                    log.error("Scenario failed with error {}", e.getMessage());
-                    if (i == maxRetries - 1) {
-                        this.failedScenarios.add(description);
-                        this.haveAllPassed = false;
+
+                    if (scenario.getPostRoleAssignmentClauseValues() != null) {
+                        Logger.say(SCENARIO_ROLE_ASSIGNMENT_FOUND);
+                        processRoleAssignment(postRoleAssignmentClauseValues, scenario);
+                        Logger.say(SCENARIO_ROLE_ASSIGNMENT_COMPLETED);
                     }
+
+                    if (scenario.getUpdateCaseClauseValues() != null) {
+                        Logger.say(SCENARIO_UPDATE_CASE_FOUND);
+                        updateBaseCcdCase(scenario);
+                        Logger.say(SCENARIO_UPDATE_CASE_COMPLETED);
+                    }
+
+                    Logger.say(SCENARIO_RUNNING);
+                    processTestClauseScenario(scenario);
+                    Logger.say(SCENARIO_SUCCESSFUL, description);
+
+                    Logger.say(SCENARIO_FINISHED);
                 }
+            } catch (Error | FeignException | NullPointerException e) {
+                log.error("Scenario failed with error {}", e.getMessage());
+                this.failedScenarios.add(description);
             }
         }
-
-        log.info((char) 27 + "\033[36m" + "-------------------------------------------------------------------");
-        log.info((char) 27 + "\033[0m");
-        if (!haveAllPassed) {
-            throw new AssertionError("Not all scenarios passed.\nFailed scenarios are:\n" + failedScenarios.stream().map(Object::toString).collect(
-                Collectors.joining(";\n")));
-        }
     }
 
-    private void processBeforeClauseScenario(TestScenario scenario) throws IOException {
-        processScenario(scenario.getBeforeClauseValues(), scenario, "");
+    private void processRoleAssignment(Map<String, Object> postRoleAssignmentClauseValues, TestScenario scenario)
+        throws IOException {
+        Map<String, Object> postRoleAssignmentValues = scenario.getPostRoleAssignmentClauseValues();
+
+        CredentialRequest credentialRequest = extractCredentialRequest(postRoleAssignmentValues, "credentials");
+        Headers requestAuthorizationHeaders = authorizationHeadersProvider.getIaUserAuthorization(credentialRequest);
+
+        String userToken = requestAuthorizationHeaders.getValue(AUTHORIZATION);
+        String serviceToken = requestAuthorizationHeaders.getValue(SERVICE_AUTHORIZATION);
+        UserInfo userInfo = authorizationHeadersProvider.getUserInfo(userToken);
+
+        roleAssignmentService.processRoleAssignments(
+            scenario,
+            postRoleAssignmentClauseValues, userToken, serviceToken, userInfo
+        );
     }
 
-    private void processTestClauseScenario(TestScenario scenario, String testType) throws IOException {
-        processScenario(scenario.getTestClauseValues(), scenario, testType);
+    private void processBeforeClauseScenario(TestScenario scenario) throws Exception {
+        processScenario(scenario.getBeforeClauseValues(), scenario);
     }
 
-    private void createBaseCcdCase(TestScenario scenario) {
+    private void processTestClauseScenario(TestScenario scenario) throws Exception {
+        processScenario(scenario.gettestClauseValues(), scenario);
+    }
+
+    private void createBaseCcdCase(TestScenario scenario) throws IOException {
         Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
-        String requestCredentials = extractOrThrow(scenarioValues, "required.credentials");
 
-        Headers requestAuthorizationHeaders = authorizationHeadersProvider
-            .getAuthorizationHeaders(requestCredentials);
-
-        scenario.setRequestAuthorizationHeaders(requestAuthorizationHeaders);
+        CredentialRequest credentialRequest = extractCredentialRequest(scenarioValues, "required.credentials");
+        Headers requestAuthorizationHeaders = authorizationHeadersProvider.getIaUserAuthorization(credentialRequest);
 
         List<Map<String, Object>> ccdCaseToCreate = new ArrayList<>(Objects.requireNonNull(
             MapValueExtractor.extract(scenarioValues, "required.ccd")));
@@ -269,36 +315,24 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         });
     }
 
-    private void updateBaseCcdCase(TestScenario scenario) {
+    private void updateBaseCcdCase(TestScenario scenario) throws IOException {
         Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
-        String requestCredentials = extractOrThrow(scenarioValues, "requiredUpdate.credentials");
 
-        Headers requestAuthorizationHeaders = authorizationHeadersProvider
-            .getAuthorizationHeaders(requestCredentials);
-
-        scenario.setRequestAuthorizationHeaders(requestAuthorizationHeaders);
+        CredentialRequest credentialRequest = extractCredentialRequest(scenarioValues, "updateCase.credentials");
+        Headers requestAuthorizationHeaders = authorizationHeadersProvider.getIaUserAuthorization(credentialRequest);
 
         List<Map<String, Object>> ccdCaseToUpdate = new ArrayList<>(Objects.requireNonNull(
-            MapValueExtractor.extract(scenarioValues, "requiredUpdate.ccd")));
+            MapValueExtractor.extract(scenarioValues, "updateCase.ccd")));
 
         ccdCaseToUpdate.forEach(caseValues -> {
             try {
-                Headers customRequestAuthorizationHeaders = null;
-                String customRequestCredentials =
-                    MapValueExtractor.extractOrDefault(caseValues, "credentials", null);
-                if (customRequestCredentials != null) {
-                    customRequestAuthorizationHeaders =
-                        authorizationHeadersProvider.getAuthorizationHeaders(customRequestCredentials);
-                }
-
                 String caseId = CaseIdUtil.extractAssignedCaseIdOrDefault(caseValues, scenario);
                 ccdCaseCreator.updateCase(
                     caseId,
                     caseValues,
                     scenario.getJurisdiction(),
                     scenario.getCaseType(),
-                    customRequestAuthorizationHeaders == null
-                        ? requestAuthorizationHeaders : customRequestAuthorizationHeaders
+                    requestAuthorizationHeaders
                 );
                 addAssignedCaseId(caseValues, caseId, scenario);
             } catch (IOException e) {
@@ -308,30 +342,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     }
 
     private void processScenario(Map<String, Object> values,
-                                 TestScenario scenario,
-                                 String testType) throws IOException {
-
-        messageInjector.injectMessage(
-            values,
-            scenario,
-            scenario.getJurisdiction(),
-            scenario.getRequestAuthorizationHeaders()
-        );
-
-        if (testType.equals("Reconfiguration") && postDeploymentTestEnvironment.equals("local")) {
-            await()
-                .ignoreException(AssertionError.class)
-                .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
-                .pollInterval(10, SECONDS)
-                .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
-                .until(
-                    () -> {
-                        taskMgmApiRetrievableService.performOperation(
-                            scenario.getExpectationAuthorizationHeaders()
-                        );
-                        return true;
-                    });
-        }
+                                 TestScenario scenario) throws Exception {
+        processTestRequest(values, scenario);
 
         String taskRetrieverOption = MapValueExtractor.extract(
             scenario.getScenarioMapValues(),
@@ -341,18 +353,56 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         List<Map<String, Object>> expectations = new ArrayList<>(Objects.requireNonNull(
             MapValueExtractor.extract(values, "expectations")));
 
-        expectations.forEach(expectationValue -> {
-
-            int expectedTasks = MapValueExtractor.extractOrDefault(
+        for (Map<String, Object> expectationValue : expectations) {
+            int expectedTasks = extractOrDefault(
                 expectationValue, "numberOfTasksAvailable", 0);
-            int expectedMessages = MapValueExtractor.extractOrDefault(
+            int expectedMessages = extractOrDefault(
                 expectationValue, "numberOfMessagesToCheck", 0);
             List<String> expectationCaseIds = CaseIdUtil.extractAllAssignedCaseIdOrDefault(expectationValue, scenario);
 
             verifyTasks(scenario, taskRetrieverOption, expectationValue, expectedTasks, expectationCaseIds);
 
             verifyMessages(expectationValue, expectedMessages, expectationCaseIds.get(0));
-        });
+
+            removeInvalidMessages(expectationCaseIds.get(0));
+        }
+    }
+
+    private void processTestRequest(Map<String, Object> values, TestScenario scenario) throws Exception {
+
+        Map<String, Object> request = extractOrThrow(values, "request");
+
+        TestRequestType requestType = TestRequestType.valueOf(MapValueExtractor.extractOrDefault(
+            request, "type", "MESSAGE"));
+
+        CredentialRequest credentialRequest = extractCredentialRequest(request, "credentials");
+        Headers requestAuthorizationHeaders = authorizationHeadersProvider.getIaUserAuthorization(credentialRequest);
+
+        String userToken = requestAuthorizationHeaders.getValue(AUTHORIZATION);
+        UserInfo userInfo = authorizationHeadersProvider.getUserInfo(userToken);
+
+        log.info("{} request", requestType);
+        switch (requestType) {
+            case MESSAGE:
+                messageInjector.injectMessage(
+                    request,
+                    scenario,
+                    userInfo
+                );
+                break;
+            case CLAIM:
+                taskManagementService.claimTask(scenario, requestAuthorizationHeaders, userInfo);
+                break;
+            case ASSIGN:
+                UserInfo assignee = getAssigneeInfo(request);
+                taskManagementService.assignTask(scenario, requestAuthorizationHeaders, assignee);
+                break;
+            case COMPLETE:
+                taskManagementService.completeTask(scenario, requestAuthorizationHeaders, userInfo);
+                break;
+            default:
+                throw new Exception("Invalid request type [" + requestType + "]");
+        }
     }
 
     private void verifyMessages(Map<String, Object> expectationValue, int expectedMessages, String expectationCaseId) {
@@ -375,11 +425,11 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                         Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedMessageResponse);
 
                         verifiers.forEach(verifier ->
-                            verifier.verify(
-                                expectationValue,
-                                expectedResponse,
-                                actualResponse
-                            )
+                                              verifier.verify(
+                                                  expectationValue,
+                                                  expectedResponse,
+                                                  actualResponse
+                                              )
                         );
 
                         return true;
@@ -388,27 +438,66 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     }
 
     private void verifyTasks(TestScenario scenario, String taskRetrieverOption, Map<String, Object> expectationValue,
-                             int expectedTasks, List<String> expectationCaseIds) {
+                             int expectedTasks, List<String> expectationCaseIds) throws IOException {
         if (expectedTasks > 0) {
-            String expectationCredentials = extractOrThrow(expectationValue, "credentials");
-            Headers expectationAuthorizationHeaders = authorizationHeadersProvider
-                .getAuthorizationHeaders(expectationCredentials);
-            scenario.setExpectationAuthorizationHeaders(expectationAuthorizationHeaders);
+            CredentialRequest credentialRequest = extractCredentialRequest(expectationValue, "credentials");
+            Headers expectationAuthorizationHeaders =
+                authorizationHeadersProvider.getIaUserAuthorization(credentialRequest);
 
             if (TaskRetrieverEnum.CAMUNDA_API.getId().equals(taskRetrieverOption)) {
                 camundaTaskRetrievableService.retrieveTask(
                     expectationValue,
                     scenario,
-                    expectationCaseIds.get(0)
+                    expectationCaseIds.get(0),
+                    expectationAuthorizationHeaders
                 );
             } else {
                 taskMgmApiRetrievableService.retrieveTask(
                     expectationValue,
                     scenario,
-                    expectationCaseIds
+                    expectationCaseIds,
+                    expectationAuthorizationHeaders
                 );
             }
         }
+    }
+
+    private UserInfo getAssigneeInfo(Map<String, Object> request) throws IOException {
+        CredentialRequest credentialRequest = extractCredentialRequest(request, "input.assignee.credentials");
+        Headers requestAuthorizationHeaders = authorizationHeadersProvider.getIaUserAuthorization(credentialRequest);
+
+        String userToken = requestAuthorizationHeaders.getValue(AUTHORIZATION);
+        return authorizationHeadersProvider.getUserInfo(userToken);
+    }
+
+    private CredentialRequest extractCredentialRequest(Map<String, Object> map, String path) {
+        String credentialsKey = extractOrThrow(map, path + ".key");
+        boolean granularPermission = extractOrDefault(map, path + ".granularPermission", false);
+
+        return new CredentialRequest(credentialsKey, granularPermission);
+    }
+
+    @SneakyThrows
+    private void removeInvalidMessages(String expectationCaseId) {
+
+        log.info("Checking Invalid Messages for caseId: " + expectationCaseId);
+        String actualMessageResponse = restMessageService.getCaseMessages(expectationCaseId);
+
+        Map<String, Object> actualResponse = MapSerializer.deserialize(actualMessageResponse);
+
+        List<Map<String, Object>> messagesSent = new ArrayList<>(Objects.requireNonNull(
+            MapValueExtractor.extract(actualResponse, "caseEventMessages")));
+
+        messagesSent.forEach(messageData -> {
+            String state = MapValueExtractor.extract(messageData, "State");
+            log.info("State: " + state);
+            if ("UNPROCESSABLE".equals(state)) {
+                String messageId = MapValueExtractor.extract(messageData, "MessageId");
+                String caseId = MapValueExtractor.extract(messageData, "CaseId");
+                log.info("Found UNPROCESSABLE messageId: " + messageId + " caseId:" + caseId);
+                restMessageService.deleteMessage(messageId, caseId);
+            }
+        });
     }
 
     private String buildMessageExpectationResponseBody(Map<String, Object> clauseValues,

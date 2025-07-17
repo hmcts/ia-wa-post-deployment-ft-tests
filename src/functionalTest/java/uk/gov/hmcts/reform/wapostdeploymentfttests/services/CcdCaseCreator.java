@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
@@ -30,6 +31,7 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.Authorization
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.SERVICE_AUTHORIZATION;
 
 @Service
+@Import({CoreCaseDataApi.class})
 public class CcdCaseCreator {
     @Autowired
     protected CoreCaseDataApi coreCaseDataApi;
@@ -61,17 +63,6 @@ public class CcdCaseCreator {
             caseData,
             authorizationHeaders
         );
-
-        if (!jurisdiction.equalsIgnoreCase("WA")) {
-            fireStartAndSubmitEventsFor(
-                caseId,
-                "submitAppeal",
-                jurisdiction,
-                caseType,
-                caseData,
-                authorizationHeaders
-            );
-        }
 
         return caseId;
 

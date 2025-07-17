@@ -1,13 +1,16 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.domain;
 
-import io.restassured.http.Headers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestScenario {
 
@@ -16,13 +19,14 @@ public class TestScenario {
     private final Map<String, Object> beforeClauseValues;
     private final Map<String, Object> testClauseValues;
     private final Map<String, Object> postRoleAssignmentClauseValues;
+    private final Map<String, Object> updateCaseClauseValues;
     private final String jurisdiction;
     private final String caseType;
 
+    private final List<String> taskIds;
+    private String assigneeId;
     private final Map<String, String> caseIdMap;
     private final Set<Map<String, Object>> searchMap;
-    private Headers requestAuthorizationHeaders;
-    private Headers expectationAuthorizationHeaders;
 
     public TestScenario(@NotNull Map<String, Object> scenarioMapValues,
                         @NotNull String scenarioSource,
@@ -30,7 +34,8 @@ public class TestScenario {
                         @NotNull String caseType,
                         @Nullable Map<String, Object> beforeClauseValues,
                         @NotNull Map<String, Object> testClauseValues,
-                        @Nullable Map<String, Object> postRoleAssignmentClauseValues) {
+                        @Nullable Map<String, Object> postRoleAssignmentClauseValues,
+                        @Nullable Map<String, Object> updateCaseClauseValues) {
         this.scenarioMapValues = scenarioMapValues;
         this.scenarioSource = scenarioSource;
         this.jurisdiction = jurisdiction;
@@ -38,8 +43,10 @@ public class TestScenario {
         this.beforeClauseValues = beforeClauseValues;
         this.testClauseValues = testClauseValues;
         this.postRoleAssignmentClauseValues = postRoleAssignmentClauseValues;
+        this.updateCaseClauseValues = updateCaseClauseValues;
         this.caseIdMap = new HashMap<>();
         this.searchMap = new HashSet<>();
+        this.taskIds = new ArrayList<>();
     }
 
     public Map<String, Object> getScenarioMapValues() {
@@ -68,27 +75,11 @@ public class TestScenario {
         return caseType;
     }
 
-    public Headers getRequestAuthorizationHeaders() {
-        return requestAuthorizationHeaders;
-    }
-
-    public void setRequestAuthorizationHeaders(Headers requestAuthorizationHeaders) {
-        this.requestAuthorizationHeaders = requestAuthorizationHeaders;
-    }
-
-    public Headers getExpectationAuthorizationHeaders() {
-        return expectationAuthorizationHeaders;
-    }
-
-    public void setExpectationAuthorizationHeaders(Headers expectationAuthorizationHeaders) {
-        this.expectationAuthorizationHeaders = expectationAuthorizationHeaders;
-    }
-
     public Map<String, Object> getBeforeClauseValues() {
         return beforeClauseValues;
     }
 
-    public Map<String, Object> getTestClauseValues() {
+    public Map<String, Object> gettestClauseValues() {
         return testClauseValues;
     }
 
@@ -108,4 +99,24 @@ public class TestScenario {
         return searchMap;
     }
 
+    public Map<String, Object> getUpdateCaseClauseValues() {
+        return updateCaseClauseValues;
+    }
+
+    public void addTaskId(String taskId) {
+        assertNotNull(taskId);
+        taskIds.add(taskId);
+    }
+
+    public List<String> getTaskIds() {
+        return taskIds;
+    }
+
+    public String getAssigneeId() {
+        return assigneeId;
+    }
+
+    public void setAssigneeId(String assigneeId) {
+        this.assigneeId = assigneeId;
+    }
 }

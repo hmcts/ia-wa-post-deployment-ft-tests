@@ -27,3 +27,7 @@ document_management:
 
 ccd_gateway:
   url: ${CCD_GW_URL:http://ccd-data-store-api:4452}
+
+idam:
+  system:
+    password: ${WA_SYSTEM_PASSWORD:password}
