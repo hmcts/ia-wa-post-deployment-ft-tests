@@ -2,7 +2,10 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
+import feign.RetryableException;
 import io.restassured.http.Headers;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
 import org.junit.Before;
@@ -97,6 +100,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private RestMessageService restMessageService;
     @Value("${ia-wa-post-deployment-test.environment}")
     protected String postDeploymentTestEnvironment;
+    private boolean haveAllPassed = true;
+    private final ArrayList<String> failedScenarios = new ArrayList<>();
 
     @Before
     public void setUp() {
@@ -145,67 +150,87 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         Logger.say(SCENARIO_START, scenarioSources.size() + " " + directoryName.toUpperCase(Locale.ROOT));
 
+        int maxRetries = 3;
         for (String scenarioSource : scenarioSources) {
+            String description = "";
+            for (int i = 0; i < maxRetries; i++) {
+                try {
+                    Map<String, Object> scenarioValues = deserializeValuesUtil
+                        .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
 
-            Map<String, Object> scenarioValues = deserializeValuesUtil
-                .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
+                    description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
+                    String testType = extractOrDefault(scenarioValues, "testType", "default");
 
-            String description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
-            String testType = extractOrDefault(scenarioValues, "testType", "default");
+                    Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
 
-            Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
+                    if (!scenarioEnabled) {
+                        Logger.say(SCENARIO_DISABLED, description);
+                        continue;
+                    } else {
+                        Logger.say(SCENARIO_ENABLED, description);
 
-            if (!scenarioEnabled) {
-                Logger.say(SCENARIO_DISABLED, description);
-                continue;
-            } else {
-                Logger.say(SCENARIO_ENABLED, description);
+                        Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
+                        Map<String, Object> testClauseValues = extractOrThrow(scenarioValues, "test");
+                        Map<String, Object> postRoleAssignmentClauseValues = extractOrDefault(
+                            scenarioValues,
+                            "postRoleAssignments", null
+                        );
 
-                Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
-                Map<String, Object> testClauseValues = extractOrThrow(scenarioValues, "test");
-                Map<String, Object> postRoleAssignmentClauseValues = extractOrDefault(scenarioValues,
-                    "postRoleAssignments", null);
+                        String scenarioJurisdiction = extractOrThrow(scenarioValues, "jurisdiction");
+                        String caseType = extractOrThrow(scenarioValues, "caseType");
 
-                String scenarioJurisdiction = extractOrThrow(scenarioValues, "jurisdiction");
-                String caseType = extractOrThrow(scenarioValues, "caseType");
+                        TestScenario scenario = new TestScenario(
+                            scenarioValues,
+                            scenarioSource,
+                            scenarioJurisdiction,
+                            caseType,
+                            beforeClauseValues,
+                            testClauseValues,
+                            postRoleAssignmentClauseValues
+                        );
+                        createBaseCcdCase(scenario);
 
-                TestScenario scenario = new TestScenario(
-                    scenarioValues,
-                    scenarioSource,
-                    scenarioJurisdiction,
-                    caseType,
-                    beforeClauseValues,
-                    testClauseValues,
-                    postRoleAssignmentClauseValues
-                );
-                createBaseCcdCase(scenario);
+                        addSearchParameters(scenario, scenarioValues);
 
-                addSearchParameters(scenario, scenarioValues);
+                        if (scenario.getBeforeClauseValues() != null) {
+                            Logger.say(SCENARIO_BEFORE_FOUND);
+                            //If before was found process with before values
+                            processBeforeClauseScenario(scenario);
+                            Logger.say(SCENARIO_BEFORE_COMPLETED);
 
-                if (scenario.getBeforeClauseValues() != null) {
-                    Logger.say(SCENARIO_BEFORE_FOUND);
-                    //If before was found process with before values
-                    processBeforeClauseScenario(scenario);
-                    Logger.say(SCENARIO_BEFORE_COMPLETED);
+                        }
 
+                        if (scenario.getPostRoleAssignmentClauseValues() != null) {
+                            Logger.say(SCENARIO_ROLE_ASSIGNMENT_FOUND);
+                            roleAssignmentService.processRoleAssignments(scenario, postRoleAssignmentClauseValues);
+                            Logger.say(SCENARIO_ROLE_ASSIGNMENT_COMPLETED);
+                        }
+
+                        if (testType.equals("Reconfiguration")) {
+                            updateBaseCcdCase(scenario);
+                        }
+
+                        Logger.say(SCENARIO_RUNNING);
+                        processTestClauseScenario(scenario, testType);
+
+                        Logger.say(SCENARIO_SUCCESSFUL, description);
+                        Logger.say(SCENARIO_FINISHED);
+                    }
+                } catch (Error | FeignException | NullPointerException e) {
+                    log.error("Scenario failed with error {}", e.getMessage());
+                    if (i == maxRetries - 1) {
+                        this.failedScenarios.add(description);
+                        this.haveAllPassed = false;
+                    }
                 }
-
-                if (scenario.getPostRoleAssignmentClauseValues() != null) {
-                    Logger.say(SCENARIO_ROLE_ASSIGNMENT_FOUND);
-                    roleAssignmentService.processRoleAssignments(scenario, postRoleAssignmentClauseValues);
-                    Logger.say(SCENARIO_ROLE_ASSIGNMENT_COMPLETED);
-                }
-
-                if (testType.equals("Reconfiguration")) {
-                    updateBaseCcdCase(scenario);
-                }
-
-                Logger.say(SCENARIO_RUNNING);
-                processTestClauseScenario(scenario, testType);
-
-                Logger.say(SCENARIO_SUCCESSFUL, description);
-                Logger.say(SCENARIO_FINISHED);
             }
+        }
+
+        log.info((char) 27 + "\033[36m" + "-------------------------------------------------------------------");
+        log.info((char) 27 + "\033[0m");
+        if (!haveAllPassed) {
+            throw new AssertionError("Not all scenarios passed.\nFailed scenarios are:\n" + failedScenarios.stream().map(Object::toString).collect(
+                Collectors.joining(";\n")));
         }
     }
 
