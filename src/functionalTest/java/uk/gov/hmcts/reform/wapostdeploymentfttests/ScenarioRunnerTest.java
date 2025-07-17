@@ -7,6 +7,7 @@ import io.restassured.http.Headers;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
+import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -259,7 +260,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
                     Logger.say(SCENARIO_FINISHED);
                 }
-            } catch (Error | FeignException | NullPointerException e) {
+            } catch (Error | FeignException | NullPointerException | ConditionTimeoutException e) {
                 log.error("Scenario failed with error {}", e.getMessage());
                 this.failedScenarios.add(description);
             }
