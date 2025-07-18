@@ -200,9 +200,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
 
                 description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
-                if (!description.contains("requestFeeRemission event should create a reviewRemissionApplication task")) {
-                    continue;
-                }
                 Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
 
                 if (!scenarioEnabled) {

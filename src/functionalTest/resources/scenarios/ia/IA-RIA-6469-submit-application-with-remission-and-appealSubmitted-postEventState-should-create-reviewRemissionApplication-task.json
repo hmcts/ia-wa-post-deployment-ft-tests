@@ -1,6 +1,7 @@
 {
   "description": "submitAppeal event with remission applicable and post event state appealSubmitted should create a reviewRemissionApplication task",
   "enabled": true,
+  "doesItWork": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

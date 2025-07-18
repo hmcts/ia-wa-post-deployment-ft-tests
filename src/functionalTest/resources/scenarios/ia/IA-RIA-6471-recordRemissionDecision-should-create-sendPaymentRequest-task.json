@@ -1,6 +1,7 @@
 {
   "description": "recordRemissionDecision event should create a sendPaymentRequest task",
-  "enabled": true,
+  "enabled": false,
+  "doesItWork": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

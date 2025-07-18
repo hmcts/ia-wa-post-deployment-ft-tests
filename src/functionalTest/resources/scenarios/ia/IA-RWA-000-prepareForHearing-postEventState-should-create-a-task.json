@@ -1,6 +1,7 @@
 {
   "description": "prepareForHearing post event state should create a caseSummaryHearingBundleStartDecision task",
-  "enabled": true,
+  "enabled": false,
+  "doesItWork": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

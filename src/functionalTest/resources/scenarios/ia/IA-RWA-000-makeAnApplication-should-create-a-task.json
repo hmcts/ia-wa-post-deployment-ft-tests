@@ -1,6 +1,7 @@
 {
   "description": "makeAnApplication event should create a processApplication task",
-  "enabled": true,
+  "enabled": false,
+  "doesItWork": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

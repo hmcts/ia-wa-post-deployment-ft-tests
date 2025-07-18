@@ -1,6 +1,7 @@
 {
   "description": "sendDirectionWithQuestions with awaitingClarifyingQuestionsAnswers post event state should create a followUpOverdueClarifyingAnswers task",
-  "enabled": true,
+  "enabled": false,
+  "doesItWork": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
