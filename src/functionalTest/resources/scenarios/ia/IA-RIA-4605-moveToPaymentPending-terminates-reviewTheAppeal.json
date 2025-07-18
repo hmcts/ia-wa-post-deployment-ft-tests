@@ -1,6 +1,6 @@
 {
   "description": "Given a payAndSubmitAppeal exist moveToPaymentPending should terminate reviewTheAppeal task",
-  "enabled": true,
+  "enabled": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

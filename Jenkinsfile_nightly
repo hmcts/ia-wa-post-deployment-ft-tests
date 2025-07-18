@@ -64,5 +64,5 @@ withNightlyPipeline(type, product, component) {
     env.WA_POST_DEPLOYMENT_TEST_ENVIRONMENT="aat"
 
     loadVaultSecrets(secrets)
-    enableFullFunctionalTest(180)
+    enableFullFunctionalTest(60)
 }
