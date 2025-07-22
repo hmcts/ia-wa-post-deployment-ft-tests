@@ -1,6 +1,6 @@
 {
   "description": "decisionAndReasonsStarted with listCaseHearingCentre should create listTheCase task",
-  "enabled": false,
+  "enabled": true,
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

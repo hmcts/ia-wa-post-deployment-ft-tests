@@ -1,6 +1,6 @@
 {
   "description": "decideAnApplication with Expedite application Granted should create a editListing task",
-  "enabled": false,
+  "enabled": true,
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

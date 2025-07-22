@@ -1,6 +1,6 @@
 {
   "description": "sendDirection event should create a followUpNonStandardDirection task",
-  "enabled": false,
+  "enabled": true,
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

@@ -1,7 +1,7 @@
 
 {
   "description": "makeAnApplication event with Link/unlink appeals should create a processApplicationLink/UnlinkAppeals task",
-  "enabled": false,
+  "enabled": true,
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

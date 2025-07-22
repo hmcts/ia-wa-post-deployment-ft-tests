@@ -1,6 +1,6 @@
 {
   "description": "makeAnApplication event with Transfer should create a processApplicationTransfer task",
-  "enabled": false,
+  "enabled": true,
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

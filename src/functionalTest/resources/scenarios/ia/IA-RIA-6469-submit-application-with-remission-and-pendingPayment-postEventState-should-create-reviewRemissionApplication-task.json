@@ -1,7 +1,7 @@
 {
   "description": "submitAppeal event with remission applicable and post event state pendingPayment should create a reviewRemissionApplication task",
-  "enabled": true,
-  "shouldItWork": "unknown",
+  "enabled": false,
+  "doesItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

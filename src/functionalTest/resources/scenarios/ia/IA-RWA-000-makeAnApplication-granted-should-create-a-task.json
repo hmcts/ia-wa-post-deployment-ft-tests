@@ -1,7 +1,7 @@
 
 {
   "description": "makeAnApplication event with Adjourn should create a processApplicationAdjourn task",
-  "enabled": false,
+  "enabled": true,
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

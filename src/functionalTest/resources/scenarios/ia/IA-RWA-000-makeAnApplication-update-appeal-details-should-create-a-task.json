@@ -1,6 +1,6 @@
 {
   "description": "makeAnApplication event with Update appeal details should create a processApplicationUpdateAppealDetails task",
-  "enabled": false,
+  "enabled": true,
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

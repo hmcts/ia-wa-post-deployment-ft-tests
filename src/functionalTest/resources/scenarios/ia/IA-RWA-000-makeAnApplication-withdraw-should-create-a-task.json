@@ -1,6 +1,6 @@
 {
   "description": "makeAnApplication event with Withdraw should create a processApplicationWithdraw task",
-  "enabled": false,
+  "enabled": true,
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
