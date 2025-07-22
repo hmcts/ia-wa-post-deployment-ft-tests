@@ -264,6 +264,11 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 this.failedScenarios.add(description);
             }
         }
+        if (!failedScenarios.isEmpty()) {
+            StringBuilder sb = new StringBuilder("Failed scenarios: ");
+            failedScenarios.forEach(scenario -> sb.append(scenario).append(", "));
+            log.error(sb.toString());
+        }
     }
 
     private void processRoleAssignment(Map<String, Object> postRoleAssignmentClauseValues, TestScenario scenario)
