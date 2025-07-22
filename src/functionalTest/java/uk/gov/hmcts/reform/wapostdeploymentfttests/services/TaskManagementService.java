@@ -74,11 +74,20 @@ public class TaskManagementService {
             .when()
             .post(taskManagementUrl + "/task/extended-search");
 
-        result.then().assertThat()
-            .statusCode(expectedStatus)
-            .contentType(APPLICATION_JSON_VALUE)
-            .body("tasks.size()", is(expectedTasks));
-
+        try {
+            result.then().assertThat()
+                .statusCode(expectedStatus)
+                .contentType(APPLICATION_JSON_VALUE)
+                .body("tasks.size()", is(expectedTasks));
+        } catch (Exception e) {
+            log.error("Error while validating response: {}", e.getMessage());
+            log.info("tasks.size() is: {}", result.then().extract().body().jsonPath().getList("tasks").size());
+            String actualResponseBody = result.then()
+                .extract()
+                .body().asString();
+            log.info("Response body: " + actualResponseBody);
+            throw e;
+        }
         String actualResponseBody = result.then()
             .extract()
             .body().asString();

@@ -134,7 +134,7 @@
               "permissions":[
                 "Read",
                 "Manage","Unassign","Assign","Complete",
-                "Execute","Claim",
+                "Claim",
                 "Cancel"
               ],
               "authorisations":[

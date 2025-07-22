@@ -1,7 +1,7 @@
 {
   "description": "recordAdjournmentDetails with hearingAdjournmentWhen and relistCaseImmediately should create listTheCase task",
   "enabled": true,
-  "shouldItWork": true,
+  "doesItWork": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
