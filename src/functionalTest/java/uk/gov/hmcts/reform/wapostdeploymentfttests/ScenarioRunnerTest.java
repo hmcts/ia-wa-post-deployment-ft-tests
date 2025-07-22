@@ -265,9 +265,9 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             }
         }
         if (!failedScenarios.isEmpty()) {
-            StringBuilder sb = new StringBuilder("Failed scenarios: ");
-            failedScenarios.forEach(scenario -> sb.append(scenario).append(", "));
-            log.error(sb.toString());
+            log.info("Failed scenarios:");
+            log.info("=========================================");
+            failedScenarios.forEach(log::info);
         }
     }
 

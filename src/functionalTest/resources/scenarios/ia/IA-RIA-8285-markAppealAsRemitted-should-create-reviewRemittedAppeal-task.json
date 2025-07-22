@@ -36,6 +36,7 @@
             "template": "minimal-ccd-event-message.json",
             "replacements": {
               "EventId": "markAppealAsRemitted",
+              "NewStateId": "remitted",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection"

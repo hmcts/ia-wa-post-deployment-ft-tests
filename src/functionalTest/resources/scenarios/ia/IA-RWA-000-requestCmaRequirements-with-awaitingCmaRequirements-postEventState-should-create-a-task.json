@@ -13,8 +13,8 @@
     },
     "ccd": [
       {
-        "eventId": "submitAppeal",
-        "state": "appealStarted",
+        "eventId": "requestCmaRequirements",
+        "state": "respondentReview",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {

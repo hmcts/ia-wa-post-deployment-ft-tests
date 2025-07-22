@@ -51,7 +51,7 @@
           "key": "CTSCAdmin"
         },
         "status": 200,
-        "numberOfTasksAvailable": 1,
+        "numberOfTasksAvailable": 2,
         "taskTypes": ["assignAFTPAJudge", "decideAnFTPA"],
         "taskData": {
           "template": "minimal-task-response.json",

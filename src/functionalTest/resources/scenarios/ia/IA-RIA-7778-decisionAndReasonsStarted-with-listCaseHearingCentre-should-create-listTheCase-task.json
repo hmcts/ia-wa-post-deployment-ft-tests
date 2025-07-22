@@ -13,8 +13,8 @@
     },
     "ccd": [
       {
-        "eventId": "submitAppeal",
-        "state": "appealStarted",
+        "eventId": "decisionAndReasonsStarted",
+        "state": "preHearing",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
@@ -39,7 +39,9 @@
               "NewStateId": "decision",
               "AdditionalData": {
                 "Data": {
-                  "listCaseHearingCentre": "decisionWithoutHearing"
+                  "listCaseHearingCentre": "decisionWithoutHearing",
+                  "isIntegrated": true,
+                  "autoHearingRequestEnabled": false
                 }
               }
             }

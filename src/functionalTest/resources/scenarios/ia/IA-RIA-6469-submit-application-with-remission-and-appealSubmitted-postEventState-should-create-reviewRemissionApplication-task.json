@@ -66,6 +66,44 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
+                "name": "Review Remission Application",
+                "type": "reviewRemissionApplication",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "Review Remission Application",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "CTSC",
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "routine_work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete",
+                    "Cancel"
+                  ]
+                }
+              },
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
                 "name": "Review the appeal",
                 "type": "reviewTheAppeal",
                 "task_state": "unassigned",
@@ -96,44 +134,6 @@
                     "Own","Claim",
                     "Manage","Unassign","Assign","Complete",
                     "Execute",
-                    "Cancel"
-                  ]
-                }
-              },
-              {
-                "id": "{$VERIFIER-UUID}",
-                "case_name": "Functional PostDeployment",
-                "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
-                "name": "Review Remission Application",
-                "type": "reviewRemissionApplication",
-                "task_state": "unassigned",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "task_title": "Review Remission Application",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
-                "execution_type": "Case Management Task",
-                "jurisdiction": "IA",
-                "case_type_id": "Asylum",
-                "region": "1",
-                "location": "765324",
-                "location_name": "Taylor House",
-                "auto_assigned": false,
-                "warnings": false,
-                "role_category": "CTSC",
-                "warning_list": {
-                  "values": [
-
-                  ]
-                },
-                "case_management_category": "Protection",
-                "work_type_id": "routine_work",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
                     "Cancel"
                   ]
                 }
