@@ -260,7 +260,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     Logger.say(SCENARIO_FINISHED);
                 }
             } catch (Error | FeignException | NullPointerException | ConditionTimeoutException e) {
-                log.error("Scenario failed with error {}", e.getMessage());
+                log.error("Scenario {} failed with error {}", description, e.getMessage());
                 this.failedScenarios.add(description);
             }
         }
