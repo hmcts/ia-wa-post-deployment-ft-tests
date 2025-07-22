@@ -1,7 +1,7 @@
 {
-  "description": "draftHearingRequirements with listing post event state should create a followUpOverdueRespondentEvidence task",
+  "description": "draftHearingRequirements with listing post event state should create a draftHearingRequirements task",
   "enabled": false,
-  "doesItWork": false,
+  "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

@@ -1,7 +1,7 @@
 {
   "description": "submitTimeExtension event should create a decideOnTimeExtension task",
   "enabled": false,
-  "doesItWork": false,
+  "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

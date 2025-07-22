@@ -1,7 +1,7 @@
 {
   "description": "requestResponseReview event should create a printAndSendHoResponse task",
   "enabled": false,
-  "doesItWork": false,
+  "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

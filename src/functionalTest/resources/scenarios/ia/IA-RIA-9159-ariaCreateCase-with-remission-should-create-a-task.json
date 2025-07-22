@@ -1,7 +1,7 @@
 {
   "description": "ariaCreateCase event with remission application and no remission decision should create a reviewAriaRemissionApplication task",
-  "enabled": false,
-  "doesItWork": false,
+  "enabled": true,
+  "shouldItWork": "unknown - likely false",
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

@@ -1,7 +1,7 @@
 {
   "description": "RIA-8285 markAppealAsRemitted event should create reviewRemittedAppeal task",
   "enabled": false,
-  "doesItWork": false,
+  "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

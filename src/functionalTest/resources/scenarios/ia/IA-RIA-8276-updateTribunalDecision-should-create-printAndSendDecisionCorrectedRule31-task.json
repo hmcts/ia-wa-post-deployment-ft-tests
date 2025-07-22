@@ -1,7 +1,7 @@
 {
   "description": "updateTribunalDecision event should create a printAndSendDecisionCorrectedRule31 task",
-  "enabled": false,
-  "doesItWork": false,
+  "enabled": true,
+  "shouldItWork": "unknown",
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

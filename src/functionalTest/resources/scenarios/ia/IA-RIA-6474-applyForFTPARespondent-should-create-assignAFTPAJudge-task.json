@@ -1,7 +1,7 @@
 {
   "description": "applyForFTPARespondent event should create a assignAFTPAJudge task",
   "enabled": false,
-  "doesItWork": false,
+  "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

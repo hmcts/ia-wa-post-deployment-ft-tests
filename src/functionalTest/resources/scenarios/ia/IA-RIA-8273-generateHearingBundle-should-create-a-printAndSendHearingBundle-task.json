@@ -1,7 +1,7 @@
 {
   "description": "generateHearingBundle event should create a printAndSendHearingBundle task",
-  "enabled": false,
-  "doesItWork": false,
+  "enabled": true,
+  "shouldItWork": "unknown - might need changing to asynccomplete",
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

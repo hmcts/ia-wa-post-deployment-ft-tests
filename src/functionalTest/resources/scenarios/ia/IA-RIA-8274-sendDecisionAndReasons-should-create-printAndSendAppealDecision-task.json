@@ -1,7 +1,7 @@
 {
   "description": "sendDecisionAndReasons event should create a printAndSendAppealDecision task",
   "enabled": false,
-  "doesItWork": false,
+  "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

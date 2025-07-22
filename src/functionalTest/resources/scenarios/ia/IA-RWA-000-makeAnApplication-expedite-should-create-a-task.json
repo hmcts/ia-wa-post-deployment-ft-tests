@@ -1,5 +1,5 @@
 {
-  "description": "decideFtpaApplication with rule 35 for respondent should create a task",
+  "description": "makeAnApplication event with Adjourn should create a processApplicationExpedite task",
   "enabled": false,
   "shouldItWork": true,
   "jurisdiction": "IA",
@@ -28,19 +28,21 @@
   "test": {
     "request": {
       "credentials": {
-        "key": "IACaseworker"
+        "key": "IALegalRepresentative"
       },
       "input": {
         "eventMessages": [
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "decideFtpaApplication",
+              "EventId": "makeAnApplication",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "ftpaRespondentRjDecisionOutcomeType": "reheardRule35",
-                  "ftpaApplicantType": "respondent"
+                  "lastModifiedApplication": {
+                    "type": "Expedite",
+                    "decision": ""
+                  }
                 }
               }
             }
@@ -55,7 +57,7 @@
         },
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["reviewAppealSetAsideUnderRule35"],
+        "taskTypes": ["processApplicationExpedite"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -65,12 +67,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Review appeal set aside under rule 35",
-                "type": "reviewAppealSetAsideUnderRule35",
+                "name": "Process Expedite Application",
+                "type": "processApplicationExpedite",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Review appeal set aside under rule 35",
+                "task_title": "Process Expedite Application",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
@@ -88,12 +90,11 @@
                   ]
                 },
                 "case_management_category": "Protection",
-                "work_type_id": "routine_work",
+                "work_type_id": "applications",
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own",
-                    "Claim",
+                    "Own","Claim",
                     "Manage","Unassign","Assign","Complete",
                     "Execute",
                     "Cancel"
@@ -103,53 +104,82 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
+        "numberOfRolesAvailable": 6,
         "roleData": {
-          "roles": [
+          "roles":[
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "case-manager",
-              "permissions": [
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"case-manager",
+              "permissions":[
                 "Read",
                 "Own","Claim",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+
               ]
             },
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "senior-tribunal-caseworker",
-              "permissions": [
+              "role_category":"JUDICIAL",
+              "role_name":"hearing-judge",
+              "permissions":[
                 "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
+                "Execute","Claim",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+
               ]
             },
             {
-              "role_name": "task-supervisor",
-              "permissions": [
+              "role_category":"JUDICIAL",
+              "role_name":"judge",
+              "permissions":[
                 "Read",
                 "Manage","Unassign","Assign","Complete",
                 "Execute","Claim",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+                "373"
               ]
             },
             {
-              "role_category": "LEGAL_OPERATIONS",
-              "role_name": "tribunal-caseworker",
-              "permissions": [
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
+              "permissions":[
                 "Read",
                 "Own","Claim",
                 "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+
+              ]
+            },
+            {
+              "role_name":"task-supervisor",
+              "permissions":[
+                "Read",
+                "Manage","Unassign","Assign","Complete",
+                "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+
               ]
             }
           ]
@@ -158,3 +188,4 @@
     ]
   }
 }
+
