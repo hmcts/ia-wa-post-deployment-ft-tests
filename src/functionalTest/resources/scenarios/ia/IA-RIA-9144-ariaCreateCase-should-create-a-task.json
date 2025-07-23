@@ -9,17 +9,34 @@
   },
   "required": {
     "credentials": {
-      "key": "AdminOfficer"
+      "key": "IALegalRepresentative"
+    },
+    "ccd": [
+      {
+        "eventId": "startAppeal",
+        "state": "appealStarted",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "appealType": "protection",
+            "homeOfficeDecisionDate": "{$TODAY-14}",
+            "ariaMigrationTaskDueDays": "5"
+          }
+        }
+      }
+    ]
+  },
+  "update": {
+    "credentials": {
+      "key": "WaSystemUser"
     },
     "ccd": [
       {
         "eventId": "ariaCreateCase",
         "state": "migrated",
         "caseData": {
-          "template": "minimal-appeal-started.json",
+          "template": "minimal-appeal-started-blank.json",
           "replacements": {
-            "appealType": "protection",
-            "homeOfficeDecisionDate": "{$TODAY-14}",
             "ariaMigrationTaskDueDays": "5"
           }
         }

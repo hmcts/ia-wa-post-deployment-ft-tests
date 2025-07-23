@@ -9,12 +9,12 @@
   },
   "required": {
     "credentials": {
-      "key": "IALegalRepresentative"
+      "key": "IACaseworker"
     },
     "ccd": [
       {
-        "eventId": "startAppeal",
-        "state": "appealStarted",
+        "eventId": "requestCmaRequirements",
+        "state": "respondentReview",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {

@@ -9,12 +9,12 @@
   },
   "required": {
     "credentials": {
-      "key": "IALegalRepresentative"
+      "key": "AdminOfficer"
     },
     "ccd": [
       {
-        "eventId": "startAppeal",
-        "state": "appealStarted",
+        "eventId": "recordAdjournmentDetails",
+        "state": "listing",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {

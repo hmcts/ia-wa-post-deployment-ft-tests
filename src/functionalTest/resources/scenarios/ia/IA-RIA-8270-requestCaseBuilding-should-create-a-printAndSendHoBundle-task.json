@@ -157,7 +157,7 @@
             {
               "role_name":"task-supervisor",
               "permissions":[
-                "Read",
+                "Read","Own",
                 "Manage","Unassign","Assign","Complete",
                 "Execute","Claim",
                 "Cancel"
