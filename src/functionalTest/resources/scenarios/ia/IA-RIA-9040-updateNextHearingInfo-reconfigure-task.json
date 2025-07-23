@@ -140,6 +140,9 @@
     ]
   },
   "before": {
+    "credentials": {
+      "key": "AdminOfficer"
+    },
     "request": {
       "input": {
         "eventMessages": [
