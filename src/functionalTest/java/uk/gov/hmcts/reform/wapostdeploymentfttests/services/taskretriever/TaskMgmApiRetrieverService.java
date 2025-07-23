@@ -88,169 +88,163 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
             deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
 
         AtomicBoolean isTestPassed = new AtomicBoolean(false);
-        AtomicReference<AssertionError> lastAssertionError = new AtomicReference<>();
         await()
-            .ignoreException(AssertionError.class)
+//            .ignoreException(AssertionError.class)
             .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
             .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
             .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
             .until(
                 () -> {
-                    try {
 
-                        String searchByCaseIdResponseBody = taskManagementService.search(
-                            deserializedClauseValues,
-                            caseIds,
-                            scenario,
-                            authorizationHeaders
-                        );
+                    String searchByCaseIdResponseBody = taskManagementService.search(
+                        deserializedClauseValues,
+                        caseIds,
+                        scenario,
+                        authorizationHeaders
+                    );
 
-                        String expectedResponseBody = buildTaskExpectationResponseBody(
-                            deserializedClauseValues,
-                            taskTemplatesByFilename,
-                            additionalValues
-                        );
+                    String expectedResponseBody = buildTaskExpectationResponseBody(
+                        deserializedClauseValues,
+                        taskTemplatesByFilename,
+                        additionalValues
+                    );
 
-                        log.info("Expectation {}", expectedResponseBody);
-                        if (searchByCaseIdResponseBody.isBlank()) {
-                            log.error("Find my case ID response is empty. Test will now fail");
-                            return false;
-                        }
-
-                        Map<String, Object> actualResponse = MapSerializer.deserialize(
-                            MapSerializer.sortCollectionElement(
-                                searchByCaseIdResponseBody,
-                                "tasks",
-                                taskTitleComparator()
-                            ));
-                        Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
-
-                        verifiers.forEach(verifier ->
-                                              verifier.verify(
-                                                  clauseValues,
-                                                  expectedResponse,
-                                                  actualResponse
-                                              )
-                        );
-
-                        List<Map<String, Object>> tasks = MapValueExtractor.extract(actualResponse, "tasks");
-
-                        if (tasks == null || tasks.isEmpty()) {
-                            log.error("Task list is empty. Test will now fail");
-                            return false;
-                        }
-
-                        tasks.forEach(t -> scenario.addTaskId(MapValueExtractor.extract(t, "id")));
-                        AtomicReference<Map<String, Object>> actualRoleResponse = new AtomicReference<>(emptyMap());
-                        AtomicReference<Map<String, Object>> expectedRoleResponse = new AtomicReference<>(emptyMap());
-
-                        Map<String, Object> scenarioMap = deserializeValuesUtil.expandMapValues(
-                            deserializedClauseValues,
-                            additionalValues
-                        );
-
-                        AtomicInteger index = new AtomicInteger(0);
-                        tasks.forEach(task -> {
-                            try {
-                                String taskId = MapValueExtractor.extract(task, "id");
-                                log.info("task id is {}", taskId);
-
-                                List<Map<String, Object>> taskDataList = MapValueExtractor.extract(
-                                    scenarioMap,
-                                    "taskData.replacements.tasks"
-                                );
-
-                                if (taskDataList == null || taskDataList.isEmpty()) {
-                                    log.info("taskDataList is null or empty");
-                                    return;
-                                }
-
-                                Map<String, Object> taskData = taskDataList.get(index.get());
-
-                                List<Map<String, Object>> metaDataList = MapValueExtractor.extract(
-                                    taskData,
-                                    "test_meta_data"
-                                );
-
-                                if (metaDataList == null || metaDataList.isEmpty()) {
-                                    log.info("metaDataList is null or empty");
-                                    return;
-                                }
-
-                                String roleDataKey = metaDataList.stream()
-                                    .filter(md -> md.containsKey("key"))
-                                    .map(md -> md.get("value").toString())
-                                    .findFirst()
-                                    .orElse(null);
-
-                                Map<String, Object> roleDataMap = filterRoleData(clauseValues, roleDataKey);
-
-                                //skip role assignment validation if no role data provided in scenario
-                                if (roleDataMap.isEmpty()) {
-                                    isTestPassed.set(true);
-                                    return;
-                                }
-
-                                int expectedStatus = MapValueExtractor.extractOrDefault(
-                                    clauseValues, "status", 200);
-
-
-                                Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
-
-
-                                String retrieveTaskRolePermissionsResponseBody =
-                                    taskManagementService.retrieveTaskRolePermissions(
-                                        roleDataMap,
-                                        taskId,
-                                        expectedStatus,
-                                        authorizationHeaders
-                                    );
-
-                                if (retrieveTaskRolePermissionsResponseBody.isBlank()) {
-                                    log.error("Task role permissions response is empty. Test will now fail");
-                                    isTestPassed.set(false);
-                                }
-
-                                String rolesExpectationResponseBody = buildRolesExpectationResponseBody(
-                                    deserializedClauseValues,
-                                    additionalValues,
-                                    roleDataKey
-                                );
-
-                                log.info("expected roles: {}", rolesExpectationResponseBody);
-                                actualRoleResponse.set(MapSerializer.deserialize(
-                                    retrieveTaskRolePermissionsResponseBody));
-                                expectedRoleResponse.set(MapSerializer.deserialize(
-                                    rolesExpectationResponseBody));
-
-                                verifiers.forEach(verifier ->
-                                                      verifier.verify(
-                                                          clauseValues,
-                                                          expectedRoleResponse.get(),
-                                                          actualRoleResponse.get()
-                                                      )
-                                );
-
-                                index.getAndIncrement();
-
-                            } catch (Exception e) {
-                                isTestPassed.set(false);
-                                Logger.say(SCENARIO_FAILED, scenario.getScenarioMapValues().get("description"));
-                                throw new RuntimeException(e);
-                            }
-
-                        });
-
-                        isTestPassed.set(true);
-                        return true;
-                    } catch (AssertionError e) {
-                        lastAssertionError.set(e);
+                    log.info("Expectation {}", expectedResponseBody);
+                    if (searchByCaseIdResponseBody.isBlank()) {
+                        log.error("Find my case ID response is empty. Test will now fail");
                         return false;
                     }
+
+                    Map<String, Object> actualResponse = MapSerializer.deserialize(
+                        MapSerializer.sortCollectionElement(
+                            searchByCaseIdResponseBody,
+                            "tasks",
+                            taskTitleComparator()
+                        ));
+                    Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
+
+                    verifiers.forEach(verifier ->
+                                          verifier.verify(
+                                              clauseValues,
+                                              expectedResponse,
+                                              actualResponse
+                                          )
+                    );
+
+                    List<Map<String, Object>> tasks = MapValueExtractor.extract(actualResponse, "tasks");
+
+                    if (tasks == null || tasks.isEmpty()) {
+                        log.error("Task list is empty. Test will now fail");
+                        return false;
+                    }
+
+                    tasks.forEach(t -> scenario.addTaskId(MapValueExtractor.extract(t, "id")));
+                    AtomicReference<Map<String, Object>> actualRoleResponse = new AtomicReference<>(emptyMap());
+                    AtomicReference<Map<String, Object>> expectedRoleResponse = new AtomicReference<>(emptyMap());
+
+                    Map<String, Object> scenarioMap = deserializeValuesUtil.expandMapValues(
+                        deserializedClauseValues,
+                        additionalValues
+                    );
+
+                    AtomicInteger index = new AtomicInteger(0);
+                    tasks.forEach(task -> {
+                        try {
+                            String taskId = MapValueExtractor.extract(task, "id");
+                            log.info("task id is {}", taskId);
+
+                            List<Map<String, Object>> taskDataList = MapValueExtractor.extract(
+                                scenarioMap,
+                                "taskData.replacements.tasks"
+                            );
+
+                            if (taskDataList == null || taskDataList.isEmpty()) {
+                                log.info("taskDataList is null or empty");
+                                return;
+                            }
+
+                            Map<String, Object> taskData = taskDataList.get(index.get());
+
+                            List<Map<String, Object>> metaDataList = MapValueExtractor.extract(
+                                taskData,
+                                "test_meta_data"
+                            );
+
+                            if (metaDataList == null || metaDataList.isEmpty()) {
+                                log.info("metaDataList is null or empty");
+                                return;
+                            }
+
+                            String roleDataKey = metaDataList.stream()
+                                .filter(md -> md.containsKey("key"))
+                                .map(md -> md.get("value").toString())
+                                .findFirst()
+                                .orElse(null);
+
+                            Map<String, Object> roleDataMap = filterRoleData(clauseValues, roleDataKey);
+
+                            //skip role assignment validation if no role data provided in scenario
+                            if (roleDataMap.isEmpty()) {
+                                isTestPassed.set(true);
+                                return;
+                            }
+
+                            int expectedStatus = MapValueExtractor.extractOrDefault(
+                                clauseValues, "status", 200);
+
+
+                            Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
+
+
+                            String retrieveTaskRolePermissionsResponseBody =
+                                taskManagementService.retrieveTaskRolePermissions(
+                                    roleDataMap,
+                                    taskId,
+                                    expectedStatus,
+                                    authorizationHeaders
+                                );
+
+                            if (retrieveTaskRolePermissionsResponseBody.isBlank()) {
+                                log.error("Task role permissions response is empty. Test will now fail");
+                                isTestPassed.set(false);
+                            }
+
+                            String rolesExpectationResponseBody = buildRolesExpectationResponseBody(
+                                deserializedClauseValues,
+                                additionalValues,
+                                roleDataKey
+                            );
+
+                            log.info("expected roles: {}", rolesExpectationResponseBody);
+                            actualRoleResponse.set(MapSerializer.deserialize(
+                                retrieveTaskRolePermissionsResponseBody));
+                            expectedRoleResponse.set(MapSerializer.deserialize(
+                                rolesExpectationResponseBody));
+
+                            verifiers.forEach(verifier ->
+                                                  verifier.verify(
+                                                      clauseValues,
+                                                      expectedRoleResponse.get(),
+                                                      actualRoleResponse.get()
+                                                  )
+                            );
+
+                            index.getAndIncrement();
+
+                        } catch (Exception e) {
+                            isTestPassed.set(false);
+                            Logger.say(SCENARIO_FAILED, scenario.getScenarioMapValues().get("description"));
+                            throw new RuntimeException(e);
+                        } catch (AssertionError e) {
+                            log.info("Assertion error occurred: {}", e.getMessage());
+                            throw e;
+                        }
+                    });
+
+                    isTestPassed.set(true);
+                    return true;
                 });
-        if (lastAssertionError.get() != null) {
-            throw lastAssertionError.get();
-        }
+
         if (!isTestPassed.get()) {
             Logger.say(SCENARIO_FAILED, scenario.getScenarioMapValues().get("description"));
         }
