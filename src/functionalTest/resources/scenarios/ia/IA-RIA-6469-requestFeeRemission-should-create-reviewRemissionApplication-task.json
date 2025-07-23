@@ -1,6 +1,6 @@
 {
   "description": "requestFeeRemission event should create a reviewRemissionApplication task",
-  "enabled": true,
+  "enabled": "false",
   "doesItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

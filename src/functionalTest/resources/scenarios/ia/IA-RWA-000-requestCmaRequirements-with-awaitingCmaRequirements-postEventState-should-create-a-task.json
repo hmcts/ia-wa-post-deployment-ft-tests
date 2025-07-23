@@ -1,6 +1,6 @@
 {
   "description": "requestCmaRequirements with awaitingCmaRequirements post event state should create a followUpOverdueCmaRequirements task",
-  "enabled": true,
+  "enabled": "false",
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

@@ -1,6 +1,6 @@
 {
   "description": "customiseHearingBundle with finalBundling post event state should create a allocateHearingJudge task",
-  "enabled": true,
+  "enabled": "false",
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

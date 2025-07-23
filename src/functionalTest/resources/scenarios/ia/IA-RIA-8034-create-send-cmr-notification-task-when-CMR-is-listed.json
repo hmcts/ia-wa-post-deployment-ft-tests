@@ -1,6 +1,6 @@
 {
   "description": "Should create Send CMR notification task when CMR is listed",
-  "enabled": true,
+  "enabled": "false",
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

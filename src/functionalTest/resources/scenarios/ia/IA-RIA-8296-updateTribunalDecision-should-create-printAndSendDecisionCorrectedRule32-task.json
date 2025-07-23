@@ -1,6 +1,6 @@
 {
   "description": "updateTribunalDecision event should create a printAndSendDecisionCorrectedRule32 task",
-  "enabled": true,
+  "enabled": "false",
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

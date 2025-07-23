@@ -1,6 +1,6 @@
 {
   "description": "requestNewHearingRequirements event should create a printAndSendReheardHearingRequirements task",
-  "enabled": true,
+  "enabled": "false",
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

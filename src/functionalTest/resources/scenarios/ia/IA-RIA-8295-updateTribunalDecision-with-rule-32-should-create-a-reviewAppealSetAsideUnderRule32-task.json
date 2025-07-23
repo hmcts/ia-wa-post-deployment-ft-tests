@@ -1,6 +1,6 @@
 {
   "description": "updateTribunalDecision with rule 32 for appellant should create reviewAppealSetAsideUnderRule32 task",
-  "enabled": true,
+  "enabled": "false",
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

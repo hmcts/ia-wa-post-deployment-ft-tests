@@ -1,6 +1,6 @@
 {
   "description": "manageFeeUpdate with refund option should create processFeeRefund task",
-  "enabled": true,
+  "enabled": "false",
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

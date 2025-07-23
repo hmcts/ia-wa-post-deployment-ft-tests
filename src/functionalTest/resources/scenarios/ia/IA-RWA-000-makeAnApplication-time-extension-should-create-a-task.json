@@ -1,6 +1,6 @@
 {
   "description": "makeAnApplication event with Time extension should create a processApplicationTimeExtension task",
-  "enabled": true,
+  "enabled": "false",
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

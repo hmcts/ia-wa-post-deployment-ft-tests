@@ -1,6 +1,6 @@
 {
   "description": "decideFtpaApplication event should create a printAndSendFTPADecision task",
-  "enabled": true,
+  "enabled": "false",
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

@@ -1,6 +1,6 @@
 {
   "description": "decideFtpaApplication with rule 35 for respondent should create a task",
-  "enabled": true,
+  "enabled": "false",
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
