@@ -88,8 +88,9 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
             deserializeValuesUtil.expandMapValues(clauseValues, additionalValues);
 
         AtomicBoolean isTestPassed = new AtomicBoolean(false);
+
         await()
-            .ignoreException(AssertionError.class)
+//            .ignoreException(AssertionError.class)
             .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
             .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
             .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
@@ -124,11 +125,11 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                     Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
 
                     verifiers.forEach(verifier ->
-                                          verifier.verify(
-                                              clauseValues,
-                                              expectedResponse,
-                                              actualResponse
-                                          )
+                        verifier.verify(
+                            clauseValues,
+                            expectedResponse,
+                            actualResponse
+                        )
                     );
 
                     List<Map<String, Object>> tasks = MapValueExtractor.extract(actualResponse, "tasks");
@@ -222,11 +223,11 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                                 rolesExpectationResponseBody));
 
                             verifiers.forEach(verifier ->
-                                                  verifier.verify(
-                                                      clauseValues,
-                                                      expectedRoleResponse.get(),
-                                                      actualRoleResponse.get()
-                                                  )
+                                verifier.verify(
+                                    clauseValues,
+                                    expectedRoleResponse.get(),
+                                    actualRoleResponse.get()
+                                )
                             );
 
                             index.getAndIncrement();
@@ -235,10 +236,8 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                             isTestPassed.set(false);
                             Logger.say(SCENARIO_FAILED, scenario.getScenarioMapValues().get("description"));
                             throw new RuntimeException(e);
-                        } catch (AssertionError e) {
-                            log.info("Assertion error occurred: {}", e.getMessage());
-                            throw e;
                         }
+
                     });
 
                     isTestPassed.set(true);
