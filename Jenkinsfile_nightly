@@ -62,6 +62,7 @@ withNightlyPipeline(type, product, component) {
     env.CAMUNDA_URL = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest"
     env.ROLE_ASSIGNMENT_URL = "http://am-role-assignment-service-aat.service.core-compute-aat.internal"
     env.WA_POST_DEPLOYMENT_TEST_ENVIRONMENT="aat"
+    env.ENABLE_TEST_USER_DELETION=true
 
     loadVaultSecrets(secrets)
     enableFullFunctionalTest(180)

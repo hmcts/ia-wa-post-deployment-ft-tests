@@ -7,6 +7,8 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam.UserInfo
 import java.io.IOException;
 
 public interface AuthorizationHeaders {
+    void cleanupTestUsers();
+
     Headers getIaUserAuthorization(CredentialRequest request) throws IOException;
 
     UserInfo getUserInfo(String userToken);
