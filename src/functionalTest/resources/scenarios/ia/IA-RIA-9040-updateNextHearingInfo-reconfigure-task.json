@@ -135,48 +135,6 @@
       }
     ]
   },
-  "postRoleAssignments" : {
-    "credentials": {
-      "key": "IACaseworker"
-    },
-    "roleData": {
-      "template": "set-organisational-role-assignment-request.json",
-      "replacements": {
-        "roleName": "tribunal-caseworker",
-        "caseType": "Asylum",
-        "jurisdiction": "IA",
-        "grantType": "SPECIFIC",
-        "roleType": "CASE",
-        "classification": "PUBLIC",
-        "roleCategory": "LEGAL_OPERATIONS"
-      }
-    }
-  },
-  "requiredUpdate": {
-    "credentials": {
-      "key": "WaSystemUser"
-    },
-    "ccd": [
-      {
-        "eventId": "updateNextHearingInfo",
-        "state": "prepareForHearing",
-        "caseData": {
-          "template": "minimal-appeal-started.json",
-          "replacements": {
-            "nextHearingDetails": {
-              "hearingID": "999",
-              "hearingDateTime": "2020-10-28T10:30:00.000",
-              "AdditionalData": {
-                "Data": {
-                  "listCaseHearingDate": "2020-10-28T10:30:00.000"
-                }
-              }
-            }
-          }
-        }
-      }
-    ]
-  },
   "test": {
     "request": {
       "credentials": {
