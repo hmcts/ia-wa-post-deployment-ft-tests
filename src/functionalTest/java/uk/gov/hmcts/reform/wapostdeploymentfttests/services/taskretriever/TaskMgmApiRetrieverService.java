@@ -90,7 +90,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
         AtomicBoolean isTestPassed = new AtomicBoolean(false);
 
         await()
-//            .ignoreException(AssertionError.class)
+            .ignoreException(AssertionError.class)
             .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
             .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
             .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
