@@ -91,10 +91,13 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
+                    "Manage",
                     "Execute",
-                    "Cancel"
+                    "Cancel",
+                    "Complete",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 }
               },
@@ -122,7 +125,6 @@
                 "role_category": "ADMIN",
                 "warning_list": {
                   "values": [
-
                   ]
                 },
                 "case_management_category": "Protection",
@@ -130,9 +132,14 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
-                    "Cancel"
+                    "Own",
+                    "Manage",
+                    "Execute",
+                    "Cancel",
+                    "Complete",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 }
               }

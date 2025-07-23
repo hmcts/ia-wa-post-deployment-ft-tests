@@ -27,7 +27,7 @@
   "test": {
     "request": {
       "credentials": {
-        "key": "AdminOfficer"
+        "key": "CTSCAdmin"
       },
       "input": {
         "eventMessages": [
@@ -35,7 +35,7 @@
             "template": "minimal-ccd-event-message.json",
             "replacements": {
               "EventId": "recordAdjournmentDetails",
-              "NewStateId": "listing",
+              "NewStateId": "prepareForHearing",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",

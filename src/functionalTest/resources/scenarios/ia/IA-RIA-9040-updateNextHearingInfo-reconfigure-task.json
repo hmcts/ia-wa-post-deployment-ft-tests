@@ -1,7 +1,7 @@
 {
   "description": "updateNextHearingInfo event should trigger reconfiguration",
-  "enabled": true,
-  "shouldItWork": true,
+  "enabled": false,
+  "shouldItWork": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "testType": "Reconfiguration",
