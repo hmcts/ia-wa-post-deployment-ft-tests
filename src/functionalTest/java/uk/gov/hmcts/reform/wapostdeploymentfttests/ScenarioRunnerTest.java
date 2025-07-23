@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
@@ -62,8 +63,6 @@ import static org.junit.Assert.assertFalse;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.SERVICE_AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil.addAssignedCaseId;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.CLEANUP_USERS_FINISHED;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.CLEANUP_USERS_RUNNING;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_BEFORE_COMPLETED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_BEFORE_FOUND;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_DISABLED;
@@ -100,6 +99,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private final List<Preparer> preparers;
     private final CcdCaseCreator ccdCaseCreator;
     private final RestMessageService restMessageService;
+    @Value("${ia-wa-post-deployment-test.environment}")
+    protected String postDeploymentTestEnvironment;
     private final ArrayList<String> failedScenarios = new ArrayList<>();
 
     @Autowired
@@ -157,7 +158,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         assertFalse("Verifiers configured successfully", verifiers.isEmpty());
 
         URL path = getClass().getClassLoader().getResource("scenarios");
-        Objects.requireNonNull(path, "No path found containing 'scenarios'");
         File[] directories = new File(path.toURI()).listFiles(File::isDirectory);
         Objects.requireNonNull(directories, "No directories found under 'scenarios'");
 
@@ -169,9 +169,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         } catch (Exception ex) {
             testException = ex;
         } finally {
-            Logger.say(CLEANUP_USERS_RUNNING);
-            authorizationHeadersProvider.cleanupTestUsers();
-            Logger.say(CLEANUP_USERS_FINISHED);
             if (testException != null) {
                 throw testException;
             }
@@ -299,7 +296,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         processScenario(scenario.gettestClauseValues(), scenario);
     }
 
-    private void createBaseCcdCase(TestScenario scenario) {
+    private void createBaseCcdCase(TestScenario scenario) throws IOException {
         Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
 
         CredentialRequest credentialRequest = extractCredentialRequest(scenarioValues, "required.credentials");
@@ -323,7 +320,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         });
     }
 
-    private void updateBaseCcdCase(TestScenario scenario) {
+    private void updateBaseCcdCase(TestScenario scenario) throws IOException {
         Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
 
         CredentialRequest credentialRequest = extractCredentialRequest(scenarioValues, "updateCase.credentials");
@@ -370,9 +367,9 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
             verifyTasks(scenario, taskRetrieverOption, expectationValue, expectedTasks, expectationCaseIds);
 
-            verifyMessages(expectationValue, expectedMessages, expectationCaseIds.getFirst());
+            verifyMessages(expectationValue, expectedMessages, expectationCaseIds.get(0));
 
-            removeInvalidMessages(expectationCaseIds.getFirst());
+            removeInvalidMessages(expectationCaseIds.get(0));
         }
     }
 
@@ -446,7 +443,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     }
 
     private void verifyTasks(TestScenario scenario, String taskRetrieverOption, Map<String, Object> expectationValue,
-                             int expectedTasks, List<String> expectationCaseIds) {
+                             int expectedTasks, List<String> expectationCaseIds) throws IOException {
         if (expectedTasks > 0) {
             CredentialRequest credentialRequest = extractCredentialRequest(expectationValue, "credentials");
             Headers expectationAuthorizationHeaders =
@@ -456,7 +453,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 camundaTaskRetrievableService.retrieveTask(
                     expectationValue,
                     scenario,
-                    expectationCaseIds.getFirst(),
+                    expectationCaseIds.get(0),
                     expectationAuthorizationHeaders
                 );
             } else {
@@ -470,7 +467,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         }
     }
 
-    private UserInfo getAssigneeInfo(Map<String, Object> request) {
+    private UserInfo getAssigneeInfo(Map<String, Object> request) throws IOException {
         CredentialRequest credentialRequest = extractCredentialRequest(request, "input.assignee.credentials");
         Headers requestAuthorizationHeaders = authorizationHeadersProvider.getIaUserAuthorization(credentialRequest);
 
@@ -524,7 +521,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         StreamSupport
             .stream(propertySources.spliterator(), false)
             .filter(EnumerablePropertySource.class::isInstance)
-            .map(propertySource -> ((EnumerablePropertySource<?>) propertySource).getPropertyNames())
+            .map(propertySource -> ((EnumerablePropertySource) propertySource).getPropertyNames())
             .flatMap(Arrays::stream)
             .forEach(name -> ENVIRONMENT_PROPERTIES.setProperty(name, environment.getProperty(name)));
     }

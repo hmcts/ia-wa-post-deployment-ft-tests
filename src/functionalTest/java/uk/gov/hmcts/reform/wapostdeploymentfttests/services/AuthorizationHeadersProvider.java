@@ -2,11 +2,7 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,9 +11,9 @@ import org.springframework.util.MultiValueMap;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.clients.IdamWebApi;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam.CredentialRequest;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam.RoleCode;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam.UserInfo;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -40,57 +36,37 @@ public class AuthorizationHeadersProvider implements AuthorizationHeaders {
     protected String idamClientId;
     @Value("${spring.security.oauth2.client.registration.oidc.client-secret}")
     protected String idamClientSecret;
-    @Value("${idam.test.userCleanupEnabled:false}")
-    private boolean testUserDeletionEnabled;
-    @Value("${idam.system.password:default}")
-    protected String systemPassword;
 
     private final IdamWebApi idamWebApi;
 
     private final AuthTokenGenerator serviceAuthTokenGenerator;
 
-    private final RoleAssignmentService roleAssignmentService;
-
     @Autowired
     public AuthorizationHeadersProvider(IdamWebApi idamWebApi,
-                                        AuthTokenGenerator serviceAuthTokenGenerator,
-                                        RoleAssignmentService roleAssignmentService) {
+                                        AuthTokenGenerator serviceAuthTokenGenerator) {
         this.idamWebApi = idamWebApi;
         this.serviceAuthTokenGenerator = serviceAuthTokenGenerator;
-        this.roleAssignmentService = roleAssignmentService;
     }
 
     @Override
-    public void cleanupTestUsers() {
-        testUserAccounts.forEach((key, value) -> {
-            Headers headers = new Headers(
-                getUserAuthorizationHeader(key, value),
-                getServiceAuthorizationHeader()
-            );
-            UserInfo userInfo = getUserInfo(headers.getValue(AUTHORIZATION));
-            roleAssignmentService.clearAllRoleAssignments(headers, userInfo);
-            deleteAccount(value);
-        });
-    }
-
-    private void deleteAccount(String username) {
-        if (testUserDeletionEnabled) {
-            log.info("Deleting test account '{}'", username);
-            idamWebApi.deleteTestUser(username);
-        } else {
-            log.info("Test User deletion feature flag was not enabled, user '{}' was not deleted", username);
+    public Headers getIaUserAuthorization(CredentialRequest request) throws IOException {
+        switch (request.getCredentialsKey()) {
+            case "WaSystemUser":
+                return getWaSystemUserAuthorization();
+            case "IALegalRepresentative":
+                return getLegalRepAuthorization();
+            case "IACaseworker":
+                return getTribunalCaseworkerAAuthorization();
+            case "CTSCAdmin":
+                return getCtscAdminAuthorization();
+            case "AdminOfficer":
+                return getAdminOfficerAuthorization();
+            case "NBCAdmin":
+                return getNbcAdminAuthorization();
+            default:
+                throw new IllegalStateException("Credentials implementation for '"
+                                                    + request.getCredentialsKey() + "' not found");
         }
-    }
-
-    @Override
-    public Headers getIaUserAuthorization(CredentialRequest request) {
-        return switch (request.getCredentialsKey()) {
-            case "WaSystemUser" -> getWaSystemUserAuthorization();
-            case "IALegalRepresentative" -> getLegalRepAuthorization();
-            case "AdminOfficer", "NBCAdmin", "CTSCAdmin", "IACaseworker" -> getGeneratedUserAuthorization(request);
-            default -> throw new IllegalStateException("Credentials implementation for '"
-                                                           + request.getCredentialsKey() + "' not found");
-        };
     }
 
     @Override
@@ -110,13 +86,12 @@ public class AuthorizationHeadersProvider implements AuthorizationHeaders {
         return new Header(SERVICE_AUTHORIZATION, serviceToken);
     }
 
-    private Header getUserAuthorizationHeader(String key, String username) {
-        return getUserAuthorizationHeader(key, username, systemPassword);
-    }
-
     private Header getUserAuthorizationHeader(String key, String username, String password) {
 
-        MultiValueMap<String, String> body = createIdamRequest(username, password);
+        MultiValueMap<String, String> body = createIdamRequest(
+            System.getenv(username),
+            System.getenv(password)
+        );
 
         String accessToken = tokens.computeIfAbsent(
             key,
@@ -154,6 +129,28 @@ public class AuthorizationHeadersProvider implements AuthorizationHeaders {
         );
     }
 
+
+    public Headers getTribunalCaseworkerAAuthorization() {
+        return new Headers(
+            getCaseworkerAAuthorizationOnly(),
+            getServiceAuthorizationHeader()
+        );
+    }
+
+    public Headers getCtscAdminAuthorization() {
+        return new Headers(
+            getCtscAdminAuthorizationOnly(),
+            getServiceAuthorizationHeader()
+        );
+    }
+
+    public Headers getAdminOfficerAuthorization() {
+        return new Headers(
+            getAdminOfficerAuthorizationOnly(),
+            getServiceAuthorizationHeader()
+        );
+    }
+
     public Headers getWaSystemUserAuthorization() {
         return new Headers(
             getUserAuthorizationHeader(
@@ -165,97 +162,48 @@ public class AuthorizationHeadersProvider implements AuthorizationHeaders {
         );
     }
 
-    private String findOrGenerateUserAccount(String credentialsKey) {
-        return testUserAccounts.computeIfAbsent(
-            credentialsKey,
-            user -> generateUserAccount(credentialsKey)
+
+    public Header getCaseworkerAAuthorizationOnly() {
+
+        return getUserAuthorizationHeader(
+            "Caseworker A",
+            "TEST_WA_CASEOFFICER_PUBLIC_A_USERNAME",
+            "TEST_WA_CASEOFFICER_PUBLIC_A_PASSWORD"
         );
     }
 
-    private String generateUserAccount(String credentialsKey) {
-        String emailPrefix = "wa-granular-permission-pdt";
-        String userEmail = emailPrefix + UUID.randomUUID() + "@fake.hmcts.net";
+    public Header getCtscAdminAuthorizationOnly() {
 
-        List<RoleCode> requiredRoles = new ArrayList<>(List.of(
-            new RoleCode("caseworker"),
-            new RoleCode("caseworker-ia")
-        ));
-
-        log.info("Attempting to create a new test account {}", userEmail);
-
-        Map<String, Object> body = requestBody(userEmail, requiredRoles);
-
-        idamWebApi.createTestUser(body);
-
-        log.info("Test account created successfully");
-
-        List<String> roleAssignments = findRoleAssignmentRequirements(credentialsKey);
-        log.info("Assigning role assignments {}", roleAssignments);
-
-        for (String r : roleAssignments) {
-            assignRoleAssignment(userEmail, credentialsKey, r);
-        }
-
-        return userEmail;
-    }
-
-    private List<String> findRoleAssignmentRequirements(String credentialsKey) {
-        List<String> roleAssignments = new ArrayList<>();
-        roleAssignments.add("task-supervisor");
-        roleAssignments.add("task-allocator");
-        roleAssignments.add("hearing-manager");
-        roleAssignments.add("hearing-viewer");
-        switch (credentialsKey) {
-            case "NBCAdmin":
-                roleAssignments.add("national-business-centre");
-                break;
-            case "AdminOfficer":
-                roleAssignments.add("hearing-center-admin");
-                roleAssignments.add("hmcts-admin");
-                break;
-            case "CTSCAdmin":
-                roleAssignments.add("ctsc");
-                roleAssignments.add("hmcts-ctsc");
-                break;
-            case "IACaseworker":
-                roleAssignments.add("hmcts-legal-operations");
-                roleAssignments.add("tribunal-caseworker");
-                roleAssignments.add("senior-tribunal-caseworker");
-                break;
-            default:
-                throw new IllegalStateException("Credentials implementation for '" + credentialsKey + "' not found");
-        }
-        return roleAssignments;
-    }
-
-    private void assignRoleAssignment(String userEmail, String credentialsKey, String roleName) {
-        Headers authenticationHeaders = new Headers(
-            getUserAuthorizationHeader(credentialsKey, userEmail),
-            getServiceAuthorizationHeader()
+        return getUserAuthorizationHeader(
+            "CTSCAdmin",
+            "TEST_CTSC_ADMIN_USERNAME",
+            "TEST_CTSC_ADMIN_PASSWORD"
         );
-        UserInfo userInfo = getUserInfo(authenticationHeaders.getValue(AUTHORIZATION));
-        roleAssignmentService.setupRoleAssignment(authenticationHeaders, userInfo, roleName);
     }
 
-    @NotNull
-    private Map<String, Object> requestBody(String userEmail, List<RoleCode> requiredRoles) {
-        RoleCode userGroup = new RoleCode("caseworker");
+    public Header getAdminOfficerAuthorizationOnly() {
 
-        Map<String, Object> body = new ConcurrentHashMap<>();
-        body.put("email", userEmail);
-        body.put("password", systemPassword);
-        body.put("forename", "WAPDTAccount");
-        body.put("surname", "Functional");
-        body.put("roles", requiredRoles);
-        body.put("userGroup", userGroup);
-        return body;
+        return getUserAuthorizationHeader(
+            "AdminOfficer",
+            "TEST_ADMINOFFICER_USERNAME",
+            "TEST_ADMINOFFICER_PASSWORD"
+        );
     }
 
-    public Headers getGeneratedUserAuthorization(CredentialRequest request) {
-        String userEmail = findOrGenerateUserAccount(request.getCredentialsKey());
+    public Headers getNbcAdminAuthorization() {
         return new Headers(
-            getUserAuthorizationHeader(request.getCredentialsKey(), userEmail),
+            getNbcAdminOfficerAuthorizationOnly(),
             getServiceAuthorizationHeader()
         );
     }
+
+    public Header getNbcAdminOfficerAuthorizationOnly() {
+
+        return getUserAuthorizationHeader(
+            "NBCAdmin",
+            "TEST_NBC_ADMIN_USERNAME",
+            "TEST_NBC_ADMIN_PASSWORD"
+        );
+    }
+
 }
