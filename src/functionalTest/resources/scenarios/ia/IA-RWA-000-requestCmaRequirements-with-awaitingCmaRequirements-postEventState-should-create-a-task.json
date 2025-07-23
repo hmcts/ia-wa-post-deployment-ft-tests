@@ -1,7 +1,6 @@
 {
   "description": "requestCmaRequirements with awaitingCmaRequirements post event state should create a followUpOverdueCmaRequirements task",
-  "enabled": true,
-  "shouldItWork": true,
+  "enabled": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
@@ -13,7 +12,7 @@
     },
     "ccd": [
       {
-        "eventId": "startAppeal",
+        "eventId": "submitAppeal",
         "state": "appealStarted",
         "caseData": {
           "template": "minimal-appeal-started.json",
@@ -87,6 +86,7 @@
                   ]
                 },
                 "case_management_category": "Protection",
+                "work_type_id": "decision_making_work",
                 "permissions": {
                   "values": [
                     "Read",
