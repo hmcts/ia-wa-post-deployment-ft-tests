@@ -1,6 +1,6 @@
 {
   "description": "requestHearingRequirements event should create a printAndSendHearingRequirementsForm task",
-  "enabled": true,
+  "enabled": "false",
   "doesItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",

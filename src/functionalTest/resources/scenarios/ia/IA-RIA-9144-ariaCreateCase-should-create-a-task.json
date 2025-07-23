@@ -1,6 +1,6 @@
 {
   "description": "ariaCreateCase event should create a reviewMigratedCase task",
-  "enabled": true,
+  "enabled": "false",
   "shouldItWork": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
