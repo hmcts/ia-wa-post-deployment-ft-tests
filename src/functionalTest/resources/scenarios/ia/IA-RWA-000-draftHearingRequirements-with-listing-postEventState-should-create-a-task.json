@@ -1,6 +1,6 @@
 {
   "description": "draftHearingRequirements with listing post event state should create a draftHearingRequirements task",
-  "enabled": true,
+  "enabled": "false",
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

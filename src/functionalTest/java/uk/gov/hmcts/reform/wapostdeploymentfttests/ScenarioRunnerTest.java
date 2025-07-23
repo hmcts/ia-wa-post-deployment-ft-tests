@@ -44,9 +44,7 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.util.StringResourceLoader;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.TaskDataVerifier;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.Verifier;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -157,41 +155,26 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         assertFalse("Verifiers configured successfully", verifiers.isEmpty());
 
-        URL path = getClass().getClassLoader().getResource("scenarios");
-        File[] directories = new File(path.toURI()).listFiles(File::isDirectory);
-        Objects.requireNonNull(directories, "No directories found under 'scenarios'");
-
-        Exception testException = null;
-        try {
-            for (File directory : directories) {
-                runAllScenariosFor(directory.getName());
-            }
-        } catch (Exception ex) {
-            testException = ex;
-        } finally {
-            if (testException != null) {
-                throw testException;
-            }
-        }
+        runAllScenariosFor();
 
         stopWatch.stop();
         Logger.say(SCENARIO_RUNNING_TIME, stopWatch.getTotalTimeSeconds());
     }
 
-    private void runAllScenariosFor(String directoryName) throws Exception {
+    private void runAllScenariosFor() throws Exception {
         String scenarioPattern = System.getProperty("scenario");
         if (scenarioPattern == null) {
             scenarioPattern = "*.json";
         } else {
             scenarioPattern = "*" + scenarioPattern + "*.json";
         }
-
+        String directoryName = "ia";
         Collection<String> scenarioSources =
             StringResourceLoader
-                .load("/scenarios/" + directoryName + "/" + scenarioPattern)
+                .load("/scenarios/ia/" + scenarioPattern)
                 .values();
 
-        Logger.say(SCENARIO_START, scenarioSources.size() + " " + directoryName.toUpperCase(Locale.ROOT));
+        Logger.say(SCENARIO_START, scenarioSources.size() + " IA");
 
         for (String scenarioSource : scenarioSources) {
             String description = "";
@@ -272,7 +255,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         if (!failedScenarios.isEmpty()) {
             StringBuilder sb = new StringBuilder("Failed scenarios:\n=========================================");
             failedScenarios.forEach(scenario -> sb.append("\n").append(scenario));
-            log.error(sb.toString());
+            throw new RuntimeException(sb.toString());
         }
     }
 

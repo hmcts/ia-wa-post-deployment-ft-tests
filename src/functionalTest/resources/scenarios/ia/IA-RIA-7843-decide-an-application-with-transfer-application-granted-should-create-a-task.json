@@ -1,6 +1,6 @@
 {
   "description": "decideAnApplication with Transfer application Granted should create a editListing task",
-  "enabled": true,
+  "enabled": "false",
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

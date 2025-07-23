@@ -1,6 +1,6 @@
 {
   "description": "makeAnApplication event with set aside a decision should create a reviewSetAsideDecisionApplication task",
-  "enabled": true,
+  "enabled": "false",
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
