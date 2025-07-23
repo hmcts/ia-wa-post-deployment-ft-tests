@@ -54,49 +54,11 @@
         },
         "status": 200,
         "numberOfTasksAvailable": 2,
-        "taskTypes": ["printAndSendHoBundle", "followUpOverdueCaseBuilding"],
+        "taskTypes": ["followUpOverdueCaseBuilding", "printAndSendHoBundle"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
             "tasks": [
-              {
-                "id": "{$VERIFIER-UUID}",
-                "case_name": "Functional PostDeployment",
-                "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
-                "name": "Print and send HO bundle and appeal reasons form",
-                "type": "printAndSendHoBundle",
-                "task_state": "unassigned",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "task_title": "Print and send HO bundle and appeal reasons form",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
-                "execution_type": "Case Management Task",
-                "jurisdiction": "IA",
-                "case_type_id": "Asylum",
-                "region": "1",
-                "location": "765324",
-                "location_name": "Taylor House",
-                "auto_assigned": false,
-                "warnings": false,
-                "role_category": "ADMIN",
-                "warning_list": {
-                  "values": [
-
-                  ]
-                },
-                "case_management_category": "Protection",
-                "work_type_id": "routine_work",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
-                    "Cancel"
-                  ]
-                }
-              },
               {
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
@@ -132,6 +94,44 @@
                     "Own","Claim",
                     "Manage","Unassign","Assign","Complete",
                     "Execute",
+                    "Cancel"
+                  ]
+                }
+              },
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "name": "Print and send HO bundle and appeal reasons form",
+                "type": "printAndSendHoBundle",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "Print and send HO bundle and appeal reasons form",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "ADMIN",
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "routine_work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete",
                     "Cancel"
                   ]
                 }
