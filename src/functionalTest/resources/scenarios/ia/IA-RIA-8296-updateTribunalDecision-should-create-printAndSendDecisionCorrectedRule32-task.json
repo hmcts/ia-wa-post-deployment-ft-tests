@@ -71,7 +71,7 @@
                 "security_classification": "PUBLIC",
                 "task_title": "Print and send decision corrected under rule 32",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -91,6 +91,7 @@
                 "permissions": {
                   "values": [
                     "Read",
+                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel",

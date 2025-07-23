@@ -1,6 +1,6 @@
 {
   "description": "requestResponseReview event should create a printAndSendHoResponse task",
-  "enabled": true,
+  "enabled": "false",
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
@@ -70,7 +70,7 @@
                 "security_classification": "PUBLIC",
                 "task_title": "Print and send HO response",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",

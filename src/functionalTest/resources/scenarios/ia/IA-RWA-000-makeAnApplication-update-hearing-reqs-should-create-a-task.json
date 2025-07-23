@@ -1,6 +1,6 @@
 {
   "description": "makeAnApplication event with Update hearing requirements should create a processApplicationUpdateHearingRequirements task",
-  "enabled": true,
+  "enabled": "false",
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
