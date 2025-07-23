@@ -19,8 +19,7 @@
           "template": "minimal-appeal-started.json",
           "replacements": {
             "appealType": "protection",
-            "homeOfficeDecisionDate": "{$TODAY-14}",
-            "ariaMigrationTaskDueDays": "5"
+            "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
       }
