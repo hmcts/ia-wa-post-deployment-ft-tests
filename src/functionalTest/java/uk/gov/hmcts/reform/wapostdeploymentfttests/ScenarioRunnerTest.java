@@ -200,7 +200,12 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
 
                 description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
-                Boolean scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
+                Boolean scenarioEnabled;
+                try {
+                    scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
+                } catch (ClassCastException e) {
+                    scenarioEnabled = Boolean.parseBoolean(extractOrDefault(scenarioValues, "enabled", "true"));
+                }
 
                 if (!scenarioEnabled) {
                     Logger.say(SCENARIO_DISABLED, description);
