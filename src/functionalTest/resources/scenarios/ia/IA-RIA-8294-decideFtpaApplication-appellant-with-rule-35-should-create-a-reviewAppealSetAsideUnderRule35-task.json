@@ -1,7 +1,6 @@
 {
   "description": "decideFtpaApplication with rule 35 for appellant should create a task",
-  "enabled": "false",
-  "shouldItWork": true,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

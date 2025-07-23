@@ -1,7 +1,6 @@
 {
   "description": "requestCaseBuilding event should create a printAndSendHoBundle task",
-  "enabled": "false",
-  "doesItWork": true,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

@@ -1,7 +1,6 @@
 {
   "description": "makeAnApplication event should create a printAndSendHoApplication task",
-  "enabled": "false",
-  "shouldItWork": true,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

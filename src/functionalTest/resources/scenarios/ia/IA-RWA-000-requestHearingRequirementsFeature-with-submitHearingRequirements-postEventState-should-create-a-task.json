@@ -1,7 +1,6 @@
 {
   "description": "requestHearingRequirementsFeature with submitHearingRequirements post event state should create a followUpOverdueHearingRequirements task",
-  "enabled": "false",
-  "doesItWork": true,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

@@ -1,7 +1,6 @@
 {
   "description": "buildCase with caseUnderReview post event state should create a reviewAppealSkeletonArgument task",
-  "enabled": "false",
-  "shouldItWork": true,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

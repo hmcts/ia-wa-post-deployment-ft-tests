@@ -1,7 +1,6 @@
 {
   "description": "submitClarifyingQuestionAnswers with clarifyingQuestionsAnswersSubmitted post event state should create a reviewClarifyingQuestionsAnswers task",
-  "enabled": "false",
-  "shouldItWork": true,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

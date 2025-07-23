@@ -1,7 +1,6 @@
 {
   "description": "decideAnApplication with Adjourn application Granted should create a editListing task",
-  "enabled": "false",
-  "shouldItWork": true,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

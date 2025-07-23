@@ -1,7 +1,6 @@
 {
   "description": "makeAnApplication event with Change Hearing Type should create a processApplicationChangeHearingType task",
-  "enabled": "false",
-  "shouldItWork": true,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

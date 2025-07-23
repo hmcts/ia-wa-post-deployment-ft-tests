@@ -1,7 +1,6 @@
 {
   "description": "preHearing post event state should create a allocateHearingJudge task",
-  "enabled": "false",
-  "shouldItWork": true,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

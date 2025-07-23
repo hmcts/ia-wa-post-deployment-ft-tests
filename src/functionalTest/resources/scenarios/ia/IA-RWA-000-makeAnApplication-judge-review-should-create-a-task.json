@@ -1,7 +1,6 @@
 {
   "description": "makeAnApplication event with Judge's review of application decision should create a processApplicationToReviewDecision task",
-  "enabled": "false",
-  "shouldItWork": true,
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
