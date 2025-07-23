@@ -9,7 +9,7 @@
   },
   "required": {
     "credentials": {
-      "key": "IALegalOperations"
+      "key": "IALegalRepresentative"
     },
     "ccd": [
       {
