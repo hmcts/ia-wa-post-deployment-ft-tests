@@ -91,9 +91,13 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
-                    "Cancel"
+                    "Manage",
+                    "Execute",
+                    "Cancel",
+                    "Complete",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 }
               },
@@ -130,10 +134,13 @@
                   "values": [
                     "Read",
                     "Own",
-                    "Claim",
-                    "Manage","Unassign","Assign","Complete",
+                    "Manage",
                     "Execute",
-                    "Cancel"
+                    "Cancel",
+                    "Complete",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 }
               }

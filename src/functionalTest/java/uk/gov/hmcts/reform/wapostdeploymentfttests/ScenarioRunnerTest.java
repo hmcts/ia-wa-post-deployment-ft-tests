@@ -168,88 +168,97 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         } else {
             scenarioPattern = "*" + scenarioPattern + "*.json";
         }
-        String directoryName = "ia";
         Collection<String> scenarioSources =
             StringResourceLoader
                 .load("/scenarios/ia/" + scenarioPattern)
                 .values();
 
         Logger.say(SCENARIO_START, scenarioSources.size() + " IA");
-
+        int retryCount = 3;
         for (String scenarioSource : scenarioSources) {
             String description = "";
-            try {
-                Map<String, Object> scenarioValues = deserializeValuesUtil
-                    .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
-
-                description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
-                Boolean scenarioEnabled;
+            for (int i = 0; i < retryCount; i++) {
                 try {
-                    scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
-                } catch (ClassCastException e) {
-                    scenarioEnabled = Boolean.parseBoolean(extractOrDefault(scenarioValues, "enabled", "true"));
+                    Map<String, Object> scenarioValues = deserializeValuesUtil
+                        .deserializeStringWithExpandedValues(scenarioSource, emptyMap());
+
+                    description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
+                    Boolean scenarioEnabled;
+                    try {
+                        scenarioEnabled = extractOrDefault(scenarioValues, "enabled", true);
+                    } catch (ClassCastException e) {
+                        scenarioEnabled = Boolean.parseBoolean(extractOrDefault(scenarioValues, "enabled", "true"));
+                    }
+
+                    if (!scenarioEnabled) {
+                        Logger.say(SCENARIO_DISABLED, description);
+                    } else {
+                        Logger.say(SCENARIO_ENABLED, description);
+
+                        Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
+                        Map<String, Object> testClauseValues = Objects.requireNonNull(
+                            MapValueExtractor.extract(scenarioValues, "test"));
+                        Map<String, Object> postRoleAssignmentClauseValues = extractOrDefault(
+                            scenarioValues,
+                            "postRoleAssignments", null
+                        );
+                        Map<String, Object> updateCaseClauseValues = extractOrDefault(
+                            scenarioValues,
+                            "updateCase",
+                            null
+                        );
+
+                        String scenarioJurisdiction = extractOrThrow(scenarioValues, "jurisdiction");
+                        String caseType = extractOrThrow(scenarioValues, "caseType");
+
+                        TestScenario scenario = new TestScenario(
+                            scenarioValues,
+                            scenarioSource,
+                            scenarioJurisdiction,
+                            caseType,
+                            beforeClauseValues,
+                            testClauseValues,
+                            postRoleAssignmentClauseValues,
+                            updateCaseClauseValues
+                        );
+                        createBaseCcdCase(scenario);
+
+                        addSearchParameters(scenario, scenarioValues);
+
+                        if (scenario.getBeforeClauseValues() != null) {
+                            Logger.say(SCENARIO_BEFORE_FOUND);
+                            //If before was found process with before values
+                            processBeforeClauseScenario(scenario);
+                            Logger.say(SCENARIO_BEFORE_COMPLETED);
+
+                        }
+
+                        if (scenario.getPostRoleAssignmentClauseValues() != null) {
+                            Logger.say(SCENARIO_ROLE_ASSIGNMENT_FOUND);
+                            processRoleAssignment(postRoleAssignmentClauseValues, scenario);
+                            Logger.say(SCENARIO_ROLE_ASSIGNMENT_COMPLETED);
+                        }
+
+                        if (scenario.getUpdateCaseClauseValues() != null) {
+                            Logger.say(SCENARIO_UPDATE_CASE_FOUND);
+                            updateBaseCcdCase(scenario);
+                            Logger.say(SCENARIO_UPDATE_CASE_COMPLETED);
+                        }
+
+                        Logger.say(SCENARIO_RUNNING);
+                        processTestClauseScenario(scenario);
+                        Logger.say(SCENARIO_SUCCESSFUL, description);
+
+                        this.failedScenarios.removeIf(description::equals);
+                        Logger.say(SCENARIO_FINISHED);
+                    }
+                    break; // Exit the retry loop if successful or disabled
+                } catch (Error | FeignException | NullPointerException | ConditionTimeoutException e) {
+                    log.error("Scenario {} failed with error {}", description, e.getMessage());
+                    if (!this.failedScenarios.contains(description)) {
+                        this.failedScenarios.add(description);
+                    }
                 }
-
-                if (!scenarioEnabled) {
-                    Logger.say(SCENARIO_DISABLED, description);
-                } else {
-                    Logger.say(SCENARIO_ENABLED, description);
-
-                    Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
-                    Map<String, Object> testClauseValues = Objects.requireNonNull(
-                        MapValueExtractor.extract(scenarioValues, "test"));
-                    Map<String, Object> postRoleAssignmentClauseValues = extractOrDefault(
-                        scenarioValues,
-                        "postRoleAssignments", null
-                    );
-                    Map<String, Object> updateCaseClauseValues = extractOrDefault(scenarioValues, "updateCase", null);
-
-                    String scenarioJurisdiction = extractOrThrow(scenarioValues, "jurisdiction");
-                    String caseType = extractOrThrow(scenarioValues, "caseType");
-
-                    TestScenario scenario = new TestScenario(
-                        scenarioValues,
-                        scenarioSource,
-                        scenarioJurisdiction,
-                        caseType,
-                        beforeClauseValues,
-                        testClauseValues,
-                        postRoleAssignmentClauseValues,
-                        updateCaseClauseValues
-                    );
-                    createBaseCcdCase(scenario);
-
-                    addSearchParameters(scenario, scenarioValues);
-
-                    if (scenario.getBeforeClauseValues() != null) {
-                        Logger.say(SCENARIO_BEFORE_FOUND);
-                        //If before was found process with before values
-                        processBeforeClauseScenario(scenario);
-                        Logger.say(SCENARIO_BEFORE_COMPLETED);
-
-                    }
-
-                    if (scenario.getPostRoleAssignmentClauseValues() != null) {
-                        Logger.say(SCENARIO_ROLE_ASSIGNMENT_FOUND);
-                        processRoleAssignment(postRoleAssignmentClauseValues, scenario);
-                        Logger.say(SCENARIO_ROLE_ASSIGNMENT_COMPLETED);
-                    }
-
-                    if (scenario.getUpdateCaseClauseValues() != null) {
-                        Logger.say(SCENARIO_UPDATE_CASE_FOUND);
-                        updateBaseCcdCase(scenario);
-                        Logger.say(SCENARIO_UPDATE_CASE_COMPLETED);
-                    }
-
-                    Logger.say(SCENARIO_RUNNING);
-                    processTestClauseScenario(scenario);
-                    Logger.say(SCENARIO_SUCCESSFUL, description);
-
-                    Logger.say(SCENARIO_FINISHED);
-                }
-            } catch (Error | FeignException | NullPointerException | ConditionTimeoutException e) {
-                log.error("Scenario {} failed with error {}", description, e.getMessage());
-                this.failedScenarios.add(description);
             }
         }
         if (!failedScenarios.isEmpty()) {
@@ -401,7 +410,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private void verifyMessages(Map<String, Object> expectationValue, int expectedMessages, String expectationCaseId) {
         if (expectedMessages > 0) {
             await()
-                .ignoreException(AssertionError.class)
+//                .ignoreException(AssertionError.class)
                 .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
                 .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
                 .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)

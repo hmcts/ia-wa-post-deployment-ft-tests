@@ -33,7 +33,7 @@ public class CamundaTaskRetrieverService implements TaskRetrieverService {
         Map<String, Object> deserializedClauseValues = deserializeValuesUtil.expandMapValues(clauseValues, emptyMap());
 
         await()
-            .ignoreException(AssertionError.class)
+//            .ignoreException(AssertionError.class)
             .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
             .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
             .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)

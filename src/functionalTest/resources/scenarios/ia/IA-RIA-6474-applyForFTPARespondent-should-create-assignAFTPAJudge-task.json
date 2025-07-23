@@ -51,7 +51,10 @@
         },
         "status": 200,
         "numberOfTasksAvailable": 2,
-        "taskTypes": ["assignAFTPAJudge", "decideAnFTPA"],
+        "taskTypes": [
+          "assignAFTPAJudge",
+          "decideAnFTPA"
+        ],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -80,7 +83,6 @@
                 "role_category": "CTSC",
                 "warning_list": {
                   "values": [
-
                   ]
                 },
                 "case_management_category": "Protection",
@@ -88,9 +90,14 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
-                    "Cancel"
+                    "Own",
+                    "Manage",
+                    "Execute",
+                    "Cancel",
+                    "Complete",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 }
               },
@@ -118,7 +125,6 @@
                 "role_category": "JUDICIAL",
                 "warning_list": {
                   "values": [
-
                   ]
                 },
                 "case_management_category": "Protection",
@@ -126,9 +132,13 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
-                    "Cancel"
+                    "Manage",
+                    "Execute",
+                    "Cancel",
+                    "Complete",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 }
               }
@@ -137,40 +147,52 @@
         },
         "numberOfRolesAvailable": 3,
         "roleData": {
-          "roles":[
+          "roles": [
             {
-              "role_category":"CTSC",
-              "role_name":"ctsc",
-              "permissions":[
+              "role_category": "CTSC",
+              "role_name": "ctsc",
+              "permissions": [
                 "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
+                "Own",
+                "Claim",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             },
             {
-              "role_category":"CTSC",
-              "role_name":"ctsc-team-leader",
-              "permissions":[
+              "role_category": "CTSC",
+              "role_name": "ctsc-team-leader",
+              "permissions": [
                 "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
+                "Own",
+                "Claim",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             },
             {
-              "role_name":"task-supervisor",
-              "permissions":[
+              "role_name": "task-supervisor",
+              "permissions": [
                 "Read",
-                "Manage","Unassign","Assign","Complete",
-                "Execute","Claim",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
+                "Execute",
+                "Claim",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             }
           ]
