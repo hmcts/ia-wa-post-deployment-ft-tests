@@ -1,3 +1,12 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath("net.serenity-bdd:serenity-gradle-plugin:3.6.22")
+  }
+}
+
 plugins {
   id 'application'
   id 'checkstyle'
@@ -11,9 +20,13 @@ plugins {
   id 'io.freefair.lombok' version '8.13.1'
 }
 
+apply plugin: 'java'
+apply plugin: 'net.serenity-bdd.serenity-gradle-plugin'
+apply plugin: 'project-report'
+apply plugin: 'idea'
+
 group = 'uk.gov.hmcts.reform'
 version = '0.0.1'
-
 
 java {
   toolchain {
@@ -153,7 +166,7 @@ dependencyUpdates {
 dependencyCheck {
   // Specifies if the build should be failed if a CVSS score above a specified level is identified.
   // range of 0-10 fails the build, anything greater and it doesn't fail the build
-  failBuildOnCVSS = 11 //test framework project, never released to production so CVE score not relevant
+  failBuildOnCVSS = 1 //test framework project, never released to production so CVE score not relevant
   suppressionFile = 'config/owasp/suppressions.xml'
 
   analyzers {
