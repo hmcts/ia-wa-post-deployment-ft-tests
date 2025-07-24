@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests;
 
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import io.restassured.http.Headers;
@@ -277,7 +278,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 passedScenarios.add(description);
                 Logger.say(SCENARIO_FINISHED);
                 break; // Exit the retry loop if successful or disabled
-            } catch (Error | FeignException | NullPointerException | ConditionTimeoutException e) {
+            } catch (Error | FeignException | NullPointerException | ConditionTimeoutException | JsonParseException e) {
                 log.error("Scenario {} failed with error {}", description, e.getMessage());
                 if (!failedScenarios.contains(description)) {
                     failedScenarios.add(description);

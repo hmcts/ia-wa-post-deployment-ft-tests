@@ -53,7 +53,10 @@
         },
         "status": 200,
         "numberOfTasksAvailable": 2,
-        "taskTypes": ["followUpOverdueHearingRequirements", "printAndSendHearingRequirements"],
+        "taskTypes": [
+          "followUpOverdueHearingRequirements",
+          "printAndSendHearingRequirements"
+        ],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -82,7 +85,6 @@
                 "role_category": "LEGAL_OPERATIONS",
                 "warning_list": {
                   "values": [
-
                   ]
                 },
                 "case_management_category": "Protection",
@@ -147,28 +149,37 @@
         },
         "numberOfRolesAvailable": 2,
         "roleData": {
-          "roles":[
+          "roles": [
             {
-              "role_category":"ADMIN",
-              "role_name":"national-business-centre",
-              "permissions":[
+              "role_category": "ADMIN",
+              "role_name": "national-business-centre",
+              "permissions": [
                 "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
+                "Own",
+                "Claim",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             },
             {
-              "role_name":"task-supervisor",
-              "permissions":[
-                "Read","Own",
-                "Manage","Unassign","Assign","Complete",
-                "Execute","Claim",
+              "role_name": "task-supervisor",
+              "permissions": [
+                "Read",
+                "Own",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
+                "Execute",
+                "Claim",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             }
           ]
