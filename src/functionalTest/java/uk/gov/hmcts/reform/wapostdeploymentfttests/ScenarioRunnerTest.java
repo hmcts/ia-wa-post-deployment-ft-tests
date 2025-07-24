@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import io.restassured.http.Headers;
-import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
@@ -59,6 +58,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static java.util.Collections.emptyMap;
@@ -70,7 +70,6 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.Authorization
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil.addAssignedCaseId;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_BEFORE_COMPLETED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_BEFORE_FOUND;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_DISABLED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_ENABLED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_FINISHED;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_ROLE_ASSIGNMENT_COMPLETED;
@@ -429,7 +428,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private void verifyMessages(Map<String, Object> expectationValue, int expectedMessages, String expectationCaseId) {
         if (expectedMessages > 0) {
             await()
-//                .ignoreException(AssertionError.class)
                 .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
                 .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
                 .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
