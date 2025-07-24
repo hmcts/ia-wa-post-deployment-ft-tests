@@ -7,7 +7,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "triggerReviewInterpreterBookingTask",
@@ -24,7 +26,9 @@
   },
   "test": {
     "request": {
-      "credentials": "IACaseworker",
+      "credentials": {
+        "key": "IACaseworker"
+      },
       "input": {
         "eventMessages": [
           {
@@ -47,7 +51,9 @@
     },
     "expectations": [
       {
-        "credentials": "IACaseworker",
+        "credentials": {
+          "key": "IACaseworker"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["reviewInterpreters"],
@@ -67,7 +73,7 @@
                 "security_classification": "PUBLIC",
                 "task_title": "Review interpreter booking",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",

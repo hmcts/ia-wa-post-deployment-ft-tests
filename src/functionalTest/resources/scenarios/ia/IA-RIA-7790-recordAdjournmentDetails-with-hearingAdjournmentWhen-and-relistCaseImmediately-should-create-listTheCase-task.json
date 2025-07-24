@@ -7,11 +7,13 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
-        "eventId": "recordAdjournmentDetails",
-        "state": "listing",
+        "eventId": "startAppeal",
+        "state": "appealStarted",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
@@ -23,7 +25,9 @@
   },
   "test": {
     "request": {
-      "credentials": "AdminOfficer",
+      "credentials": {
+        "key": "AdminOfficer"
+      },
       "input": {
         "eventMessages": [
           {
@@ -35,7 +39,8 @@
                 "Data": {
                   "appealType": "protection",
                   "hearingAdjournmentWhen": "onHearingDate",
-                  "relistCaseImmediately": true
+                  "relistCaseImmediately": "Yes",
+                  "autoHearingRequestEnabled": false
                 }
               }
             }
@@ -45,7 +50,9 @@
     },
     "expectations": [
       {
-        "credentials": "CTSCAdmin",
+        "credentials": {
+          "key": "CTSCAdmin"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["listTheCase"],
@@ -85,9 +92,14 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
-                    "Cancel"
+                    "Own",
+                    "Manage",
+                    "Execute",
+                    "Cancel",
+                    "Complete",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 }
               }

@@ -7,11 +7,13 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
-        "eventId": "submitAppeal",
-        "state": "appealStarted",
+        "eventId": "decisionAndReasonsStarted",
+        "state": "preHearing",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
@@ -24,7 +26,9 @@
   },
   "test": {
     "request": {
-      "credentials": "IACaseworker",
+      "credentials": {
+        "key": "IACaseworker"
+      },
       "input": {
         "eventMessages": [
           {
@@ -34,7 +38,9 @@
               "NewStateId": "decision",
               "AdditionalData": {
                 "Data": {
-                  "listCaseHearingCentre": "decisionWithoutHearing"
+                  "listCaseHearingCentre": "decisionWithoutHearing",
+                  "isIntegrated": true,
+                  "autoHearingRequestEnabled": false
                 }
               }
             }
@@ -44,7 +50,9 @@
     },
     "expectations": [
       {
-        "credentials": "CTSCAdmin",
+        "credentials": {
+          "key": "CTSCAdmin"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["listTheCase"],
@@ -84,8 +92,13 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
+                    "Own",
+                    "Claim",
+                    "Manage",
+                    "Execute",
+                    "Unassign",
+                    "Assign",
+                    "Complete",
                     "Cancel"
                   ]
                 }

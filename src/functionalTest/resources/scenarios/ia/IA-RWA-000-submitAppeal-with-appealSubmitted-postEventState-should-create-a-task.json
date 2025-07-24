@@ -7,7 +7,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "submitAppeal",
@@ -24,7 +26,9 @@
   },
   "test": {
     "request": {
-      "credentials": "IALegalRepresentative",
+      "credentials": {
+        "key": "IALegalRepresentative"
+      },
       "input": {
         "eventMessages": [
           {
@@ -44,7 +48,9 @@
     },
     "expectations": [
       {
-        "credentials": "IACaseworker",
+        "credentials": {
+          "key": "IACaseworker"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["reviewTheAppeal"],

@@ -7,7 +7,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "startAppeal",
@@ -23,7 +25,9 @@
   },
   "test": {
     "request": {
-      "credentials": "IACaseworker",
+      "credentials": {
+        "key": "IACaseworker"
+      },
       "input": {
         "eventMessages": [
           {
@@ -43,7 +47,9 @@
     },
     "expectations": [
       {
-        "credentials": "NBCAdmin",
+        "credentials": {
+          "key": "NBCAdmin"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["printAndSendHoEvidence"],
@@ -63,7 +69,7 @@
                 "security_classification": "PUBLIC",
                 "task_title": "Print and send new HO evidence",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -83,7 +89,7 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
+                    "Own","Claim","Execute",
                     "Manage","Unassign","Assign","Complete",
                     "Cancel"
                   ]

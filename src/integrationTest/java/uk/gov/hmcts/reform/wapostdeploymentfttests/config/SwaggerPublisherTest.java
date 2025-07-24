@@ -29,7 +29,7 @@ class SwaggerPublisherTest {
 
     @DisplayName("Generate swagger documentation")
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
+    @SuppressWarnings({"PMD.UnitTestShouldIncludeAssert", "PMD.LawOfDemeter"})
     void generateDocs() throws Exception {
         byte[] specs = mvc.perform(get("/v2/api-docs"))
             .andExpect(status().isOk())

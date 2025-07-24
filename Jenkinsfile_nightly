@@ -1,7 +1,22 @@
 #!groovy
 
 properties([
-  pipelineTriggers([cron('H 8,17 * * 1-5')])
+  pipelineTriggers([cron('H 8,17 * * 1-5')]),
+  parameters([
+    string(name: 'retryCount', defaultValue: '5', description: 'Number of retries per scenario to combat flakey Scenario Runner'),
+    string(name: 'azureServiceBusTopicName', defaultValue: 'ccd-case-events-aat', description: 'ccd case events service bus topic name'),
+    string(name: 'ccdUrl', defaultValue: 'http://ccd-data-store-api-aat.service.core-compute-aat.internal', description: 'ccd-data-store-api url'),
+    string(name: 'dmStoreUrl', defaultValue: 'http://dm-store-aat.service.core-compute-aat.internal', description: 'dm-store url'),
+    string(name: 'idamUrl', defaultValue: 'https://idam-api.aat.platform.hmcts.net', description: 'idam-api url'),
+    string(name: 's2sUrl', defaultValue: 'http://rpe-service-auth-provider-aat.service.core-compute-aat.internal', description: 'rpe-service-auth-provider url'),
+    string(name: 'openIdIdamUrl', defaultValue: 'https://idam-web-public.aat.platform.hmcts.net', description: 'idam-web-public url'),
+    string(name: 'waTaskManagementUrl', defaultValue: 'http://wa-task-management-api-aat.service.core-compute-aat.internal', description: 'wa-task-management-api url'),
+    string(name: 'waCaseEventHandlerUrl', defaultValue: 'http://wa-case-event-handler-aat.service.core-compute-aat.internal', description: 'wa-case-event-handler url'),
+    string(name: 'waTaskMonitorUrl', defaultValue: 'http://wa-task-monitor-aat.service.core-compute-aat.internal', description: 'wa-task-monitor url'),
+    string(name: 'camundaUrl', defaultValue: 'http://camunda-api-aat.service.core-compute-aat.internal/engine-rest', description: 'camunda-api url'),
+    string(name: 'roleAssignmentUrl', defaultValue: 'http://am-role-assignment-service-aat.service.core-compute-aat.internal', description: 'am-role-assignment-service url'),
+    string(name: 'waPostDeploymentTestEnvironment', defaultValue: 'aat', description: 'post deployment test environment')
+  ])
 ])
 
 @Library("Infrastructure")
@@ -32,7 +47,10 @@ def secrets = [
     secret('wa-test-adminofficer-password', 'TEST_ADMINOFFICER_PASSWORD'),
 
     secret('wa-test-ctsc-admin-username', 'TEST_CTSC_ADMIN_USERNAME'),
-    secret('wa-test-ctsc-admin-password', 'TEST_CTSC_ADMIN_PASSWORD')
+    secret('wa-test-ctsc-admin-password', 'TEST_CTSC_ADMIN_PASSWORD'),
+
+    secret('wa-test-nbc-admin-username', 'TEST_NBC_ADMIN_USERNAME'),
+    secret('wa-test-nbc-admin-password', 'TEST_NBC_ADMIN_PASSWORD')
   ],
   's2s-${env}': [
     secret('microservicekey-wa-task-management-api', 'S2S_SECRET_TASK_MANAGEMENT_API'),
@@ -40,29 +58,56 @@ def secrets = [
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
-    [$class     : 'AzureKeyVaultSecret',
-     secretType : 'Secret',
-     name       : secretName,
-     version    : '',
-     envVariable: envVar
-    ]
+  [$class     : 'AzureKeyVaultSecret',
+   secretType : 'Secret',
+   name       : secretName,
+   version    : '',
+   envVariable: envVar
+  ]
 }
+
 withNightlyPipeline(type, product, component) {
-    env.AZURE_SERVICE_BUS_TOPIC_NAME = "ccd-case-events-aat"
+  env.AZURE_SERVICE_BUS_TOPIC_NAME = params.azureServiceBusTopicName
+  env.CCD_URL = params.ccdUrl
+  env.DM_STORE_URL = params.dmStoreUrl
+  env.DOCUMENT_STORE_URL = params.dmStoreUrl
+  env.IDAM_URL = params.idamUrl
+  env.S2S_URL = params.s2sUrl
+  env.OPEN_ID_IDAM_URL = params.openIdIdamUrl
+  env.WA_TASK_MANAGEMENT_URL = params.waTaskManagementUrl
+  env.WA_CASE_EVENT_HANDLER_URL = params.waCaseEventHandlerUrl
+  env.WA_TASK_MONITOR_URL = params.waTaskMonitorUrl
+  env.CAMUNDA_URL = params.camundaUrl
+  env.ROLE_ASSIGNMENT_URL = params.roleAssignmentUrl
+  env.WA_POST_DEPLOYMENT_TEST_ENVIRONMENT = params.waPostDeploymentTestEnvironment
+  env.WA_RETRY_COUNT = params.retryCount
 
-    env.CCD_URL = "http://ccd-data-store-api-aat.service.core-compute-aat.internal"
-    env.DM_STORE_URL = "http://dm-store-aat.service.core-compute-aat.internal"
-    env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
-    env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
-    env.OPEN_ID_IDAM_URL = "https://idam-web-public.aat.platform.hmcts.net"
-    env.DOCUMENT_STORE_URL = "http://dm-store-aat.service.core-compute-aat.internal"
-    env.WA_TASK_MANAGEMENT_URL = "http://wa-task-management-api-aat.service.core-compute-aat.internal"
-    env.WA_CASE_EVENT_HANDLER_URL = "http://wa-case-event-handler-aat.service.core-compute-aat.internal"
-    env.WA_TASK_MONITOR_URL = "http://wa-task-monitor-aat.service.core-compute-aat.internal"
-    env.CAMUNDA_URL = "http://camunda-api-aat.service.core-compute-aat.internal/engine-rest"
-    env.ROLE_ASSIGNMENT_URL = "http://am-role-assignment-service-aat.service.core-compute-aat.internal"
-    env.WA_POST_DEPLOYMENT_TEST_ENVIRONMENT="aat"
+  loadVaultSecrets(secrets)
+  enableFullFunctionalTest(180)
 
-    loadVaultSecrets(secrets)
-    enableFullFunctionalTest(60)
+  afterAlways('DependencyCheckNightly') {
+    publishHTML([
+      allowMissing         : true,
+      alwaysLinkToLastBuild: true,
+      keepAll              : true,
+      reportDir            : "build/reports",
+      reportFiles          : 'dependency-check-report.html',
+      reportName           : 'Dependency Check Report'
+    ])
+  }
+
+  afterAlways('fullFunctionalTest') {
+    publishHTML([
+      allowMissing         : true,
+      alwaysLinkToLastBuild: true,
+      keepAll              : true,
+      reportDir            : "build/reports/tests/functional",
+      reportFiles          : 'index.html',
+      reportName           : 'Functional Test Report'
+    ])
+
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/build/reports/**/*'
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/**/*'
+  }
 }

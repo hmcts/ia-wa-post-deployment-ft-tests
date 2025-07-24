@@ -1,0 +1,190 @@
+{
+  "description": "makeAnApplication event with Other should create a processApplicationOther task",
+  "enabled": true,
+  "jurisdiction": "IA",
+  "caseType": "Asylum",
+  "options": {
+    "taskRetrievalApi": "task-management-api"
+  },
+  "required": {
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
+    "ccd": [
+      {
+        "eventId": "submitAppeal",
+        "state": "appealStarted",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "appealType": "protection",
+            "homeOfficeDecisionDate": "{$TODAY-14}"
+          }
+        }
+      }
+    ]
+  },
+  "test": {
+    "request": {
+      "credentials": {
+        "key": "IALegalRepresentative"
+      },
+      "input": {
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json",
+            "replacements": {
+              "EventId": "makeAnApplication",
+              "AdditionalData": {
+                "Data": {
+                  "appealType": "protection",
+                  "lastModifiedApplication": {
+                    "type": "Other",
+                    "decision": ""
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "expectations": [
+      {
+        "credentials": {
+          "key": "IACaseworker"
+        },
+        "status": 200,
+        "numberOfTasksAvailable": 1,
+        "taskTypes": ["processApplicationOther"],
+        "taskData": {
+          "template": "minimal-task-response.json",
+          "replacements": {
+            "tasks": [
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "name": "Process Other Application",
+                "type": "processApplicationOther",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "Process Other Application",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "LEGAL_OPERATIONS",
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "applications",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete",
+                    "Execute",
+                    "Cancel"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "numberOfRolesAvailable": 6,
+        "roleData": {
+          "roles":[
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"case-manager",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+
+              ]
+            },
+            {
+              "role_category":"JUDICIAL",
+              "role_name":"hearing-judge",
+              "permissions":[
+                "Read",
+                "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+
+              ]
+            },
+            {
+              "role_category":"JUDICIAL",
+              "role_name":"judge",
+              "permissions":[
+                "Read",
+                "Manage","Unassign","Assign","Complete",
+                "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+                "373"
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+
+              ]
+            },
+            {
+              "role_name":"task-supervisor",
+              "permissions":[
+                "Read",
+                "Manage","Unassign","Assign","Complete",
+                "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+

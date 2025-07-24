@@ -7,7 +7,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "submitAppeal",
@@ -25,7 +27,9 @@
   },
   "test": {
     "request": {
-      "credentials": "IALegalRepresentative",
+      "credentials": {
+        "key": "IALegalRepresentative"
+      },
       "input": {
         "eventMessages": [
           {
@@ -46,10 +50,14 @@
     },
     "expectations": [
       {
-        "credentials": "CTSCAdmin",
+        "credentials": {
+          "key": "CTSCAdmin"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["reviewRemissionApplication"],
+        "taskTypes": [
+          "reviewRemissionApplication"
+        ],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -78,7 +86,6 @@
                 "role_category": "CTSC",
                 "warning_list": {
                   "values": [
-
                   ]
                 },
                 "case_management_category": "Human rights",
@@ -86,9 +93,14 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
-                    "Cancel"
+                    "Own",
+                    "Manage",
+                    "Execute",
+                    "Cancel",
+                    "Complete",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 }
               }
@@ -97,40 +109,51 @@
         },
         "numberOfRolesAvailable": 3,
         "roleData": {
-          "roles":[
+          "roles": [
             {
-              "role_category":"CTSC",
-              "role_name":"ctsc",
-              "permissions":[
+              "role_category": "CTSC",
+              "role_name": "ctsc",
+              "permissions": [
                 "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
+                "Own",
+                "Claim",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             },
             {
-              "role_category":"CTSC",
-              "role_name":"ctsc-team-leader",
-              "permissions":[
+              "role_category": "CTSC",
+              "role_name": "ctsc-team-leader",
+              "permissions": [
                 "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
+                "Own",
+                "Claim",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             },
             {
-              "role_name":"task-supervisor",
-              "permissions":[
+              "role_name": "task-supervisor",
+              "permissions": [
                 "Read",
-                "Manage","Unassign","Assign","Complete",
-                "Execute","Claim",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
+                "Claim",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             }
           ]

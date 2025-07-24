@@ -1,5 +1,5 @@
 {
-  "description": "makeAnApplication event should create a processApplication task",
+  "description": "makeAnApplication event with Update hearing requirements should create a processApplicationUpdateHearingRequirements task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -7,7 +7,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "submitAppeal",
@@ -24,7 +26,9 @@
   },
   "test": {
     "request": {
-      "credentials": "IALegalRepresentative",
+      "credentials": {
+        "key": "IALegalRepresentative"
+      },
       "input": {
         "eventMessages": [
           {
@@ -35,7 +39,7 @@
                 "Data": {
                   "appealType": "protection",
                   "lastModifiedApplication": {
-                    "type": "Expedite",
+                    "type": "Update hearing requirements",
                     "decision": ""
                   }
                 }
@@ -47,10 +51,12 @@
     },
     "expectations": [
       {
-        "credentials": "IACaseworker",
+        "credentials": {
+          "key": "IACaseworker"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["processApplication"],
+        "taskTypes": ["processApplicationUpdateHearingRequirements"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -60,12 +66,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Process Application",
-                "type": "processApplication",
+                "name": "Process Update Hearing Requirements Application",
+                "type": "processApplicationUpdateHearingRequirements",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Process Application",
+                "task_title": "Process Update Hearing Requirements Application",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
                 "execution_type": "Case Management Task",

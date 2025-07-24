@@ -1,5 +1,5 @@
 {
-  "description": "applyForFTPAAppellant event should create a assignAFTPAJudge task",
+  "description": "applyForFTPAAppellant event should create a assignAFTPAJudge and decideAnFTPA task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -7,7 +7,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "applyForFTPAAppellant",
@@ -23,7 +25,9 @@
   },
   "test": {
     "request": {
-      "credentials": "IALegalRepresentative",
+      "credentials": {
+        "key": "IALegalRepresentative"
+      },
       "input": {
         "eventMessages": [
           {
@@ -42,10 +46,12 @@
     },
     "expectations": [
       {
-        "credentials": "CTSCAdmin",
+        "credentials": {
+          "key": "CTSCAdmin"
+        },
         "status": 200,
-        "numberOfTasksAvailable": 1,
-        "taskTypes": ["assignAFTPAJudge"],
+        "numberOfTasksAvailable": 2,
+        "taskTypes": ["assignAFTPAJudge", "decideAnFTPA"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -82,9 +88,56 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
-                    "Cancel"
+                    "Own",
+                    "Manage",
+                    "Execute",
+                    "Cancel",
+                    "Complete",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
+                  ]
+                }
+              },
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "name": "Decide an FTPA",
+                "type": "decideAnFTPA",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "Decide an FTPA",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "JUDICIAL",
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "upper_tribunal",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Manage",
+                    "Execute",
+                    "Cancel",
+                    "Complete",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 }
               }

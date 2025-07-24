@@ -8,7 +8,9 @@
         "taskRetrievalApi": "task-management-api"
     },
     "required": {
-        "credentials": "IALegalRepresentative",
+        "credentials": {
+          "key": "IALegalRepresentative"
+        },
         "ccd": [
             {
                 "eventId": "submitAppeal",
@@ -44,7 +46,9 @@
         },
         "expectations": [
             {
-                "credentials": "IACaseworker",
+                "credentials": {
+                  "key": "IACaseworker"
+                },
                 "status": 200,
                 "numberOfTasksAvailable": 2,
                 "taskData": {
@@ -195,7 +199,9 @@
         ]
     },
     "postRoleAssignments": {
-        "credentials": "IACaseworker",
+        "credentials": {
+          "key": "IACaseworker"
+        },
         "roleData": {
             "template": "set-organisational-role-assignment-request.json",
             "replacements": {
@@ -210,7 +216,9 @@
         }
     },
     "requiredUpdate": {
-        "credentials": "IACaseworker",
+        "credentials": {
+          "key": "IACaseworker"
+        },
         "ccd": [
             {
                 "eventId": "requestRespondentEvidence",
@@ -302,7 +310,9 @@
                 }
             },
             {
-                "credentials": "AdminOfficer",
+                "credentials": {
+                  "key": "AdminOfficer"
+                },
                 "eventId": "listCase",
                 "state": "listing",
                 "caseData": {
@@ -329,7 +339,9 @@
     },
     "test": {
         "request": {
-            "credentials": "IACaseworker",
+            "credentials": {
+              "key": "IACaseworker"
+            },
             "input": {
                 "eventMessages": [
                     {
@@ -343,7 +355,9 @@
         },
         "expectations": [
             {
-                "credentials": "IACaseworker",
+                "credentials": {
+                  "key": "IACaseworker"
+                },
                 "status": 200,
                 "numberOfTasksAvailable": 2,
                 "taskTypes": [

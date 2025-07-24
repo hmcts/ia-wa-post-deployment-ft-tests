@@ -7,16 +7,34 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
+    "ccd": [
+      {
+        "eventId": "startAppeal",
+        "state": "appealStarted",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "appealType": "protection",
+            "homeOfficeDecisionDate": "{$TODAY-14}"
+          }
+        }
+      }
+    ]
+  },
+  "update": {
+    "credentials": {
+      "key": "WaSystemUser"
+    },
     "ccd": [
       {
         "eventId": "ariaCreateCase",
         "state": "migrated",
         "caseData": {
-          "template": "minimal-appeal-started.json",
+          "template": "minimal-appeal-started-blank.json",
           "replacements": {
-            "appealType": "protection",
-            "homeOfficeDecisionDate": "{$TODAY-14}",
             "ariaMigrationTaskDueDays": "5"
           }
         }
@@ -25,7 +43,9 @@
   },
   "test": {
     "request": {
-      "credentials": "WaSystemUser",
+      "credentials": {
+        "key": "WaSystemUser"
+      },
       "input": {
         "eventMessages": [
           {
@@ -45,7 +65,9 @@
     },
     "expectations": [
       {
-        "credentials": "IACaseworker",
+        "credentials": {
+          "key": "IACaseworker"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["reviewMigratedCase"],
@@ -65,7 +87,7 @@
                 "security_classification": "PUBLIC",
                 "task_title": "Review migrated case",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever;
 
+import io.restassured.http.Headers;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +27,19 @@ public class CamundaTaskRetrieverService implements TaskRetrieverService {
     private DeserializeValuesUtil deserializeValuesUtil;
 
     @Override
-    public void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario, String caseId) {
+    public void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario, String caseId,
+                             Headers authorizationHeaders) {
 
         Map<String, Object> deserializedClauseValues = deserializeValuesUtil.expandMapValues(clauseValues, emptyMap());
 
         await()
-            .ignoreException(AssertionError.class)
             .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
             .pollInterval(DEFAULT_POLL_INTERVAL_SECONDS, SECONDS)
             .atMost(DEFAULT_TIMEOUT_SECONDS, SECONDS)
             .until(
                 () -> {
-                    camundaService.searchByCaseIdJurisdictionAndCaseType(deserializedClauseValues, scenario, caseId);
+                    camundaService.searchByCaseIdJurisdictionAndCaseType(deserializedClauseValues, scenario, caseId,
+                                                                         authorizationHeaders);
                     // TODO: Do we want to verify responses for camunda?
                     return true;
                 });

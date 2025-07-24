@@ -7,7 +7,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "startAppeal",
@@ -23,7 +25,9 @@
   },
   "test": {
     "request": {
-      "credentials": "IACaseworker",
+      "credentials": {
+        "key": "IACaseworker"
+      },
       "input": {
         "eventMessages": [
           {
@@ -44,14 +48,60 @@
     },
     "expectations": [
       {
-        "credentials": "NBCAdmin",
+        "credentials": {
+          "key": "NBCAdmin"
+        },
         "status": 200,
-        "numberOfTasksAvailable": 1,
-        "taskTypes": ["printAndSendHearingRequirements"],
+        "numberOfTasksAvailable": 2,
+        "taskTypes": [
+          "followUpOverdueHearingRequirements",
+          "printAndSendHearingRequirements"
+        ],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
             "tasks": [
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "name": "Follow-up overdue hearing requirements",
+                "type": "followUpOverdueHearingRequirements",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "Follow-up overdue hearing requirements",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "LEGAL_OPERATIONS",
+                "warning_list": {
+                  "values": [
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "hearing_work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Manage",
+                    "Execute",
+                    "Cancel",
+                    "Complete",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
+                  ]
+                }
+              },
               {
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
@@ -64,7 +114,7 @@
                 "security_classification": "PUBLIC",
                 "task_title": "Print and send hearing requirements form",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -76,7 +126,6 @@
                 "role_category": "ADMIN",
                 "warning_list": {
                   "values": [
-
                   ]
                 },
                 "case_management_category": "Protection",
@@ -84,9 +133,14 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
-                    "Cancel"
+                    "Own",
+                    "Manage",
+                    "Execute",
+                    "Cancel",
+                    "Complete",
+                    "Claim",
+                    "Assign",
+                    "Unassign"
                   ]
                 }
               }
@@ -95,28 +149,37 @@
         },
         "numberOfRolesAvailable": 2,
         "roleData": {
-          "roles":[
+          "roles": [
             {
-              "role_category":"ADMIN",
-              "role_name":"national-business-centre",
-              "permissions":[
+              "role_category": "ADMIN",
+              "role_name": "national-business-centre",
+              "permissions": [
                 "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
+                "Own",
+                "Claim",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             },
             {
-              "role_name":"task-supervisor",
-              "permissions":[
+              "role_name": "task-supervisor",
+              "permissions": [
                 "Read",
-                "Manage","Unassign","Assign","Complete",
-                "Execute","Claim",
+                "Own",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
+                "Execute",
+                "Claim",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             }
           ]

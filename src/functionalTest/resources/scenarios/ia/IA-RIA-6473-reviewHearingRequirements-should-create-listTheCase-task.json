@@ -7,7 +7,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "reviewHearingRequirements",
@@ -23,7 +25,9 @@
   },
   "test": {
     "request": {
-      "credentials": "IALegalRepresentative",
+      "credentials": {
+        "key": "IALegalRepresentative"
+      },
       "input": {
         "eventMessages": [
           {
@@ -43,7 +47,9 @@
     },
     "expectations": [
       {
-        "credentials": "CTSCAdmin",
+        "credentials": {
+          "key": "CTSCAdmin"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["listTheCase"],
@@ -83,8 +89,13 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
+                    "Own",
+                    "Claim",
+                    "Manage",
+                    "Execute",
+                    "Unassign",
+                    "Assign",
+                    "Complete",
                     "Cancel"
                   ]
                 }
@@ -124,7 +135,7 @@
               "permissions":[
                 "Read",
                 "Manage","Unassign","Assign","Complete",
-                "Execute","Claim",
+                "Claim",
                 "Cancel"
               ],
               "authorisations":[

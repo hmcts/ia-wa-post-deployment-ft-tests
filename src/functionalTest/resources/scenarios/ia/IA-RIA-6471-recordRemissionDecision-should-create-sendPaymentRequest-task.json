@@ -7,7 +7,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "recordRemissionDecision",
@@ -23,7 +25,9 @@
   },
   "test": {
     "request": {
-      "credentials": "AdminOfficer",
+      "credentials": {
+        "key": "AdminOfficer"
+      },
       "input": {
         "eventMessages": [
           {
@@ -44,7 +48,9 @@
     },
     "expectations": [
       {
-        "credentials": "CTSCAdmin",
+        "credentials": {
+          "key": "CTSCAdmin"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["sendPaymentRequest"],
@@ -64,7 +70,7 @@
                 "security_classification": "PUBLIC",
                 "task_title": "Send Payment Request",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -84,8 +90,13 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim",
-                    "Manage","Unassign","Assign","Complete",
+                    "Own",
+                    "Claim",
+                    "Manage",
+                    "Execute",
+                    "Unassign",
+                    "Assign",
+                    "Complete",
                     "Cancel"
                   ]
                 }
@@ -125,7 +136,7 @@
               "permissions":[
                 "Read",
                 "Manage","Unassign","Assign","Complete",
-                "Execute","Claim",
+                "Claim",
                 "Cancel"
               ],
               "authorisations":[

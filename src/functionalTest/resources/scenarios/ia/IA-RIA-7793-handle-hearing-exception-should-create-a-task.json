@@ -7,7 +7,9 @@
     "taskRetrievalApi": "task-management-api"
   },
   "required": {
-    "credentials": "IALegalRepresentative",
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
     "ccd": [
       {
         "eventId": "submitAppeal",
@@ -24,7 +26,9 @@
   },
   "test": {
     "request": {
-      "credentials": "WaSystemUser",
+      "credentials": {
+        "key": "WaSystemUser"
+      },
       "input": {
         "eventMessages": [
           {
@@ -47,7 +51,9 @@
     },
     "expectations": [
       {
-        "credentials": "IACaseworker",
+        "credentials": {
+          "key": "IACaseworker"
+        },
         "status": 200,
         "numberOfTasksAvailable": 1,
         "taskTypes": ["hearingException"],
@@ -60,14 +66,14 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Hearing exception",
+                "name": "Hearing Exception",
                 "type": "hearingException",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Hearing exception",
+                "task_title": "Hearing Exception",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+0_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
