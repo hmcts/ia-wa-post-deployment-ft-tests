@@ -1,6 +1,6 @@
 {
   "description": "submitCmaRequirements with cmaRequirementsSubmitted post event state  should create a reviewCmaRequirements task",
-  "enabled": "false",
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

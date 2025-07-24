@@ -1,6 +1,6 @@
 {
   "description": "uploadAdditionalEvidenceHomeOffice event should create a printAndSendHoEvidence task",
-  "enabled": "false",
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

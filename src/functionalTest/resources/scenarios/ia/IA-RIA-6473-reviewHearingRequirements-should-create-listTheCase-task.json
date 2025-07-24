@@ -1,6 +1,6 @@
 {
   "description": "reviewHearingRequirements event should create a listTheCase task",
-  "enabled": "false",
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

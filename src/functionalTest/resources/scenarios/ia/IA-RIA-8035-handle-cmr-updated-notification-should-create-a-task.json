@@ -1,6 +1,6 @@
 {
   "description": "Should create Update CMR notification task when CMR is updated",
-  "enabled": "false",
+  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
