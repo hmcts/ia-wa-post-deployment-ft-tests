@@ -12,6 +12,7 @@ import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -85,6 +86,7 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor
 @Slf4j
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
     protected MessageInjector messageInjector;
@@ -94,18 +96,18 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private final TaskMgmApiRetrieverService taskMgmApiRetrievableService;
     private final RoleAssignmentService roleAssignmentService;
     private final TaskManagementService taskManagementService;
-    private static Environment environment;
+    private final Environment environment;
     private final DeserializeValuesUtil deserializeValuesUtil;
     private final ObjectMapper objectMapper;
-    private static List<Verifier> verifiers;
-    private static List<Preparer> preparers;
+    private final List<Verifier> verifiers;
+    private final List<Preparer> preparers;
     private final CcdCaseCreator ccdCaseCreator;
     private final RestMessageService restMessageService;
     @Value("${ia-wa-post-deployment-test.environment}")
     protected String postDeploymentTestEnvironment;
-    private static final ArrayList<String> failedScenarios = new ArrayList<>();
-    private static final ArrayList<String> passedScenarios = new ArrayList<>();
-    private static StopWatch stopWatch;
+    private final ArrayList<String> failedScenarios = new ArrayList<>();
+    private final ArrayList<String> passedScenarios = new ArrayList<>();
+    private StopWatch stopWatch;
     @Value("${scenarioRunner.retryCount}")
     private int retryCount;
 
@@ -133,17 +135,17 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         this.taskMgmApiRetrievableService = taskMgmApiRetrievableService;
         this.roleAssignmentService = roleAssignmentService;
         this.taskManagementService = taskManagementService;
-        ScenarioRunnerTest.environment = environment;
+        this.environment = environment;
         this.deserializeValuesUtil = deserializeValuesUtil;
         this.objectMapper = objectMapper;
-        ScenarioRunnerTest.verifiers = verifiers;
-        ScenarioRunnerTest.preparers = preparers;
+        this.verifiers = verifiers;
+        this.preparers = preparers;
         this.ccdCaseCreator = ccdCaseCreator;
         this.restMessageService = restMessageService;
     }
 
     @BeforeAll
-    public static void beforeAll() throws Exception {
+    public void beforeAll() throws Exception {
         stopWatch = new StopWatch();
         stopWatch.start();
         loadPropertiesIntoMapValueExpander();
@@ -163,7 +165,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     }
 
     @AfterAll
-    public static void tearDown() {
+    public void tearDown() {
         if (!failedScenarios.isEmpty()) {
             StringBuilder sb = new StringBuilder("Failed scenarios:\n=========================================");
             failedScenarios.forEach(scenario -> sb.append("\n").append(scenario));
@@ -530,7 +532,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     }
 
 
-    private static void loadPropertiesIntoMapValueExpander() {
+    private void loadPropertiesIntoMapValueExpander() {
 
         MutablePropertySources propertySources = ((AbstractEnvironment) environment).getPropertySources();
         StreamSupport
