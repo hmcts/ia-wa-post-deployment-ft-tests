@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
 import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
@@ -215,69 +216,66 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     scenarioEnabled = Boolean.parseBoolean(extractOrDefault(scenarioValues, "enabled", "true"));
                 }
 
-                if (!scenarioEnabled) {
-                    Logger.say(SCENARIO_DISABLED, description);
-                } else {
-                    Logger.say(SCENARIO_ENABLED, description);
+                Assumptions.assumeTrue(scenarioEnabled, "ℹ️ SCENARIO: " + description + " **disabled**");
+                Logger.say(SCENARIO_ENABLED, description);
 
-                    Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
-                    Map<String, Object> testClauseValues = Objects.requireNonNull(
-                        MapValueExtractor.extract(scenarioValues, "test"));
-                    Map<String, Object> postRoleAssignmentClauseValues = extractOrDefault(
-                        scenarioValues,
-                        "postRoleAssignments", null
-                    );
-                    Map<String, Object> updateCaseClauseValues = extractOrDefault(
-                        scenarioValues,
-                        "updateCase",
-                        null
-                    );
+                Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
+                Map<String, Object> testClauseValues = Objects.requireNonNull(
+                    MapValueExtractor.extract(scenarioValues, "test"));
+                Map<String, Object> postRoleAssignmentClauseValues = extractOrDefault(
+                    scenarioValues,
+                    "postRoleAssignments", null
+                );
+                Map<String, Object> updateCaseClauseValues = extractOrDefault(
+                    scenarioValues,
+                    "updateCase",
+                    null
+                );
 
-                    String scenarioJurisdiction = extractOrThrow(scenarioValues, "jurisdiction");
-                    String caseType = extractOrThrow(scenarioValues, "caseType");
+                String scenarioJurisdiction = extractOrThrow(scenarioValues, "jurisdiction");
+                String caseType = extractOrThrow(scenarioValues, "caseType");
 
-                    TestScenario scenario = new TestScenario(
-                        scenarioValues,
-                        scenarioSource,
-                        scenarioJurisdiction,
-                        caseType,
-                        beforeClauseValues,
-                        testClauseValues,
-                        postRoleAssignmentClauseValues,
-                        updateCaseClauseValues
-                    );
-                    createBaseCcdCase(scenario);
+                TestScenario scenario = new TestScenario(
+                    scenarioValues,
+                    scenarioSource,
+                    scenarioJurisdiction,
+                    caseType,
+                    beforeClauseValues,
+                    testClauseValues,
+                    postRoleAssignmentClauseValues,
+                    updateCaseClauseValues
+                );
+                createBaseCcdCase(scenario);
 
-                    addSearchParameters(scenario, scenarioValues);
+                addSearchParameters(scenario, scenarioValues);
 
-                    if (scenario.getBeforeClauseValues() != null) {
-                        Logger.say(SCENARIO_BEFORE_FOUND);
-                        //If before was found process with before values
-                        processBeforeClauseScenario(scenario);
-                        Logger.say(SCENARIO_BEFORE_COMPLETED);
+                if (scenario.getBeforeClauseValues() != null) {
+                    Logger.say(SCENARIO_BEFORE_FOUND);
+                    //If before was found process with before values
+                    processBeforeClauseScenario(scenario);
+                    Logger.say(SCENARIO_BEFORE_COMPLETED);
 
-                    }
-
-                    if (scenario.getPostRoleAssignmentClauseValues() != null) {
-                        Logger.say(SCENARIO_ROLE_ASSIGNMENT_FOUND);
-                        processRoleAssignment(postRoleAssignmentClauseValues, scenario);
-                        Logger.say(SCENARIO_ROLE_ASSIGNMENT_COMPLETED);
-                    }
-
-                    if (scenario.getUpdateCaseClauseValues() != null) {
-                        Logger.say(SCENARIO_UPDATE_CASE_FOUND);
-                        updateBaseCcdCase(scenario);
-                        Logger.say(SCENARIO_UPDATE_CASE_COMPLETED);
-                    }
-
-                    Logger.say(SCENARIO_RUNNING);
-                    processTestClauseScenario(scenario);
-                    Logger.say(SCENARIO_SUCCESSFUL, description);
-
-                    failedScenarios.removeIf(description::equals);
-                    passedScenarios.add(description);
-                    Logger.say(SCENARIO_FINISHED);
                 }
+
+                if (scenario.getPostRoleAssignmentClauseValues() != null) {
+                    Logger.say(SCENARIO_ROLE_ASSIGNMENT_FOUND);
+                    processRoleAssignment(postRoleAssignmentClauseValues, scenario);
+                    Logger.say(SCENARIO_ROLE_ASSIGNMENT_COMPLETED);
+                }
+
+                if (scenario.getUpdateCaseClauseValues() != null) {
+                    Logger.say(SCENARIO_UPDATE_CASE_FOUND);
+                    updateBaseCcdCase(scenario);
+                    Logger.say(SCENARIO_UPDATE_CASE_COMPLETED);
+                }
+
+                Logger.say(SCENARIO_RUNNING);
+                processTestClauseScenario(scenario);
+                Logger.say(SCENARIO_SUCCESSFUL, description);
+
+                failedScenarios.removeIf(description::equals);
+                passedScenarios.add(description);
+                Logger.say(SCENARIO_FINISHED);
                 break; // Exit the retry loop if successful or disabled
             } catch (Error | FeignException | NullPointerException | ConditionTimeoutException e) {
                 log.error("Scenario {} failed with error {}", description, e.getMessage());
