@@ -174,7 +174,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         stopWatch.stop();
         Logger.say(SCENARIO_RUNNING_TIME, stopWatch.getTotalTimeSeconds());
-        StringBuilder sb = new StringBuilder("Passed Scenarios:\n=========================================");
+        StringBuilder sb = new StringBuilder("\nScenarios ran:\n=========================================");
         passedScenarios.forEach(scenario -> sb.append("\n").append(scenario));
         log.info(sb.toString());
     }
