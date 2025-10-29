@@ -1,6 +1,6 @@
 {
-  "description": "sendDecisionAndReasons event should create a printAndSendAppealDecision task",
-  "enabled": true,
+  "description": "sendDecisionAndReasons event should create a printAndSendAppealDecision task - DEPRECATED BY DIAC-1080",
+  "enabled": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
