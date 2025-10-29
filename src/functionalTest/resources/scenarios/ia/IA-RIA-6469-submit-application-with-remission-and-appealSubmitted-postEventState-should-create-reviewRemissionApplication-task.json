@@ -1,6 +1,6 @@
 {
-  "description": "submitAppeal event with remission applicable and post event state appealSubmitted should create a reviewRemissionApplication task",
-  "enabled": true,
+  "description": "submitAppeal event with remission applicable and post event state appealSubmitted should create a reviewRemissionApplication task - DEPRECATED BY DIAC-1211",
+  "enabled": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

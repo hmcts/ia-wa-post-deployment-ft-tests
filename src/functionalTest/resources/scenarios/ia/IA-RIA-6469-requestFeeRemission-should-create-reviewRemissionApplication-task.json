@@ -1,6 +1,6 @@
 {
-  "description": "requestFeeRemission event should create a reviewRemissionApplication task",
-  "enabled": true,
+  "description": "requestFeeRemission event should create a reviewRemissionApplication task - DEPRECATED BY DIAC-1211",
+  "enabled": false,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
