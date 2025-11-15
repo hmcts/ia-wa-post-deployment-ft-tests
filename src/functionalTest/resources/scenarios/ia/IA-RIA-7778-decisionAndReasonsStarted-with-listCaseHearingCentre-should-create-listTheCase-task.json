@@ -38,9 +38,9 @@
               "NewStateId": "decision",
               "AdditionalData": {
                 "Data": {
-                  "listCaseHearingCentre": "decisionWithoutHearing",
                   "isIntegrated": true,
-                  "autoHearingRequestEnabled": false
+                  "autoHearingRequestEnabled": false,
+                  "decisionWithoutHearing": true
                 }
               }
             }
