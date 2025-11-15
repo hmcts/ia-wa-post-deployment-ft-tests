@@ -34,7 +34,7 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "triggerCmrUpdated",
+              "EventId": "cmrReListing",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
