@@ -1,0 +1,136 @@
+{
+  "description": "updateTribunalDecision detained event should create a detainedPrintAndSendDecisionCorrectedRule31 task",
+  "enabled": true,
+  "jurisdiction": "IA",
+  "caseType": "Asylum",
+  "options": {
+    "taskRetrievalApi": "task-management-api"
+  },
+  "required": {
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
+    "ccd": [
+      {
+        "eventId": "startAppeal",
+        "state": "appealStarted",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "appealType": "protection"
+          }
+        }
+      }
+    ]
+  },
+  "test": {
+    "request": {
+      "credentials": {
+        "key": "IACaseworker"
+      },
+      "input": {
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json",
+            "replacements": {
+              "EventId": "updateTribunalDecision",
+              "NewStateId": "decided",
+              "AdditionalData": {
+                "Data": {
+                  "appealType": "protection",
+                  "isAdmin": true,
+                  "isDecisionRule31Changed": true,
+                  "updateTribunalDecisionList": "underRule31",
+                  "appellantInDetention": "Yes"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "expectations": [
+      {
+        "credentials": {
+          "key": "NBCAdmin"
+        },
+        "status": 200,
+        "numberOfTasksAvailable": 1,
+        "taskTypes": ["detainedPrintAndSendDecisionCorrectedRule31"],
+        "taskData": {
+          "template": "minimal-task-response.json",
+          "replacements": {
+            "tasks": [
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "name": "Detained - Print and send decision corrected under rule 31",
+                "type": "detainedPrintAndSendDecisionCorrectedRule31",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "Detained - Print and send decision corrected under rule 31",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "ADMIN",
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "routine_work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Own","Claim","Execute",
+                    "Manage","Unassign","Assign","Complete",
+                    "Cancel"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "numberOfRolesAvailable": 2,
+        "roleData": {
+          "roles":[
+            {
+              "role_category":"ADMIN",
+              "role_name":"national-business-centre",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_name":"task-supervisor",
+              "permissions":[
+                "Read",
+                "Manage","Unassign","Assign","Complete",
+                "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

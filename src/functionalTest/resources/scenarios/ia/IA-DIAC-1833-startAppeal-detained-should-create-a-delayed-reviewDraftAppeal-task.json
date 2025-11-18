@@ -1,0 +1,145 @@
+{
+  "description": "startAppeal detained event should create a delayed detainedReviewDraftAppeal task after 14 days",
+  "enabled": false,
+  "jurisdiction": "IA",
+  "caseType": "Asylum",
+  "options": {
+    "taskRetrievalApi": "task-management-api"
+  },
+  "required": {
+    "credentials": {
+      "key": "IALegalRepresentative"
+    },
+    "ccd": [
+      {
+        "eventId": "startAppeal",
+        "state": "appealStarted",
+        "caseData": {
+          "template": "minimal-appeal-started.json",
+          "replacements": {
+            "appealType": "protection"
+          }
+        }
+      }
+    ]
+  },
+  "test": {
+    "request": {
+      "credentials": {
+        "key": "AdminOfficer"
+      },
+      "input": {
+        "eventMessages": [
+          {
+            "template": "minimal-ccd-event-message.json",
+            "replacements": {
+              "EventId": "startAppeal",
+              "NewStateId": "appealStartedByAdmin",
+              "AdditionalData": {
+                "Data": {
+                  "appealType": "protection",
+                  "appellantInDetention": "Yes"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "expectations": [
+      {
+        "credentials": {
+          "key": "CTSCAdmin"
+        },
+        "status": 200,
+        "numberOfTasksAvailable": 1,
+        "taskTypes": ["detainedReviewDraftAppeal"],
+        "taskData": {
+          "template": "minimal-task-response.json",
+          "replacements": {
+            "tasks": [
+              {
+                "id": "{$VERIFIER-UUID}",
+                "case_name": "Functional PostDeployment",
+                "case_id": "{$GENERATED_CASE_ID}",
+                "case_category": "Protection",
+                "name": "Detained - Review draft appeal",
+                "type": "detainedReviewDraftAppeal",
+                "task_state": "unassigned",
+                "task_system": "SELF",
+                "security_classification": "PUBLIC",
+                "task_title": "Detained - Review draft appeal",
+                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
+                "execution_type": "Case Management Task",
+                "jurisdiction": "IA",
+                "case_type_id": "Asylum",
+                "region": "1",
+                "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
+                "warnings": false,
+                "role_category": "CTSC",
+                "warning_list": {
+                  "values": [
+
+                  ]
+                },
+                "case_management_category": "Protection",
+                "work_type_id": "routine_work",
+                "permissions": {
+                  "values": [
+                    "Read",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete",
+                    "Cancel"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "numberOfRolesAvailable": 3,
+        "roleData": {
+          "roles":[
+            {
+              "role_category":"CTSC",
+              "role_name":"ctsc",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"CTSC",
+              "role_name":"ctsc-team-leader",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_name":"task-supervisor",
+              "permissions":[
+                "Read",
+                "Manage","Unassign","Assign","Complete",
+                "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
