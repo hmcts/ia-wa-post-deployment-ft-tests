@@ -38,7 +38,7 @@
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "appellantInDetention": "Yes",
+                  "appellantInDetention": "true",
                   "lastModifiedApplication": {
                     "type": "Judge's review of application decision",
                     "decision": ""

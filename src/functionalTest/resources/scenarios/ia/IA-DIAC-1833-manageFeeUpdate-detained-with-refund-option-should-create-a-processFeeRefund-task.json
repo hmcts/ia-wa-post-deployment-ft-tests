@@ -39,7 +39,7 @@
                 "Data": {
                   "appealType": "protection",
                   "feeUpdateTribunalAction": "refund",
-                  "appellantInDetention": "Yes"
+                  "appellantInDetention": "true"
                 }
               }
             }

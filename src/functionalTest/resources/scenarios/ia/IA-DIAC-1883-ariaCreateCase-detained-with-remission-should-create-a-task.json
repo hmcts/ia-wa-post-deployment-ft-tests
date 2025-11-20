@@ -56,7 +56,7 @@
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "appellantInDetention": "Yes"
+                  "appellantInDetention": "true"
                 }
               }
             }

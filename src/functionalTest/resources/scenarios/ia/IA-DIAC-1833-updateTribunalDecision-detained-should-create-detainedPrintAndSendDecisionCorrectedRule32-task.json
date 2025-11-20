@@ -40,7 +40,7 @@
                   "appealType": "protection",
                   "isAdmin": true,
                   "updateTribunalDecisionList": "underRule32",
-                  "appellantInDetention": "Yes"
+                  "appellantInDetention": "true"
                 }
               }
             }

@@ -38,7 +38,7 @@
                 "Data": {
                   "appealType": "protection",
                   "isAdmin": true,
-                  "appellantInDetention": "Yes"
+                  "appellantInDetention": "true"
                 }
               }
             }

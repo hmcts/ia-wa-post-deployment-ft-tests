@@ -42,7 +42,7 @@
                     "type": "Set aside a decision",
                     "decision": "Granted"
                   },
-                  "appellantInDetention": "Yes"
+                  "appellantInDetention": "true"
                 }
               }
             }

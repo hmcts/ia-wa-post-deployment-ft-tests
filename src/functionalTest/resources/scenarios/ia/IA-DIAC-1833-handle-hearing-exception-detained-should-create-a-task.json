@@ -42,7 +42,7 @@
                     "type": "Adjourn",
                     "decision": "Granted"
                   },
-                  "appellantInDetention": "Yes"
+                  "appellantInDetention": "true"
                 }
               }
             }
