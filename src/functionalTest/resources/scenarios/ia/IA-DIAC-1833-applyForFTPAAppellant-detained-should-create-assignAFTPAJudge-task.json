@@ -17,7 +17,8 @@
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection"
+            "appealType": "protection",
+            "appellantInDetention": "Yes"
           }
         }
       }
@@ -36,8 +37,7 @@
               "EventId": "applyForFTPAAppellant",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection",
-                  "appellantInDetention": "Yes"
+                  "appealType": "protection"
                 }
               }
             }
