@@ -1,5 +1,5 @@
 {
-  "description": "requestCaseBuilding detained with caseBuilding post event state should create a detainedFollowUpExtendedDirection task",
+  "description": "requestCaseBuilding detained with caseBuilding post event state should create a detainedFollowUpOverdueCaseBuilding task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -54,7 +54,7 @@
         },
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["detainedFollowUpExtendedDirection"],
+        "taskTypes": ["detainedFollowUpOverdueCaseBuilding"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -64,12 +64,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Detained - Follow-up extended direction",
-                "type": "detainedFollowUpExtendedDirection",
+                "name": "Detained - Follow-up overdue case building",
+                "type": "detainedFollowUpOverdueCaseBuilding",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Detained - Follow-up extended direction",
+                "task_title": "Detained - Follow-up overdue case building",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",

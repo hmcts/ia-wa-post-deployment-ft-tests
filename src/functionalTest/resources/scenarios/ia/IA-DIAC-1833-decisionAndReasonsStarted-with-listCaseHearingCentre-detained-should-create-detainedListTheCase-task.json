@@ -41,6 +41,7 @@
                   "listCaseHearingCentre": "decisionWithoutHearing",
                   "isIntegrated": true,
                   "autoHearingRequestEnabled": false,
+                  "isDecisionWithoutHearing": true,
                   "appellantInDetention": "true"
                 }
               }

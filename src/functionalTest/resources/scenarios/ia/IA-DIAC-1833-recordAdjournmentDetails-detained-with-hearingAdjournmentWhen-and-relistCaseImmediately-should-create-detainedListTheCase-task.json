@@ -39,7 +39,7 @@
                 "Data": {
                   "appealType": "protection",
                   "hearingAdjournmentWhen": "onHearingDate",
-                  "relistCaseImmediately": "Yes",
+                  "relistCaseImmediately": true,
                   "autoHearingRequestEnabled": false,
                   "appellantInDetention": "true"
                 }

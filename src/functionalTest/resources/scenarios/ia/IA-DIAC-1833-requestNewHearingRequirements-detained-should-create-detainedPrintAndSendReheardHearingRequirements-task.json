@@ -100,12 +100,24 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 2,
+        "numberOfRolesAvailable": 3,
         "roleData": {
           "roles":[
             {
-              "role_category":"ADMIN",
-              "role_name":"national-business-centre",
+              "role_category":"CTSC",
+              "role_name":"ctsc",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"CTSC",
+              "role_name":"ctsc-team-leader",
               "permissions":[
                 "Read",
                 "Own","Claim",

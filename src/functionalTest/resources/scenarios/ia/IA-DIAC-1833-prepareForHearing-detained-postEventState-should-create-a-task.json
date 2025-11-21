@@ -98,9 +98,9 @@
                 }
               },
               {
-                "name": "Post hearing – attendees,duration and recording",
-                "type": "postHearingAttendeesDurationAndRecording",
-                "task_title": "Post hearing – attendees,duration and recording",
+                "name": "Detained - Post hearing – attendees,duration and recording",
+                "type": "detainedPostHearingAttendeesDurationAndRecording",
+                "task_title": "Detained - Post hearing – attendees,duration and recording",
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
