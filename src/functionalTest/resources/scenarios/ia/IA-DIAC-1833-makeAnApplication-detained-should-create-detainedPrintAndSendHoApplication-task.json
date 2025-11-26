@@ -97,7 +97,6 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel",
@@ -113,12 +112,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Process Adjourn Application",
-                "type": "processApplicationAdjourn",
+                "name": "Detained - Process Adjourn Application",
+                "type": "detainedProcessApplicationAdjourn",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Process Adjourn Application",
+                "task_title": "Detained - Process Adjourn Application",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
                 "execution_type": "Case Management Task",

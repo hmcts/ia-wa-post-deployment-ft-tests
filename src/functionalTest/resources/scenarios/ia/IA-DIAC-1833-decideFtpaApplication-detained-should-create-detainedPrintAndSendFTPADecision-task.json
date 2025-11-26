@@ -90,7 +90,7 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own","Claim","Execute",
+                    "Claim","Execute",
                     "Manage","Unassign","Assign","Complete",
                     "Cancel"
                   ]
