@@ -1,5 +1,5 @@
 {
-  "description": "uploadAddendumEvidenceHomeOffice event should create a printAndSendHoEvidence task",
+  "description": "decisionAndReasonsStarted with listCaseHearingCentre detained case should create detainedListTheCase task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -12,12 +12,13 @@
     },
     "ccd": [
       {
-        "eventId": "startAppeal",
-        "state": "appealStarted",
+        "eventId": "decisionAndReasonsStarted",
+        "state": "preHearing",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection"
+            "appealType": "refusalOfHumanRights",
+            "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
       }
@@ -33,11 +34,15 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "uploadAddendumEvidenceHomeOffice",
+              "EventId": "decisionAndReasonsStarted",
+              "NewStateId": "decision",
               "AdditionalData": {
                 "Data": {
-                  "appealType": "protection",
-                  "isAdmin": true
+                  "listCaseHearingCentre": "decisionWithoutHearing",
+                  "isIntegrated": true,
+                  "autoHearingRequestEnabled": false,
+                  "isDecisionWithoutHearing": true,
+                  "appellantInDetention": "true"
                 }
               }
             }
@@ -48,11 +53,11 @@
     "expectations": [
       {
         "credentials": {
-          "key": "NBCAdmin"
+          "key": "CTSCAdmin"
         },
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["printAndSendHoEvidence"],
+        "taskTypes": ["detainedListTheCase"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -61,15 +66,15 @@
                 "id": "{$VERIFIER-UUID}",
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
-                "name": "Print and send new HO evidence",
-                "type": "printAndSendHoEvidence",
+                "case_category": "Human rights",
+                "name": "Detained - List the case",
+                "type": "detainedListTheCase",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Print and send new HO evidence",
+                "task_title": "Detained - List the case",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -78,31 +83,32 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "ADMIN",
+                "role_category": "CTSC",
                 "warning_list": {
                   "values": [
+
                   ]
                 },
-                "case_management_category": "Protection",
-                "work_type_id": "routine_work",
+                "case_management_category": "Human rights",
+                "work_type_id": "hearing_work",
                 "permissions": {
                   "values": [
                     "Read",
                     "Own",
+                    "Claim",
                     "Manage",
                     "Execute",
-                    "Cancel",
-                    "Complete",
-                    "Claim",
+                    "Unassign",
                     "Assign",
-                    "Unassign"
+                    "Complete",
+                    "Cancel"
                   ]
                 }
               }
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
+        "numberOfRolesAvailable": 3,
         "roleData": {
           "roles":[
             {
@@ -120,18 +126,6 @@
             {
               "role_category":"CTSC",
               "role_name":"ctsc-team-leader",
-              "permissions":[
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations":[
-              ]
-            },
-            {
-              "role_category":"ADMIN",
-              "role_name":"national-business-centre",
               "permissions":[
                 "Read",
                 "Own","Claim",
