@@ -146,7 +146,7 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 3,
+        "numberOfRolesAvailable": 5,
         "roleData": {
           "roles": [
             {
@@ -176,6 +176,34 @@
                 "Unassign",
                 "Assign",
                 "Complete",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "JUDICIAL",
+              "role_name": "judge",
+              "permissions": [
+                "Read",
+                "Own",
+                "Claim",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "JUDICIAL",
+              "role_name": "FTPA-judge",
+              "permissions": [
+                "Read",
+                "Own",
+                "Claim",
                 "Cancel"
               ],
               "authorisations": [

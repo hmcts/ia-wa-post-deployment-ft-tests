@@ -104,21 +104,9 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 6,
+        "numberOfRolesAvailable": 3,
         "roleData": {
           "roles":[
-            {
-              "role_category":"LEGAL_OPERATIONS",
-              "role_name":"case-manager",
-              "permissions":[
-                "Read",
-                "Own","Claim",
-                "Cancel"
-              ],
-              "authorisations":[
-
-              ]
-            },
             {
               "role_category":"JUDICIAL",
               "role_name":"hearing-judge",
@@ -145,37 +133,11 @@
               ]
             },
             {
-              "role_category":"LEGAL_OPERATIONS",
-              "role_name":"senior-tribunal-caseworker",
-              "permissions":[
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations":[
-
-              ]
-            },
-            {
               "role_name":"task-supervisor",
               "permissions":[
                 "Read",
                 "Manage","Unassign","Assign","Complete",
                 "Execute","Claim",
-                "Cancel"
-              ],
-              "authorisations":[
-
-              ]
-            },
-            {
-              "role_category":"LEGAL_OPERATIONS",
-              "role_name":"tribunal-caseworker",
-              "permissions":[
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations":[
