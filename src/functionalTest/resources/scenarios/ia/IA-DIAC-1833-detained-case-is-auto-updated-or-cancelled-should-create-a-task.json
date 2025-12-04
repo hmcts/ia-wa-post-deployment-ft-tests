@@ -1,5 +1,5 @@
 {
-  "description": "updateTribunalDecision event should create a printAndSendDecisionCorrectedRule32 task",
+  "description": "Should create detained review interpreter details task when detained case is auto updated or cancelled",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -12,12 +12,13 @@
     },
     "ccd": [
       {
-        "eventId": "startAppeal",
+        "eventId": "triggerReviewInterpreterBookingTask",
         "state": "appealStarted",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection"
+            "appealType": "protection",
+            "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
       }
@@ -33,13 +34,15 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "updateTribunalDecision",
-              "NewStateId": "decided",
+              "EventId": "triggerReviewInterpreterBookingTask",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "isAdmin": true,
-                  "updateTribunalDecisionList": "underRule32"
+                  "lastModifiedApplication": {
+                    "type": "Adjourn",
+                    "decision": "Granted"
+                  },
+                  "appellantInDetention": "true"
                 }
               }
             }
@@ -50,11 +53,11 @@
     "expectations": [
       {
         "credentials": {
-          "key": "NBCAdmin"
+          "key": "IACaseworker"
         },
         "status": 200,
-        "numberOfTasksAvailable": 2,
-        "taskTypes": ["printAndSendDecisionCorrectedRule32", "reviewAppealSetAsideUnderRule32"],
+        "numberOfTasksAvailable": 1,
+        "taskTypes": ["detainedReviewInterpreters"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -64,12 +67,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Print and send decision corrected under rule 32",
-                "type": "printAndSendDecisionCorrectedRule32",
+                "name": "Detained - Review interpreter booking",
+                "type": "detainedReviewInterpreters",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Print and send decision corrected under rule 32",
+                "task_title": "Detained - Review interpreter booking",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
@@ -87,67 +90,22 @@
                   ]
                 },
                 "case_management_category": "Protection",
-                "work_type_id": "routine_work",
+                "work_type_id": "hearing_work",
                 "permissions": {
                   "values": [
                     "Read",
                     "Own",
-                    "Manage",
-                    "Execute",
-                    "Cancel",
-                    "Complete",
                     "Claim",
-                    "Assign",
-                    "Unassign"
-                  ]
-                }
-              },
-              {
-                "id": "{$VERIFIER-UUID}",
-                "case_name": "Functional PostDeployment",
-                "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
-                "name": "Review appeal set aside under rule 32",
-                "type": "reviewAppealSetAsideUnderRule32",
-                "task_state": "unassigned",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "task_title": "Review appeal set aside under rule 32",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
-                "execution_type": "Case Management Task",
-                "jurisdiction": "IA",
-                "case_type_id": "Asylum",
-                "region": "1",
-                "location": "765324",
-                "location_name": "Taylor House",
-                "auto_assigned": false,
-                "warnings": false,
-                "role_category": "LEGAL_OPERATIONS",
-                "warning_list": {
-                  "values": [
-
-                  ]
-                },
-                "case_management_category": "Protection",
-                "work_type_id": "routine_work",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Manage",
+                    "Manage","Unassign","Assign","Complete",
                     "Execute",
-                    "Cancel",
-                    "Complete",
-                    "Claim",
-                    "Assign",
-                    "Unassign"
+                    "Cancel"
                   ]
                 }
               }
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
+        "numberOfRolesAvailable": 6,
         "roleData": {
           "roles":[
             {
@@ -176,7 +134,7 @@
             },
             {
               "role_category":"ADMIN",
-              "role_name":"national-business-centre",
+              "role_name":"hearing-centre-admin",
               "permissions":[
                 "Read",
                 "Own","Claim",
@@ -187,11 +145,36 @@
               ]
             },
             {
-              "role_name":"task-supervisor",
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
               "permissions":[
                 "Read",
+                "Own",
                 "Manage","Unassign","Assign","Complete",
+                "Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_name": "task-supervisor",
+              "permissions": [
+                "Read",
                 "Execute","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations":[

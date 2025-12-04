@@ -1,5 +1,5 @@
 {
-  "description": "makeAnApplication event should create a printAndSendHoApplication task",
+  "description": "requestCaseBuilding detained event should create a detainedPrintAndSendHoBundle task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -33,16 +33,13 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "makeAnApplication",
+              "EventId": "requestCaseBuilding",
+              "NewStateId": "caseBuilding",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
                   "isAdmin": true,
-                  "lastModifiedApplication": {
-                    "type": "Adjourn",
-                    "decision": "",
-                    "applicant": "Respondent"
-                  }
+                  "appellantInDetention": "true"
                 }
               }
             }
@@ -57,10 +54,7 @@
         },
         "status": 200,
         "numberOfTasksAvailable": 2,
-        "taskTypes": [
-          "processApplicationAdjourn",
-          "printAndSendHoApplication"
-        ],
+        "taskTypes": ["detainedFollowUpOverdueCaseBuilding", "detainedPrintAndSendHoBundle"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -70,14 +64,14 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Print and send HO application",
-                "type": "printAndSendHoApplication",
+                "name": "Detained - Follow-up overdue case building",
+                "type": "detainedFollowUpOverdueCaseBuilding",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Print and send HO application",
+                "task_title": "Detained - Follow-up overdue case building",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -86,17 +80,17 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "ADMIN",
+                "role_category": "LEGAL_OPERATIONS",
                 "warning_list": {
                   "values": [
+
                   ]
                 },
                 "case_management_category": "Protection",
-                "work_type_id": "routine_work",
+                "work_type_id": "decision_making_work",
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel",
@@ -112,14 +106,14 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Process Adjourn Application",
-                "type": "processApplicationAdjourn",
+                "name": "Detained - Print and send HO bundle and appeal reasons form",
+                "type": "detainedPrintAndSendHoBundle",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Process Adjourn Application",
+                "task_title": "Detained - Print and send HO bundle and appeal reasons form",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -128,13 +122,14 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "LEGAL_OPERATIONS",
+                "role_category": "ADMIN",
                 "warning_list": {
                   "values": [
+
                   ]
                 },
                 "case_management_category": "Protection",
-                "work_type_id": "applications",
+                "work_type_id": "routine_work",
                 "permissions": {
                   "values": [
                     "Read",
@@ -151,70 +146,77 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
+        "numberOfRolesAvailable": 6,
         "roleData": {
-          "roles": [
+          "roles":[
             {
-              "role_category": "ADMIN",
-              "role_name": "national-business-centre",
-              "permissions": [
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"case-manager",
+              "permissions":[
                 "Read",
-                "Own",
-                "Claim",
-                "Manage",
-                "Unassign",
-                "Assign",
-                "Complete",
+                "Own","Claim",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
               ]
             },
             {
-              "role_category": "CTSC",
-              "role_name": "ctsc",
-              "permissions": [
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
                 "Read",
-                "Own",
-                "Claim",
-                "Manage",
-                "Unassign",
-                "Assign",
-                "Complete",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
               ]
             },
             {
-              "role_category": "CTSC",
-              "role_name": "ctsc-team-leader",
-              "permissions": [
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
+              "permissions":[
                 "Read",
-                "Own",
-                "Claim",
-                "Manage",
-                "Unassign",
-                "Assign",
-                "Complete",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
               ]
             },
             {
-              "role_name": "task-supervisor",
-              "permissions": [
+              "role_category":"CTSC",
+              "role_name":"ctsc",
+              "permissions":[
                 "Read",
-                "Manage",
-                "Unassign",
-                "Assign",
-                "Complete",
-                "Execute",
-                "Claim",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"CTSC",
+              "role_name":"ctsc-team-leader",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_name":"task-supervisor",
+              "permissions":[
+                "Read","Own",
+                "Manage","Unassign","Assign","Complete",
+                "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
               ]
             }
           ]

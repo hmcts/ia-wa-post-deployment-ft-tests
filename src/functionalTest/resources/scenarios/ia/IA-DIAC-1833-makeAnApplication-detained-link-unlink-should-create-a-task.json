@@ -1,5 +1,6 @@
+
 {
-  "description": "updateTribunalDecision event should create a printAndSendDecisionCorrectedRule32 task",
+  "description": "makeAnApplication event with Link/unlink detained appeals should create a detainedProcessApplicationLink/UnlinkAppeals task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -12,12 +13,13 @@
     },
     "ccd": [
       {
-        "eventId": "startAppeal",
+        "eventId": "submitAppeal",
         "state": "appealStarted",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection"
+            "appealType": "protection",
+            "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
       }
@@ -26,20 +28,22 @@
   "test": {
     "request": {
       "credentials": {
-        "key": "IACaseworker"
+        "key": "IALegalRepresentative"
       },
       "input": {
         "eventMessages": [
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "updateTribunalDecision",
-              "NewStateId": "decided",
+              "EventId": "makeAnApplication",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "isAdmin": true,
-                  "updateTribunalDecisionList": "underRule32"
+                  "appellantInDetention": "true",
+                  "lastModifiedApplication": {
+                    "type": "Link/unlink appeals",
+                    "decision": ""
+                  }
                 }
               }
             }
@@ -50,11 +54,11 @@
     "expectations": [
       {
         "credentials": {
-          "key": "NBCAdmin"
+          "key": "IACaseworker"
         },
         "status": 200,
-        "numberOfTasksAvailable": 2,
-        "taskTypes": ["printAndSendDecisionCorrectedRule32", "reviewAppealSetAsideUnderRule32"],
+        "numberOfTasksAvailable": 1,
+        "taskTypes": ["detainedProcessApplicationLink/UnlinkAppeals"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -64,55 +68,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Print and send decision corrected under rule 32",
-                "type": "printAndSendDecisionCorrectedRule32",
+                "name": "Detained - Process Link/Unlink Appeals Application",
+                "type": "detainedProcessApplicationLink/UnlinkAppeals",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Print and send decision corrected under rule 32",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "execution_type": "Case Management Task",
-                "jurisdiction": "IA",
-                "case_type_id": "Asylum",
-                "region": "1",
-                "location": "765324",
-                "location_name": "Taylor House",
-                "auto_assigned": false,
-                "warnings": false,
-                "role_category": "ADMIN",
-                "warning_list": {
-                  "values": [
-
-                  ]
-                },
-                "case_management_category": "Protection",
-                "work_type_id": "routine_work",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Own",
-                    "Manage",
-                    "Execute",
-                    "Cancel",
-                    "Complete",
-                    "Claim",
-                    "Assign",
-                    "Unassign"
-                  ]
-                }
-              },
-              {
-                "id": "{$VERIFIER-UUID}",
-                "case_name": "Functional PostDeployment",
-                "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
-                "name": "Review appeal set aside under rule 32",
-                "type": "reviewAppealSetAsideUnderRule32",
-                "task_state": "unassigned",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "task_title": "Review appeal set aside under rule 32",
+                "task_title": "Detained - Process Link/Unlink Appeals Application",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
@@ -130,53 +91,63 @@
                   ]
                 },
                 "case_management_category": "Protection",
-                "work_type_id": "routine_work",
+                "work_type_id": "applications",
                 "permissions": {
                   "values": [
                     "Read",
-                    "Manage",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete",
                     "Execute",
-                    "Cancel",
-                    "Complete",
-                    "Claim",
-                    "Assign",
-                    "Unassign"
+                    "Cancel"
                   ]
                 }
               }
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
+        "numberOfRolesAvailable": 6,
         "roleData": {
           "roles":[
             {
-              "role_category":"CTSC",
-              "role_name":"ctsc",
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"case-manager",
               "permissions":[
                 "Read",
                 "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations":[
+
               ]
             },
             {
-              "role_category":"CTSC",
-              "role_name":"ctsc-team-leader",
+              "role_category":"JUDICIAL",
+              "role_name":"hearing-judge",
               "permissions":[
                 "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
+                "Execute","Claim",
                 "Cancel"
               ],
               "authorisations":[
+
               ]
             },
             {
-              "role_category":"ADMIN",
-              "role_name":"national-business-centre",
+              "role_category":"JUDICIAL",
+              "role_name":"judge",
+              "permissions":[
+                "Read",
+                "Manage","Unassign","Assign","Complete",
+                "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
+                "373"
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
               "permissions":[
                 "Read",
                 "Own","Claim",
@@ -184,6 +155,7 @@
                 "Cancel"
               ],
               "authorisations":[
+
               ]
             },
             {
@@ -195,6 +167,20 @@
                 "Cancel"
               ],
               "authorisations":[
+
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+
               ]
             }
           ]
@@ -203,3 +189,4 @@
     ]
   }
 }
+

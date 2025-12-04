@@ -1,5 +1,5 @@
 {
-  "description": "makeAnApplication event should create a printAndSendHoApplication task",
+  "description": "applyForFTPARespondent detained event should create a detainedAssignAFTPAJudge and detainedDecideAnFTPA task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -12,8 +12,8 @@
     },
     "ccd": [
       {
-        "eventId": "startAppeal",
-        "state": "appealStarted",
+        "eventId": "applyForFTPARespondent",
+        "state": "ftpaSubmitted",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
@@ -33,16 +33,11 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "makeAnApplication",
+              "EventId": "applyForFTPARespondent",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "isAdmin": true,
-                  "lastModifiedApplication": {
-                    "type": "Adjourn",
-                    "decision": "",
-                    "applicant": "Respondent"
-                  }
+                  "appellantInDetention": "true"
                 }
               }
             }
@@ -53,13 +48,13 @@
     "expectations": [
       {
         "credentials": {
-          "key": "NBCAdmin"
+          "key": "CTSCAdmin"
         },
         "status": 200,
         "numberOfTasksAvailable": 2,
         "taskTypes": [
-          "processApplicationAdjourn",
-          "printAndSendHoApplication"
+          "detainedAssignAFTPAJudge",
+          "detainedDecideAnFTPA"
         ],
         "taskData": {
           "template": "minimal-task-response.json",
@@ -70,14 +65,14 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Print and send HO application",
-                "type": "printAndSendHoApplication",
+                "name": "Detained - Assign a FTPA Judge",
+                "type": "detainedAssignAFTPAJudge",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Print and send HO application",
+                "task_title": "Detained - Assign a FTPA Judge",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -86,7 +81,7 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "ADMIN",
+                "role_category": "CTSC",
                 "warning_list": {
                   "values": [
                   ]
@@ -112,14 +107,14 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Process Adjourn Application",
-                "type": "processApplicationAdjourn",
+                "name": "Detained - Decide an FTPA",
+                "type": "detainedDecideAnFTPA",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Process Adjourn Application",
+                "task_title": "Detained - Decide an FTPA",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -128,13 +123,13 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "LEGAL_OPERATIONS",
+                "role_category": "JUDICIAL",
                 "warning_list": {
                   "values": [
                   ]
                 },
                 "case_management_category": "Protection",
-                "work_type_id": "applications",
+                "work_type_id": "upper_tribunal",
                 "permissions": {
                   "values": [
                     "Read",
@@ -151,25 +146,9 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
+        "numberOfRolesAvailable": 5,
         "roleData": {
           "roles": [
-            {
-              "role_category": "ADMIN",
-              "role_name": "national-business-centre",
-              "permissions": [
-                "Read",
-                "Own",
-                "Claim",
-                "Manage",
-                "Unassign",
-                "Assign",
-                "Complete",
-                "Cancel"
-              ],
-              "authorisations": [
-              ]
-            },
             {
               "role_category": "CTSC",
               "role_name": "ctsc",
@@ -197,6 +176,34 @@
                 "Unassign",
                 "Assign",
                 "Complete",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "JUDICIAL",
+              "role_name": "judge",
+              "permissions": [
+                "Read",
+                "Own",
+                "Claim",
+                "Manage",
+                "Unassign",
+                "Assign",
+                "Complete",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "JUDICIAL",
+              "role_name": "FTPA-judge",
+              "permissions": [
+                "Read",
+                "Own",
+                "Claim",
                 "Cancel"
               ],
               "authorisations": [
