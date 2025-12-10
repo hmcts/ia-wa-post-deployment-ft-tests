@@ -1,5 +1,5 @@
 {
-  "description": "updateTribunalDecision event should create a printAndSendDecisionCorrectedRule32 task",
+  "description": "decideFtpaApplication detained event should create a detainedPrintAndSendFTPADecision task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -33,13 +33,12 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "updateTribunalDecision",
-              "NewStateId": "decided",
+              "EventId": "decideFtpaApplication",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
                   "isAdmin": true,
-                  "updateTribunalDecisionList": "underRule32"
+                  "appellantInDetention": "true"
                 }
               }
             }
@@ -53,8 +52,8 @@
           "key": "NBCAdmin"
         },
         "status": 200,
-        "numberOfTasksAvailable": 2,
-        "taskTypes": ["printAndSendDecisionCorrectedRule32", "reviewAppealSetAsideUnderRule32"],
+        "numberOfTasksAvailable": 1,
+        "taskTypes": ["detainedPrintAndSendFTPADecision"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -64,12 +63,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Print and send decision corrected under rule 32",
-                "type": "printAndSendDecisionCorrectedRule32",
+                "name": "Detained - Print and send FTPA decision",
+                "type": "detainedPrintAndSendFTPADecision",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Print and send decision corrected under rule 32",
+                "task_title": "Detained - Print and send FTPA decision",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
@@ -91,77 +90,18 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own",
-                    "Manage",
-                    "Execute",
-                    "Cancel",
-                    "Complete",
-                    "Claim",
-                    "Assign",
-                    "Unassign"
-                  ]
-                }
-              },
-              {
-                "id": "{$VERIFIER-UUID}",
-                "case_name": "Functional PostDeployment",
-                "case_id": "{$GENERATED_CASE_ID}",
-                "case_category": "Protection",
-                "name": "Review appeal set aside under rule 32",
-                "type": "reviewAppealSetAsideUnderRule32",
-                "task_state": "unassigned",
-                "task_system": "SELF",
-                "security_classification": "PUBLIC",
-                "task_title": "Review appeal set aside under rule 32",
-                "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
-                "execution_type": "Case Management Task",
-                "jurisdiction": "IA",
-                "case_type_id": "Asylum",
-                "region": "1",
-                "location": "765324",
-                "location_name": "Taylor House",
-                "auto_assigned": false,
-                "warnings": false,
-                "role_category": "LEGAL_OPERATIONS",
-                "warning_list": {
-                  "values": [
-
-                  ]
-                },
-                "case_management_category": "Protection",
-                "work_type_id": "routine_work",
-                "permissions": {
-                  "values": [
-                    "Read",
-                    "Manage",
-                    "Execute",
-                    "Cancel",
-                    "Complete",
-                    "Claim",
-                    "Assign",
-                    "Unassign"
+                    "Claim","Execute",
+                    "Manage","Unassign","Assign","Complete",
+                    "Cancel"
                   ]
                 }
               }
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
+        "numberOfRolesAvailable": 3,
         "roleData": {
           "roles":[
-            {
-              "role_category":"CTSC",
-              "role_name":"ctsc",
-              "permissions":[
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations":[
-              ]
-            },
             {
               "role_category":"CTSC",
               "role_name":"ctsc-team-leader",
@@ -175,8 +115,8 @@
               ]
             },
             {
-              "role_category":"ADMIN",
-              "role_name":"national-business-centre",
+              "role_category":"CTSC",
+              "role_name":"ctsc",
               "permissions":[
                 "Read",
                 "Own","Claim",

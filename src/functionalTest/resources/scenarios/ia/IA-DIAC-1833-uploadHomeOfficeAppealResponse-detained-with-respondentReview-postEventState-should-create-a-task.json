@@ -1,5 +1,5 @@
 {
-  "description": "uploadAddendumEvidenceHomeOffice event should create a printAndSendHoEvidence task",
+  "description": "uploadHomeOfficeAppealResponse detained with respondentReview post event state should create a detainedReviewRespondentResponse task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -12,12 +12,13 @@
     },
     "ccd": [
       {
-        "eventId": "startAppeal",
+        "eventId": "submitAppeal",
         "state": "appealStarted",
         "caseData": {
           "template": "minimal-appeal-started.json",
           "replacements": {
-            "appealType": "protection"
+            "appealType": "protection",
+            "homeOfficeDecisionDate": "{$TODAY-14}"
           }
         }
       }
@@ -26,18 +27,19 @@
   "test": {
     "request": {
       "credentials": {
-        "key": "IACaseworker"
+        "key": "IALegalRepresentative"
       },
       "input": {
         "eventMessages": [
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "uploadAddendumEvidenceHomeOffice",
+              "EventId": "uploadHomeOfficeAppealResponse",
+              "NewStateId": "respondentReview",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "isAdmin": true
+                  "appellantInDetention": "true"
                 }
               }
             }
@@ -48,11 +50,11 @@
     "expectations": [
       {
         "credentials": {
-          "key": "NBCAdmin"
+          "key": "IACaseworker"
         },
         "status": 200,
         "numberOfTasksAvailable": 1,
-        "taskTypes": ["printAndSendHoEvidence"],
+        "taskTypes": ["detainedReviewRespondentResponse"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -62,14 +64,14 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Print and send new HO evidence",
-                "type": "printAndSendHoEvidence",
+                "name": "Detained - Review Respondent Response",
+                "type": "detainedReviewRespondentResponse",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Print and send new HO evidence",
+                "task_title": "Detained - Review Respondent Response",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
-                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
+                "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+2_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
                 "jurisdiction": "IA",
                 "case_type_id": "Asylum",
@@ -78,78 +80,72 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "ADMIN",
+                "role_category": "LEGAL_OPERATIONS",
                 "warning_list": {
                   "values": [
                   ]
                 },
                 "case_management_category": "Protection",
-                "work_type_id": "routine_work",
+                "work_type_id": "decision_making_work",
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own",
-                    "Manage",
+                    "Own","Claim",
+                    "Manage","Unassign","Assign","Complete",
                     "Execute",
-                    "Cancel",
-                    "Complete",
-                    "Claim",
-                    "Assign",
-                    "Unassign"
+                    "Cancel"
                   ]
                 }
               }
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
         "roleData": {
-          "roles":[
+          "roles": [
             {
-              "role_category":"CTSC",
-              "role_name":"ctsc",
-              "permissions":[
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "case-manager",
+              "permissions": [
+                "Read",
+                "Own","Claim",
+                "Cancel"
+              ],
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "senior-tribunal-caseworker",
+              "permissions": [
                 "Read",
                 "Own","Claim",
                 "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
               ]
             },
             {
-              "role_category":"CTSC",
-              "role_name":"ctsc-team-leader",
-              "permissions":[
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations":[
-              ]
-            },
-            {
-              "role_category":"ADMIN",
-              "role_name":"national-business-centre",
-              "permissions":[
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations":[
-              ]
-            },
-            {
-              "role_name":"task-supervisor",
-              "permissions":[
+              "role_name": "task-supervisor",
+              "permissions": [
                 "Read",
                 "Manage","Unassign","Assign","Complete",
                 "Execute","Claim",
                 "Cancel"
               ],
-              "authorisations":[
+              "authorisations": [
+              ]
+            },
+            {
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "tribunal-caseworker",
+              "permissions": [
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations": [
               ]
             }
           ]

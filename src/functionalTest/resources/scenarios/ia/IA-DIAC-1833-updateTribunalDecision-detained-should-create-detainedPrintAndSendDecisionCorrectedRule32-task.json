@@ -1,5 +1,5 @@
 {
-  "description": "makeAnApplication event should create a printAndSendHoApplication task",
+  "description": "updateTribunalDecision event detained case should create a detainedPrintAndSendDecisionCorrectedRule32 task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -33,16 +33,14 @@
           {
             "template": "minimal-ccd-event-message.json",
             "replacements": {
-              "EventId": "makeAnApplication",
+              "EventId": "updateTribunalDecision",
+              "NewStateId": "decided",
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
                   "isAdmin": true,
-                  "lastModifiedApplication": {
-                    "type": "Adjourn",
-                    "decision": "",
-                    "applicant": "Respondent"
-                  }
+                  "updateTribunalDecisionList": "underRule32",
+                  "appellantInDetention": "true"
                 }
               }
             }
@@ -57,10 +55,7 @@
         },
         "status": 200,
         "numberOfTasksAvailable": 2,
-        "taskTypes": [
-          "processApplicationAdjourn",
-          "printAndSendHoApplication"
-        ],
+        "taskTypes": ["detainedPrintAndSendDecisionCorrectedRule32", "detainedReviewAppealSetAsideUnderRule32"],
         "taskData": {
           "template": "minimal-task-response.json",
           "replacements": {
@@ -70,12 +65,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Print and send HO application",
-                "type": "printAndSendHoApplication",
+                "name": "Detained - Print and send decision corrected under rule 32",
+                "type": "detainedPrintAndSendDecisionCorrectedRule32",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Print and send HO application",
+                "task_title": "Detained - Print and send decision corrected under rule 32",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
@@ -89,6 +84,7 @@
                 "role_category": "ADMIN",
                 "warning_list": {
                   "values": [
+
                   ]
                 },
                 "case_management_category": "Protection",
@@ -96,7 +92,6 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel",
@@ -112,12 +107,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Process Adjourn Application",
-                "type": "processApplicationAdjourn",
+                "name": "Detained - Review appeal set aside under rule 32",
+                "type": "detainedReviewAppealSetAsideUnderRule32",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Process Adjourn Application",
+                "task_title": "Detained - Review appeal set aside under rule 32",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
@@ -131,10 +126,11 @@
                 "role_category": "LEGAL_OPERATIONS",
                 "warning_list": {
                   "values": [
+
                   ]
                 },
                 "case_management_category": "Protection",
-                "work_type_id": "applications",
+                "work_type_id": "routine_work",
                 "permissions": {
                   "values": [
                     "Read",
@@ -151,70 +147,77 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
+        "numberOfRolesAvailable": 6,
         "roleData": {
-          "roles": [
+          "roles":[
             {
-              "role_category": "ADMIN",
-              "role_name": "national-business-centre",
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "case-manager",
               "permissions": [
                 "Read",
-                "Own",
-                "Claim",
-                "Manage",
-                "Unassign",
-                "Assign",
-                "Complete",
+                "Own","Claim",
                 "Cancel"
               ],
               "authorisations": [
               ]
             },
             {
-              "role_category": "CTSC",
-              "role_name": "ctsc",
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "senior-tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Own",
-                "Claim",
-                "Manage",
-                "Unassign",
-                "Assign",
-                "Complete",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations": [
               ]
             },
             {
-              "role_category": "CTSC",
-              "role_name": "ctsc-team-leader",
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "tribunal-caseworker",
               "permissions": [
                 "Read",
-                "Own",
-                "Claim",
-                "Manage",
-                "Unassign",
-                "Assign",
-                "Complete",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
               "authorisations": [
               ]
             },
             {
-              "role_name": "task-supervisor",
-              "permissions": [
+              "role_category":"CTSC",
+              "role_name":"ctsc",
+              "permissions":[
                 "Read",
-                "Manage",
-                "Unassign",
-                "Assign",
-                "Complete",
-                "Execute",
-                "Claim",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
                 "Cancel"
               ],
-              "authorisations": [
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"CTSC",
+              "role_name":"ctsc-team-leader",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_name":"task-supervisor",
+              "permissions":[
+                "Read",
+                "Manage","Unassign","Assign","Complete",
+                "Execute","Claim",
+                "Cancel"
+              ],
+              "authorisations":[
               ]
             }
           ]

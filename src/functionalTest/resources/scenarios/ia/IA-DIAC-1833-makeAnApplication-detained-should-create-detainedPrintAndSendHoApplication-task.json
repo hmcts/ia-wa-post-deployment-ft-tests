@@ -1,5 +1,5 @@
 {
-  "description": "makeAnApplication event should create a printAndSendHoApplication task",
+  "description": "makeAnApplication detained event should create a detainedPrintAndSendHoApplication task",
   "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
@@ -42,7 +42,8 @@
                     "type": "Adjourn",
                     "decision": "",
                     "applicant": "Respondent"
-                  }
+                  },
+                  "appellantInDetention": "true"
                 }
               }
             }
@@ -58,8 +59,8 @@
         "status": 200,
         "numberOfTasksAvailable": 2,
         "taskTypes": [
-          "processApplicationAdjourn",
-          "printAndSendHoApplication"
+          "detainedProcessApplicationAdjourn",
+          "detainedPrintAndSendHoApplication"
         ],
         "taskData": {
           "template": "minimal-task-response.json",
@@ -70,12 +71,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Print and send HO application",
-                "type": "printAndSendHoApplication",
+                "name": "Detained - Print and send HO application",
+                "type": "detainedPrintAndSendHoApplication",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Print and send HO application",
+                "task_title": "Detained - Print and send HO application",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "execution_type": "Case Management Task",
@@ -96,7 +97,6 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own",
                     "Manage",
                     "Execute",
                     "Cancel",
@@ -112,12 +112,12 @@
                 "case_name": "Functional PostDeployment",
                 "case_id": "{$GENERATED_CASE_ID}",
                 "case_category": "Protection",
-                "name": "Process Adjourn Application",
-                "type": "processApplicationAdjourn",
+                "name": "Detained - Process Adjourn Application",
+                "type": "detainedProcessApplicationAdjourn",
                 "task_state": "unassigned",
                 "task_system": "SELF",
                 "security_classification": "PUBLIC",
-                "task_title": "Process Adjourn Application",
+                "task_title": "Detained - Process Adjourn Application",
                 "created_date": "{$VERIFIER-ZONED_DATETIME_TODAY}",
                 "due_date": "{$VERIFIER-ZONED_DATETIME_TODAY+5_WORKING_DAYS}",
                 "execution_type": "Case Management Task",
@@ -151,12 +151,12 @@
             ]
           }
         },
-        "numberOfRolesAvailable": 4,
+        "numberOfRolesAvailable": 6,
         "roleData": {
           "roles": [
             {
-              "role_category": "ADMIN",
-              "role_name": "national-business-centre",
+              "role_category": "JUDICIAL",
+              "role_name": "judge",
               "permissions": [
                 "Read",
                 "Own",
@@ -171,35 +171,51 @@
               ]
             },
             {
-              "role_category": "CTSC",
-              "role_name": "ctsc",
+              "role_category": "JUDICIAL",
+              "role_name": "FTPA-judge",
               "permissions": [
                 "Read",
                 "Own",
                 "Claim",
-                "Manage",
-                "Unassign",
-                "Assign",
-                "Complete",
                 "Cancel"
               ],
               "authorisations": [
               ]
             },
             {
-              "role_category": "CTSC",
-              "role_name": "ctsc-team-leader",
+              "role_category": "LEGAL_OPERATIONS",
+              "role_name": "case-manager",
               "permissions": [
                 "Read",
                 "Own",
                 "Claim",
-                "Manage",
-                "Unassign",
-                "Assign",
-                "Complete",
                 "Cancel"
               ],
               "authorisations": [
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"LEGAL_OPERATIONS",
+              "role_name":"senior-tribunal-caseworker",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
               ]
             },
             {
