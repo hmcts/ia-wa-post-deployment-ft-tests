@@ -30,7 +30,7 @@ azure:
 idam:
   baseUrl: ${OPEN_ID_IDAM_URL:http://sidam-api}
   redirectUrl: ${IA_IDAM_REDIRECT_URI:http://xui-webapp/oauth2/callback}
-  scope: "openid profile roles"
+  scope: "openid profile authorities acr roles create-user manage-user search-user"
   s2s-auth:
     url: ${S2S_URL:http://service-auth-provider-api}
     secret: ${S2S_SECRET_TASK_MANAGEMENT_API:AAAAAAAAAAAAAAAA}
