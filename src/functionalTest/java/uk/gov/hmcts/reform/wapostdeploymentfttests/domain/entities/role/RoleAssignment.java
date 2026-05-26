@@ -1,7 +1,11 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.role;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.role.enums.ActorIdType;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.role.enums.Classification;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.role.enums.GrantType;

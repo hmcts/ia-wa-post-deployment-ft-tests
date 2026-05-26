@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.gov;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 

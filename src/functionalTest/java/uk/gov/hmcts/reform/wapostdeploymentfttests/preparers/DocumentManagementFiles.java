@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.preparers;
 
-import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -11,6 +10,10 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeaders
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.BinaryResourceLoader;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component

@@ -1,10 +1,13 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
-import java.util.*;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -67,7 +70,8 @@ public class MapFieldAsserter {
                             new HashSet<>(actualValueCollection).containsAll(expectedValueCollection),
                             "Expected collection did not contain all actual values (" + pathWithKey + ")"
                         );
-                        assertEquals(((List<Object>) expectedValueCollection).size(), ((List<Object>) actualValueCollection).size());
+                        assertEquals(((List<Object>) expectedValueCollection).size(),
+                                     ((List<Object>) actualValueCollection).size());
                     }
                 } else {
                     //The collection was empty

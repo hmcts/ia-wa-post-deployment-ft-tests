@@ -3,11 +3,9 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.RetryableException;
 import io.restassured.http.Headers;
-import java.util.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -45,6 +43,12 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.TaskDataVerifier;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.Verifier;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -180,7 +184,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 break;
             } catch (Error | RetryableException | NullPointerException e) {
                 stopWatch.stop();
-                log.error("Scenario failed after {} seconds with error {}", stopWatch.getTotalTimeSeconds(), e.getMessage());
+                log.error("Scenario failed after {} seconds with error {}",
+                          stopWatch.getTotalTimeSeconds(), e.getMessage());
                 if (i == retryCount - 1) {
                     throw e;
                 }

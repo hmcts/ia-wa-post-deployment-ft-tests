@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.domain;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

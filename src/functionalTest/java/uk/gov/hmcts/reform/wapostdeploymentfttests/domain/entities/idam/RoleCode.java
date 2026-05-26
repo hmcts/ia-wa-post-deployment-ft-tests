@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam;
 
-import lombok.*;
+import lombok.Getter;
 
 @Getter
 public class RoleCode {
