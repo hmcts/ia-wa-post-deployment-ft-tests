@@ -51,16 +51,14 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
         this.verifiers = verifiers;
     }
 
-    @SneakyThrows
     @Override
     public void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario, String caseId,
-                             Headers authorizationHeaders) {
+                             Headers authorizationHeaders) throws IOException {
         retrieveTask(clauseValues, scenario, singletonList(caseId), authorizationHeaders);
     }
 
-    @SneakyThrows
     public void retrieveTask(Map<String, Object> clauseValues, TestScenario scenario,
-                             List<String> caseIds, Headers authorizationHeaders) {
+                             List<String> caseIds, Headers authorizationHeaders) throws IOException {
 
         Map<String, String> taskTemplatesByFilename =
             StringResourceLoader.load(
