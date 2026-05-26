@@ -1,6 +1,5 @@
 {
   "description": "ariaCreateCase detained event should create a detainedReviewMigratedCase task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

@@ -1,6 +1,5 @@
 {
   "description": "recordAdjournmentDetails detained with hearingAdjournmentWhen and relistCaseImmediately should create detainedListTheCase task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

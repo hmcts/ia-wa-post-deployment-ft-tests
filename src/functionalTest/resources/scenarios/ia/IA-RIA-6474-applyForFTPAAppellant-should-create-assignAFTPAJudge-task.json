@@ -1,6 +1,5 @@
 {
   "description": "applyForFTPAAppellant event should create a assignAFTPAJudge and decideAnFTPA task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

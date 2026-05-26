@@ -1,6 +1,5 @@
 {
   "description": "generateHearingBundle detained event should create a detainedPrintAndSendHearingBundle task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

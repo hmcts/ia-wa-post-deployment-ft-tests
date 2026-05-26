@@ -1,6 +1,5 @@
 {
   "description": "draftHearingRequirements detained with listing post event state should create a detainedReviewHearingRequirements task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

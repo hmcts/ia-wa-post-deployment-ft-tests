@@ -1,6 +1,5 @@
 {
   "description": "Should create review interpreter details task when case is auto updated or cancelled",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

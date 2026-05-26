@@ -1,6 +1,5 @@
 {
   "description": "decideFtpaApplication detained event should create a detainedPrintAndSendFTPADecision task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

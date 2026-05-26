@@ -1,6 +1,6 @@
 {
   "description": "recordRemissionDecision event should create a delayed markAsPaid task",
-  "enabled": false,
+  "disabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

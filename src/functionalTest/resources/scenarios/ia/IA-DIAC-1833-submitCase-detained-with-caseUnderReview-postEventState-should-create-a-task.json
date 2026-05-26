@@ -1,6 +1,5 @@
 {
   "description": "submitCase detained with caseUnderReview post event state should create a detainedReviewAppealSkeletonArgument task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

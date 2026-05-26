@@ -1,6 +1,5 @@
 {
   "description": "sendDirection detained event should create a detainedFollowUpNonStandardDirection task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

@@ -1,6 +1,5 @@
 {
   "description": "manageFeeUpdate detained with refund option should create detainedProcessFeeRefund task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

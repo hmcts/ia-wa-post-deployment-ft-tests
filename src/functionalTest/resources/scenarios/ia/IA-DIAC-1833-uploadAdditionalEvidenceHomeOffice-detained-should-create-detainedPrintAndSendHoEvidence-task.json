@@ -1,6 +1,5 @@
 {
   "description": "uploadAdditionalEvidenceHomeOffice detained event should create a detainedPrintAndSendHoEvidence task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

@@ -1,6 +1,6 @@
 {
   "description": "removeLegalRepresentative event detained case should create a delayed detainedFollowUpNoticeOfChange task",
-  "enabled": false,
+  "disabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

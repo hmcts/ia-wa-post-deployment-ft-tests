@@ -1,6 +1,5 @@
 {
   "description": "makeAnApplication event with Expedite detained case should create a detainedProcessApplicationExpedite task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

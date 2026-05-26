@@ -1,6 +1,5 @@
 {
   "description": "uploadHomeOfficeAppealResponse detained with respondentReview post event state should create a detainedReviewRespondentResponse task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

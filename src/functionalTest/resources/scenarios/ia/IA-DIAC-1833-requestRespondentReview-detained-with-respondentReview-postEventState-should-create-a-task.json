@@ -1,6 +1,5 @@
 {
   "description": "requestRespondentReview with respondentReview post event state detained case should create a detainedFollowUpOverdueRespondentReview task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

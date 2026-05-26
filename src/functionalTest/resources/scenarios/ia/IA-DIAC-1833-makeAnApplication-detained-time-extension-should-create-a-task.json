@@ -1,6 +1,5 @@
 {
   "description": "makeAnApplication event with Time extension detained case should create a detainedProcessApplicationTimeExtension task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

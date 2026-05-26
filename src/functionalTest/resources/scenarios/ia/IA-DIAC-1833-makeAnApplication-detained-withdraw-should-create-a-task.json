@@ -1,6 +1,5 @@
 {
   "description": "makeAnApplication event with Withdraw detained case should create a detainedProcessApplicationWithdraw task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

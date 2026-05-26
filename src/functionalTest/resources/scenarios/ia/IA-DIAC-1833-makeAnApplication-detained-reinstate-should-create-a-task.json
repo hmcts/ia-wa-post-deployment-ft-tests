@@ -1,6 +1,5 @@
 {
   "description": "makeAnApplication event with Reinstate An Ended detained Appeal should create a detainedProcessApplicationReinstateAnEndedAppeal task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
