@@ -181,7 +181,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
                 processTestClauseScenario(scenario);
                 stopWatch.stop();
-                log.info("✅ SCENARIO: Total time taken to complete test {} seconds", stopWatch.getTotalTimeSeconds());
+                log.info("✅ SCENARIO {}: Total time taken to complete test {} seconds", description,
+                         stopWatch.getTotalTimeSeconds());
                 break;
             } catch (Error | RetryableException | NullPointerException e) {
                 stopWatch.stop();
