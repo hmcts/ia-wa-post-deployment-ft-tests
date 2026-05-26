@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.domain;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -28,12 +28,12 @@ public class TestScenario {
     private final Map<String, String> caseIdMap;
     private final Set<Map<String, Object>> searchMap;
 
-    public TestScenario(@NotNull Map<String, Object> scenarioMapValues,
-                        @NotNull String scenarioSource,
-                        @NotNull String jurisdiction,
-                        @NotNull String caseType,
+    public TestScenario(@NonNull Map<String, Object> scenarioMapValues,
+                        @NonNull String scenarioSource,
+                        @NonNull String jurisdiction,
+                        @NonNull String caseType,
                         @Nullable Map<String, Object> beforeClauseValues,
-                        @NotNull Map<String, Object> testClauseValues,
+                        @NonNull Map<String, Object> testClauseValues,
                         @Nullable Map<String, Object> postRoleAssignmentClauseValues,
                         @Nullable Map<String, Object> updateCaseClauseValues) {
         this.scenarioMapValues = scenarioMapValues;
@@ -53,7 +53,7 @@ public class TestScenario {
         return scenarioMapValues;
     }
 
-    @NotNull
+    @NonNull
     public String getScenarioSource() {
         return scenarioSource;
     }

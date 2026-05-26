@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
-import org.jetbrains.annotations.NotNull;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -73,7 +73,7 @@ public class RestMessageService {
         return result.then().extract().body().asString();
     }
 
-    @NotNull
+    @NonNull
     private String randomMessageId() {
         return "messageId_" + ThreadLocalRandom.current().nextLong(1000000000);
     }
