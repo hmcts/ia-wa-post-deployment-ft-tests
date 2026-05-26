@@ -74,7 +74,7 @@ public class DocumentManagementFiles implements Preparer {
             );
         } else {
             throw new IllegalStateException(
-                String.format("Resource for document '{}' not found", document));
+                "Resource for document '{}' not found".formatted(document));
         }
     }
 

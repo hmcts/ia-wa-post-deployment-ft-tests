@@ -15,8 +15,6 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam.UserInfo
 import java.io.IOException;
 import java.util.Collections;
 
-import static java.lang.String.format;
-
 @Service
 @Import({DocumentUploadClientApi.class})
 public class DocumentManagementUploader {
@@ -40,7 +38,7 @@ public class DocumentManagementUploader {
                 ByteStreams.toByteArray(resource.getInputStream())
             );
 
-            System.out.println(format("Uploading document '%s'", file.getOriginalFilename()));
+            System.out.println("Uploading document '%s'".formatted(file.getOriginalFilename()));
             UploadResponse uploadResponse =
                 documentUploadClientApi
                     .upload(
@@ -56,7 +54,7 @@ public class DocumentManagementUploader {
                     .getDocuments()
                     .get(0);
 
-            System.out.println(format("Document '%s' uploaded successfully", file.getOriginalFilename()));
+            System.out.println("Document '%s' uploaded successfully".formatted(file.getOriginalFilename()));
             return new Document(
                 uploadedDocument
                     .links

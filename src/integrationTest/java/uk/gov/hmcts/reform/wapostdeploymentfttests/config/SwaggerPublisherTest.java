@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,7 +37,7 @@ class SwaggerPublisherTest {
             .getResponse()
             .getContentAsByteArray();
 
-        try (OutputStream outputStream = Files.newOutputStream(Paths.get("/tmp/swagger-specs.json"))) {
+        try (OutputStream outputStream = Files.newOutputStream(Path.of("/tmp/swagger-specs.json"))) {
             outputStream.write(specs);
         }
 

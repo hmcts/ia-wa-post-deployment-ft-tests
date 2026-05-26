@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -25,7 +24,6 @@ import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.StopWatch;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestRequestType;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
@@ -64,7 +62,7 @@ import java.util.stream.StreamSupport;
 import static java.util.Collections.emptyMap;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.SERVICE_AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil.addAssignedCaseId;
@@ -85,7 +83,6 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrThrow;
 
 @Slf4j
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
@@ -155,7 +152,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             preparer.prepare();
         }
 
-        assertFalse("Verifiers configured successfully", verifiers.isEmpty());
+        assertFalse(verifiers.isEmpty(), "Verifiers configured successfully");
 
     }
 

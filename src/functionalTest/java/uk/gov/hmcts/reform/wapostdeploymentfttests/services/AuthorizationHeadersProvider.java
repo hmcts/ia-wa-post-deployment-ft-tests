@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -41,7 +40,6 @@ public class AuthorizationHeadersProvider implements AuthorizationHeaders {
 
     private final AuthTokenGenerator serviceAuthTokenGenerator;
 
-    @Autowired
     public AuthorizationHeadersProvider(IdamWebApi idamWebApi,
                                         AuthTokenGenerator serviceAuthTokenGenerator) {
         this.idamWebApi = idamWebApi;

@@ -12,8 +12,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.ZONED_DATE_TIME_FORMAT;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.UUID_REGEX_PATTERN;
@@ -45,10 +45,8 @@ public class MapFieldAsserter {
             Object expectedValue = expectedEntry.getValue();
             Object actualValue = actualMap.get(key);
 
-            if ((expectedValue instanceof List) && (actualValue instanceof List)) {
-
-                List expectedValueCollection = (List) expectedValue;
-                List actualValueCollection = (List) actualValue;
+            if ((expectedValue instanceof List expectedValueCollection)
+                && (actualValue instanceof List actualValueCollection)) {
 
                 if (!actualValueCollection.isEmpty()) {
                     //Get first Item to check the instance
@@ -103,16 +101,14 @@ public class MapFieldAsserter {
 
         } else {
 
-            if ((expectedValue instanceof String) && (actualValue instanceof String)) {
-
-                String expectedValueString = (String) expectedValue;
-                String actualValueString = (String) actualValue;
+            if ((expectedValue instanceof String expectedValueString)
+                && (actualValue instanceof String actualValueString)) {
 
                 if (expectedValueString.equals("{$VERIFIER-UUID}")) {
 
                     assertTrue(
-                        "Expected field did not match UUID regular expression (" + path + ")",
-                        actualValueString.matches(UUID_REGEX_PATTERN)
+                        actualValueString.matches(UUID_REGEX_PATTERN),
+                        "Expected field did not match UUID regular expression (" + path + ")"
                     );
                 } else if (VERIFIER_ZONED_DATETIME_TODAY_WORKING_DAYS_PATTERN.matcher(expectedValueString).find()) {
 
@@ -137,9 +133,9 @@ public class MapFieldAsserter {
                     }
 
                     assertEquals(
-                        "Expected field did not match actual (" + path + ")",
                         expectedDate,
-                        actualDate
+                        actualDate,
+                        "Expected field did not match actual (" + path + ")"
                     );
                 } else if (expectedValueString.length() > 3
                            && expectedValueString.startsWith("$/")

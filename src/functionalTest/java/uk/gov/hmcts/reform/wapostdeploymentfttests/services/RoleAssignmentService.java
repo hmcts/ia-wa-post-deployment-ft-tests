@@ -256,7 +256,7 @@ public class RoleAssignmentService {
 
         assignmentRequestBody = assignmentRequestBody.replace(
             "\"replaceExisting\": \"{REPLACE_EXISTING}\"",
-            String.format("\"replaceExisting\": %s", replaceExisting)
+            "\"replaceExisting\": %s".formatted(replaceExisting)
         );
 
         if (beginTime != null) {
@@ -296,7 +296,7 @@ public class RoleAssignmentService {
         if (notes != null) {
             assignmentRequestBody = assignmentRequestBody.replace(
                 "\"notes\": \"{NOTES}\"",
-                String.format("\"notes\": [%s]", notes)
+                "\"notes\": [%s]".formatted(notes)
             );
         } else {
             assignmentRequestBody = assignmentRequestBody
@@ -306,7 +306,7 @@ public class RoleAssignmentService {
         if (readOnly != null) {
             assignmentRequestBody = assignmentRequestBody.replace(
                 "\"readOnly\": \"{READ_ONLY}\"",
-                String.format("\"readOnly\": %s", readOnly)
+                "\"readOnly\": %s".formatted(readOnly)
             );
         } else {
             assignmentRequestBody = assignmentRequestBody
