@@ -34,3 +34,5 @@ idam:
 
 scenarioRunner:
   retryCount: ${WA_RETRY_COUNT:3}
+
+junit.jupiter.execution.parallel.enabled: true
