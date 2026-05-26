@@ -51,3 +51,6 @@ logging:
     com.azure.*: OFF
     com.azure.core.amqp.implementation.*: OFF
     net.serenitybdd.rest.decorators.request.RequestSpecificationDecorated: OFF
+
+scenarioRunner:
+  retryCount: ${WA_RETRY_COUNT:3}

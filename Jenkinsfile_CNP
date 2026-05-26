@@ -81,7 +81,9 @@ withNightlyPipeline(type, product, component) {
   env.WA_RETRY_COUNT = params.retryCount
 
   loadVaultSecrets(secrets)
-  enableFullFunctionalTest(180)
+  onPR() {
+    enableFullFunctionalTest(180)
+  }
 
   afterAlways('DependencyCheckNightly') {
     publishHTML([
