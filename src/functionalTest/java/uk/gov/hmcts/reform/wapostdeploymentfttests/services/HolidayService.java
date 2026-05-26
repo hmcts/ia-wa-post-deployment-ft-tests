@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -10,7 +9,6 @@ import java.util.Set;
 public class HolidayService {
     private final Set<LocalDate> holidays;
 
-    @Autowired
     public HolidayService(Set<LocalDate> holidays) {
         this.holidays = holidays;
     }

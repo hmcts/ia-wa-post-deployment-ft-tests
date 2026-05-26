@@ -1,10 +1,13 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities;
 
+import lombok.Getter;
+
+@Getter
 public class CalculateDateParameters {
 
-    char plusOrMinus;
-    int dayAdjustment;
-    boolean workingDays;
+    final char plusOrMinus;
+    final int dayAdjustment;
+    final boolean workingDays;
 
     public CalculateDateParameters(char plusOrMinus, int dayAdjustment, boolean workingDays) {
         this.plusOrMinus = plusOrMinus;
@@ -13,15 +16,4 @@ public class CalculateDateParameters {
     }
 
 
-    public char getPlusOrMinus() {
-        return plusOrMinus;
-    }
-
-    public int getDayAdjustment() {
-        return dayAdjustment;
-    }
-
-    public boolean isWorkingDays() {
-        return workingDays;
-    }
 }

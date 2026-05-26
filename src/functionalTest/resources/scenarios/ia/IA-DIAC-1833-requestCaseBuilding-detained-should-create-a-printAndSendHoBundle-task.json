@@ -1,6 +1,5 @@
 {
   "description": "requestCaseBuilding detained event should create a detainedPrintAndSendHoBundle task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

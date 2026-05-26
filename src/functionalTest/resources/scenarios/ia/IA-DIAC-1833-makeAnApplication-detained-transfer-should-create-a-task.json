@@ -1,6 +1,5 @@
 {
   "description": "makeAnApplication event with Transfer detained case should create a detainedProcessApplicationTransfer task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

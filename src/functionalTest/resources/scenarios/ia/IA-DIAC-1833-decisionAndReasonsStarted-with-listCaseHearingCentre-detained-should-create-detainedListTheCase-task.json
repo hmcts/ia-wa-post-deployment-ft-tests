@@ -1,6 +1,5 @@
 {
   "description": "decisionAndReasonsStarted with listCaseHearingCentre detained case should create detainedListTheCase task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

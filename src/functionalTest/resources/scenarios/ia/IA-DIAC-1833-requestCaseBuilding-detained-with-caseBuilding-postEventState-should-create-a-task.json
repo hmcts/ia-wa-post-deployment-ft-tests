@@ -1,6 +1,5 @@
 {
   "description": "requestCaseBuilding detained with caseBuilding post event state should create a detainedFollowUpOverdueCaseBuilding task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

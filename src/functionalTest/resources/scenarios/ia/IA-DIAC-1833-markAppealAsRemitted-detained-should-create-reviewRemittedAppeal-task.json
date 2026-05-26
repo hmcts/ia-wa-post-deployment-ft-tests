@@ -1,6 +1,5 @@
 {
   "description": "DIAC-1833 markAppealAsRemitted detained event should create detainedReviewRemittedAppeal task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

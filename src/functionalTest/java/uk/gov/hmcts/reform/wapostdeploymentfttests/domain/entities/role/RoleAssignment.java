@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.role.enums.ActorIdType;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings("PMD.ExcessiveParameterList")
 @Builder
@@ -85,62 +87,6 @@ public class RoleAssignment {
         this.endTime = endTime;
         this.created = created;
         this.authorisations = authorisations;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public ActorIdType getActorIdType() {
-        return actorIdType;
-    }
-
-    public String getActorId() {
-        return actorId;
-    }
-
-    public RoleType getRoleType() {
-        return roleType;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public Classification getClassification() {
-        return classification;
-    }
-
-    public GrantType getGrantType() {
-        return grantType;
-    }
-
-    public RoleCategory getRoleCategory() {
-        return roleCategory;
-    }
-
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-    public LocalDateTime getBeginTime() {
-        return beginTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
-    public Map<String, String> getAttributes() {
-        return attributes;
-    }
-
-    public List<String> getAuthorisations() {
-        return authorisations;
     }
 
 }

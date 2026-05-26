@@ -1,6 +1,5 @@
 {
   "description": "makeAnApplication event with Other detained case should create a detainedProcessApplicationOther task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.util.BinaryResourceLoader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,7 +37,7 @@ public class DocumentManagementFiles implements Preparer {
 
         Optional<Resource> maybeResource = documentResources.stream()
             .filter(res -> {
-                String filename = formatFileName(res.getFilename());
+                String filename = formatFileName(Objects.requireNonNull(res.getFilename()));
                 return filename.equals(document.toString());
             }).findFirst();
 
@@ -44,7 +45,7 @@ public class DocumentManagementFiles implements Preparer {
 
             Resource documentResource = maybeResource.get();
 
-            String filename = documentResource.getFilename().toUpperCase();
+            String filename = Objects.requireNonNull(documentResource.getFilename()).toUpperCase();
 
             String contentType;
 
@@ -74,7 +75,7 @@ public class DocumentManagementFiles implements Preparer {
             );
         } else {
             throw new IllegalStateException(
-                String.format("Resource for document '{}' not found", document));
+                "Resource for document '%s' not found".formatted(document));
         }
     }
 

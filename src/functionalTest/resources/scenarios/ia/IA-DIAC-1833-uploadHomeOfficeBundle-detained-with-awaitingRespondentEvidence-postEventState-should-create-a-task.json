@@ -1,6 +1,5 @@
 {
   "description": "uploadHomeOfficeBundle detained with awaitingRespondentEvidence post event state should create a detainedReviewRespondentEvidence task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

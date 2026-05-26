@@ -1,6 +1,5 @@
 {
   "description": "requestNewHearingRequirements detained event should create a detainedPrintAndSendReheardHearingRequirements task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

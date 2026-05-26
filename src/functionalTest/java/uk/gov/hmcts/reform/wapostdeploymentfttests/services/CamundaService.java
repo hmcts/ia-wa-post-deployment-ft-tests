@@ -12,7 +12,7 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Service
 @Slf4j

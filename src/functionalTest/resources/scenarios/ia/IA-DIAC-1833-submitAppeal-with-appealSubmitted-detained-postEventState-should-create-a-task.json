@@ -1,6 +1,5 @@
 {
   "description": "submitAppeal with appeal submitted detained post event state should create a detainedReviewTheAppeal task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

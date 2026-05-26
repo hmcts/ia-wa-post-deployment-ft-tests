@@ -1,6 +1,6 @@
 {
   "description": "decideAnApplication with set aside a decision Granted should create a delayed followUpSetAsideDecision task",
-  "enabled": false,
+  "disabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

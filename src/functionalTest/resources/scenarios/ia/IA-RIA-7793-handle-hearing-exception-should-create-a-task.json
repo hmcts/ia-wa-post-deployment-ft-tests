@@ -1,6 +1,5 @@
 {
   "description": "handleHearingException with should create a hearingException task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

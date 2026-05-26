@@ -1,6 +1,5 @@
 {
   "description": "requestRespondentEvidence with awaitingRespondentEvidence post event state should create a followUpOverdueRespondentEvidence task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

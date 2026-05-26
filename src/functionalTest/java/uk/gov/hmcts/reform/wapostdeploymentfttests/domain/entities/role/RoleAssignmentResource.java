@@ -3,9 +3,11 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 @EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -18,10 +20,6 @@ public class RoleAssignmentResource {
 
     public RoleAssignmentResource(List<RoleAssignment> roleAssignmentResponse) {
         this.roleAssignmentResponse = roleAssignmentResponse;
-    }
-
-    public List<RoleAssignment> getRoleAssignmentResponse() {
-        return roleAssignmentResponse;
     }
 
 }

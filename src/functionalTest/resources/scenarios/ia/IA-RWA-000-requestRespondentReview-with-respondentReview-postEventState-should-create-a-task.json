@@ -1,6 +1,5 @@
 {
   "description": "requestRespondentReview with respondentReview post event state should create a followUpOverdueRespondentReview task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

@@ -1,6 +1,5 @@
 {
   "description": "makeAnApplication event with Change Hearing Type detained case should create a detainedProcessApplicationChangeHearingType task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

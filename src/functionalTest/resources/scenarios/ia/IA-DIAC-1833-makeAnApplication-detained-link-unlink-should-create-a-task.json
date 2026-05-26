@@ -1,7 +1,6 @@
 
 {
   "description": "makeAnApplication event with Link/unlink detained appeals should create a detainedProcessApplicationLink/UnlinkAppeals task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

@@ -1,6 +1,5 @@
 {
   "description": "prepareForHearing post event state detained case should create a detainedCaseSummaryHearingBundleStartDecision task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

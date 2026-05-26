@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.CalculateDateParameters;
 
@@ -13,7 +12,6 @@ public class DateProviderService {
 
     private final HolidayService holidayService;
 
-    @Autowired
     public DateProviderService(HolidayService holidayService) {
         this.holidayService = holidayService;
     }

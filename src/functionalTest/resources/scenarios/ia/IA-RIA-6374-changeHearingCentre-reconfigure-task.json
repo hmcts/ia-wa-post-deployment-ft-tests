@@ -1,6 +1,6 @@
 {
   "description": "changeHearingCentre event should trigger reconfiguration",
-  "enabled": false,
+  "disabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "testType": "Reconfiguration",

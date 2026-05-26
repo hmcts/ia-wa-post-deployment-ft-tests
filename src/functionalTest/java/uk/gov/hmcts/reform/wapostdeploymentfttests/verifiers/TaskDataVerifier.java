@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapFieldAsserter;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor;
@@ -12,7 +11,6 @@ public class TaskDataVerifier implements Verifier {
 
     private final MapFieldAsserter mapFieldAsserter;
 
-    @Autowired
     public TaskDataVerifier(MapFieldAsserter mapFieldAsserter) {
         this.mapFieldAsserter = mapFieldAsserter;
     }

@@ -19,9 +19,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
-import static java.util.stream.Collectors.toList;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.SERVICE_AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.JsonUtil.toJsonString;
@@ -159,11 +159,11 @@ public class RoleAssignmentService {
             //Delete All role assignments
             List<RoleAssignment> organisationalRoleAssignments = response.getRoleAssignmentResponse().stream()
                 .filter(assignment -> RoleType.ORGANISATION.equals(assignment.getRoleType()))
-                .collect(toList());
+                .toList();
 
             List<RoleAssignment> caseRoleAssignments = response.getRoleAssignmentResponse().stream()
                 .filter(assignment -> RoleType.CASE.equals(assignment.getRoleType()))
-                .collect(toList());
+                .toList();
 
             //Check if there are 'orphaned' restricted roles
             if (organisationalRoleAssignments.isEmpty() && !caseRoleAssignments.isEmpty()) {
@@ -242,7 +242,7 @@ public class RoleAssignmentService {
                            String endTime,
                            String assignerId) {
 
-        String assignmentRequestBody = null;
+        String assignmentRequestBody;
 
         assignmentRequestBody = resourceFile;
         assignmentRequestBody = assignmentRequestBody.replace("{ACTOR_ID_PLACEHOLDER}", actorId);
@@ -256,7 +256,7 @@ public class RoleAssignmentService {
 
         assignmentRequestBody = assignmentRequestBody.replace(
             "\"replaceExisting\": \"{REPLACE_EXISTING}\"",
-            String.format("\"replaceExisting\": %s", replaceExisting)
+            "\"replaceExisting\": %s".formatted(replaceExisting)
         );
 
         if (beginTime != null) {
@@ -269,17 +269,14 @@ public class RoleAssignmentService {
                 .replace(",\n" + "      \"beginTime\": \"{BEGIN_TIME_PLACEHOLDER}\"", "");
         }
 
-        if (endTime != null) {
-            assignmentRequestBody = assignmentRequestBody.replace(
-                "{END_TIME_PLACEHOLDER}",
-                endTime
-            );
-        } else {
-            assignmentRequestBody = assignmentRequestBody.replace(
-                "{END_TIME_PLACEHOLDER}",
-                ZonedDateTime.now().plusHours(2).format(ROLE_ASSIGNMENT_DATA_TIME_FORMATTER)
-            );
-        }
+        assignmentRequestBody = assignmentRequestBody.replace(
+            "{END_TIME_PLACEHOLDER}",
+            Objects.requireNonNullElseGet(
+                endTime,
+                () -> ZonedDateTime.now().plusHours(2).format(
+                    ROLE_ASSIGNMENT_DATA_TIME_FORMATTER)
+            )
+        );
 
         if (attributes != null) {
             assignmentRequestBody = assignmentRequestBody
@@ -296,7 +293,7 @@ public class RoleAssignmentService {
         if (notes != null) {
             assignmentRequestBody = assignmentRequestBody.replace(
                 "\"notes\": \"{NOTES}\"",
-                String.format("\"notes\": [%s]", notes)
+                "\"notes\": [%s]".formatted(notes)
             );
         } else {
             assignmentRequestBody = assignmentRequestBody
@@ -306,7 +303,7 @@ public class RoleAssignmentService {
         if (readOnly != null) {
             assignmentRequestBody = assignmentRequestBody.replace(
                 "\"readOnly\": \"{READ_ONLY}\"",
-                String.format("\"readOnly\": %s", readOnly)
+                "\"readOnly\": %s".formatted(readOnly)
             );
         } else {
             assignmentRequestBody = assignmentRequestBody

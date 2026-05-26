@@ -1,6 +1,5 @@
 {
   "description": "makeAnApplication event with Other should create a processApplicationOther task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

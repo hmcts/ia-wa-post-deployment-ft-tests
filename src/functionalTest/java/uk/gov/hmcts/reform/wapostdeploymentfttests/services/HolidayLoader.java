@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.clients.GovUkHolidayDatesClient;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.gov.HolidayDate;
@@ -12,10 +12,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@Configuration
 public class HolidayLoader {
     private final GovUkHolidayDatesClient govUkHolidayDatesClient;
 
-    @Autowired
     public HolidayLoader(GovUkHolidayDatesClient govUkHolidayDatesClient) {
         this.govUkHolidayDatesClient = govUkHolidayDatesClient;
     }

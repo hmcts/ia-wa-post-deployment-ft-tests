@@ -1,6 +1,5 @@
 {
   "description": "reviewHearingRequirements detained event should create a detainedListTheCase task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

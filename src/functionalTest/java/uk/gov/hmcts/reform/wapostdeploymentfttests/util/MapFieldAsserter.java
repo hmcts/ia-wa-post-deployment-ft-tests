@@ -5,15 +5,12 @@ import org.springframework.stereotype.Component;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.text.MatchesPattern.matchesPattern;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.ZONED_DATE_TIME_FORMAT;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.UUID_REGEX_PATTERN;
@@ -45,14 +42,12 @@ public class MapFieldAsserter {
             Object expectedValue = expectedEntry.getValue();
             Object actualValue = actualMap.get(key);
 
-            if ((expectedValue instanceof List) && (actualValue instanceof List)) {
-
-                List expectedValueCollection = (List) expectedValue;
-                List actualValueCollection = (List) actualValue;
+            if ((expectedValue instanceof List expectedValueCollection)
+                && (actualValue instanceof List actualValueCollection)) {
 
                 if (!actualValueCollection.isEmpty()) {
                     //Get first Item to check the instance
-                    Object actualValueCollectionItem = actualValueCollection.get(0);
+                    Object actualValueCollectionItem = actualValueCollection.getFirst();
 
                     if ((actualValueCollectionItem instanceof Map)) {
 
@@ -70,15 +65,17 @@ public class MapFieldAsserter {
 
                         }
                     } else {
-                        List<Object> expectedValuesStrings = expectedValueCollection;
-                        List<Object> actualValuesStrings = actualValueCollection;
                         //The collection was a list of objects assert them using any order
-                        assertThat(expectedValuesStrings, containsInAnyOrder(actualValuesStrings.toArray()));
-                        assertEquals(expectedValuesStrings.size(), actualValuesStrings.size());
+                        assertTrue(
+                            new HashSet<>(actualValueCollection).containsAll(expectedValueCollection),
+                            "Expected collection did not contain all actual values (" + pathWithKey + ")"
+                        );
+                        assertEquals(((List<Object>) expectedValueCollection).size(),
+                                     ((List<Object>) actualValueCollection).size());
                     }
                 } else {
                     //The collection was empty
-                    assertThat(actualValue, equalTo(expectedValue));
+                    assertEquals(expectedValue, actualValue);
                 }
 
             } else {
@@ -103,16 +100,14 @@ public class MapFieldAsserter {
 
         } else {
 
-            if ((expectedValue instanceof String) && (actualValue instanceof String)) {
-
-                String expectedValueString = (String) expectedValue;
-                String actualValueString = (String) actualValue;
+            if ((expectedValue instanceof String expectedValueString)
+                && (actualValue instanceof String actualValueString)) {
 
                 if (expectedValueString.equals("{$VERIFIER-UUID}")) {
 
                     assertTrue(
-                        "Expected field did not match UUID regular expression (" + path + ")",
-                        actualValueString.matches(UUID_REGEX_PATTERN)
+                        actualValueString.matches(UUID_REGEX_PATTERN),
+                        "Expected field did not match UUID regular expression (" + path + ")"
                     );
                 } else if (VERIFIER_ZONED_DATETIME_TODAY_WORKING_DAYS_PATTERN.matcher(expectedValueString).find()) {
 
@@ -137,33 +132,31 @@ public class MapFieldAsserter {
                     }
 
                     assertEquals(
-                        "Expected field did not match actual (" + path + ")",
                         expectedDate,
-                        actualDate
+                        actualDate,
+                        "Expected field did not match actual (" + path + ")"
                     );
                 } else if (expectedValueString.length() > 3
                            && expectedValueString.startsWith("$/")
                            && expectedValueString.endsWith("/")) {
 
                     expectedValueString = expectedValueString.substring(2, expectedValueString.length() - 1);
-
-                    assertThat(
-                        "Expected field matches regular expression (" + path + ")",
-                        actualValueString,
-                        matchesPattern(expectedValueString)
+                    assertTrue(
+                        actualValueString.matches(expectedValueString),
+                        "Expected field did not match regular expression (" + path + ")"
                     );
                 } else {
-                    assertThat(
-                        "Expected field matches (" + path + ")",
+                    assertEquals(
+                        expectedValue,
                         actualValue,
-                        equalTo(expectedValue)
+                        "Expected field did not match actual (" + path + ")"
                     );
                 }
             } else {
-                assertThat(
-                    "Expected field matches (" + path + ")",
+                assertEquals(
+                    expectedValue,
                     actualValue,
-                    equalTo(expectedValue)
+                    "Expected field matches (" + path + ")"
                 );
             }
         }

@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.CalculateDateParameters;
@@ -42,7 +41,6 @@ public class MapValueExpander {
 
     private final DateProviderService dateProviderService;
 
-    @Autowired
     private MapValueExpander(DateProviderService dateProviderService) {
         this.dateProviderService = dateProviderService;
     }
@@ -101,10 +99,10 @@ public class MapValueExpander {
 
             Object untypedValue = entry.getValue();
 
-            if (untypedValue instanceof List) {
+            if (untypedValue instanceof List list) {
 
                 untypedValue =
-                    ((List) untypedValue)
+                    list
                         .stream()
                         .map(value -> expandValue(value, additionalValues))
                         .collect(Collectors.toList());
@@ -179,9 +177,7 @@ public class MapValueExpander {
 
             expandValues((Map<String, Object>) untypedValue, additionalValues);
 
-        } else if (untypedValue instanceof String) {
-
-            String value = (String) untypedValue;
+        } else if (untypedValue instanceof String value) {
 
             //If the value is not a verifier then expand
             if (!VERIFIER_PATTERN.matcher(value).find()) {

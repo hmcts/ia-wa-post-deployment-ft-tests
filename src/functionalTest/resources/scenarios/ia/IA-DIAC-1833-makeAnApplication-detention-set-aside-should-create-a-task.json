@@ -1,6 +1,5 @@
 {
   "description": "makeAnApplication event with Set aside a decision detained case should create a detainedReviewSetAsideDecisionApplication task",
-  "enabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {

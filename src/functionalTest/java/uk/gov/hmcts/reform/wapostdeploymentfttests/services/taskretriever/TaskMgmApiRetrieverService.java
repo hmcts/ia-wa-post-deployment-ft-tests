@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.TaskManagementService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.util.Logger;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapMerger;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapSerializer;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor;
@@ -35,7 +34,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBaseTest.DEFAULT_POLL_INTERVAL_SECONDS;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.SpringBootFunctionalBaseTest.DEFAULT_TIMEOUT_SECONDS;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_FAILED;
 
 @Component
 @Slf4j
@@ -75,7 +73,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
         } else {
             additionalValues = new HashMap<>() {
                 {
-                    put("caseId", caseIds.get(0));
+                    put("caseId", caseIds.getFirst());
                 }
             };
         }
@@ -215,7 +213,6 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                                 roleDataKey
                             );
 
-                            log.info("expected roles: {}", rolesExpectationResponseBody);
                             actualRoleResponse.set(MapSerializer.deserialize(
                                 retrieveTaskRolePermissionsResponseBody));
                             expectedRoleResponse.set(MapSerializer.deserialize(
@@ -233,7 +230,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
                         } catch (Exception e) {
                             isTestPassed.set(false);
-                            Logger.say(SCENARIO_FAILED, scenario.getScenarioMapValues().get("description"));
+                            log.info("❌ SCENARIO: {} failed", scenario.getScenarioMapValues().get("description"));
                             throw new RuntimeException(e);
                         }
 
@@ -244,7 +241,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                 });
 
         if (!isTestPassed.get()) {
-            Logger.say(SCENARIO_FAILED, scenario.getScenarioMapValues().get("description"));
+            log.info("❌ SCENARIO: {} failed", scenario.getScenarioMapValues().get("description"));
         }
     }
 

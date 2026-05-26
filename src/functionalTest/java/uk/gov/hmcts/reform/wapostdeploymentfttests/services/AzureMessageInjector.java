@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import static java.lang.String.format;
-
 @Service
 public class AzureMessageInjector {
 
@@ -25,9 +23,7 @@ public class AzureMessageInjector {
         serviceBusMessage.getApplicationProperties().put("jurisdiction_id", jurisdictionId);
         serviceBusMessage.setSessionId(caseId);
 
-        System.out.println(
-            format("Attempting to inject a message into azure service bus to session with ID: %s", caseId)
-        );
+        System.out.printf("Attempting to inject a message into azure service bus to session with ID: %s%n", caseId);
         senderClient.sendMessage(serviceBusMessage);
         System.out.println("Message injected successfully into Azure Service Bus");
     }
