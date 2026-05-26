@@ -18,8 +18,8 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.role.RoleAssi
 @SuppressWarnings("checkstyle:LineLength")
 public interface RoleAssignmentServiceApiClient {
 
-    public static final String AUTHORIZATION = "Authorization";
-    public static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
+    String AUTHORIZATION = "Authorization";
+    String SERVICE_AUTHORIZATION = "ServiceAuthorization";
 
     @DeleteMapping(
         value = "/am/role-assignments/{role-assignment-id}",

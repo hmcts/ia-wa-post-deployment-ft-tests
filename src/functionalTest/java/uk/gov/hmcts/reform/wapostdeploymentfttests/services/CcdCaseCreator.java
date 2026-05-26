@@ -56,7 +56,7 @@ public class CcdCaseCreator {
 
         String eventId = MapValueExtractor.extractOrThrow(scenario, "eventId");
 
-        String caseId = createInitialStartEventAndSubmit(
+        return createInitialStartEventAndSubmit(
             jurisdiction.equals("IA") ? "startAppeal" : eventId,
             jurisdiction,
             caseType,
@@ -64,15 +64,13 @@ public class CcdCaseCreator {
             authorizationHeaders
         );
 
-        return caseId;
-
     }
 
-    public String updateCase(String caseId,
-                             Map<String, Object> scenario,
-                             String jurisdiction,
-                             String caseType,
-                             Headers authorizationHeaders) throws IOException {
+    public void updateCase(String caseId,
+                           Map<String, Object> scenario,
+                           String jurisdiction,
+                           String caseType,
+                           Headers authorizationHeaders) throws IOException {
 
         Map<String, String> ccdTemplatesByFilename =
             StringResourceLoader.load(
@@ -92,8 +90,6 @@ public class CcdCaseCreator {
             authorizationHeaders
         );
 
-
-        return caseId;
 
     }
 
@@ -144,12 +140,12 @@ public class CcdCaseCreator {
     }
 
 
-    private CaseDetails fireStartAndSubmitEventsFor(String caseId,
-                                                    String eventId,
-                                                    String jurisdiction,
-                                                    String caseType,
-                                                    Map<String, Object> caseData,
-                                                    Headers authorizationHeaders) {
+    private void fireStartAndSubmitEventsFor(String caseId,
+                                             String eventId,
+                                             String jurisdiction,
+                                             String caseType,
+                                             Map<String, Object> caseData,
+                                             Headers authorizationHeaders) {
 
 
         String userToken = authorizationHeaders.getValue(AUTHORIZATION);
@@ -195,7 +191,6 @@ public class CcdCaseCreator {
 
         System.out.println("Event [" + eventId + "] completed for case with Id [" + submitEventResponse.getId() + "]");
 
-        return submitEventResponse;
     }
 
 
@@ -204,12 +199,10 @@ public class CcdCaseCreator {
         Map<String, String> templatesByFilename
     ) throws IOException {
 
-        Map<String, Object> caseData = buildCaseData(
+        return buildCaseData(
             MapValueExtractor.extract(input, "caseData"),
             templatesByFilename
         );
-
-        return caseData;
     }
 
     private Map<String, Object> buildCaseData(

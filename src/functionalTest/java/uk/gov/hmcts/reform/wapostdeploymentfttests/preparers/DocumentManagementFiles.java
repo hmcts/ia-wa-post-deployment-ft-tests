@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.preparers;
 
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -10,9 +11,6 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeaders
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.BinaryResourceLoader;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -36,7 +34,7 @@ public class DocumentManagementFiles implements Preparer {
 
         Optional<Resource> maybeResource = documentResources.stream()
             .filter(res -> {
-                String filename = formatFileName(res.getFilename());
+                String filename = formatFileName(Objects.requireNonNull(res.getFilename()));
                 return filename.equals(document.toString());
             }).findFirst();
 
@@ -44,7 +42,7 @@ public class DocumentManagementFiles implements Preparer {
 
             Resource documentResource = maybeResource.get();
 
-            String filename = documentResource.getFilename().toUpperCase();
+            String filename = Objects.requireNonNull(documentResource.getFilename()).toUpperCase();
 
             String contentType;
 
@@ -74,7 +72,7 @@ public class DocumentManagementFiles implements Preparer {
             );
         } else {
             throw new IllegalStateException(
-                "Resource for document '{}' not found".formatted(document));
+                "Resource for document '%s' not found".formatted(document));
         }
     }
 

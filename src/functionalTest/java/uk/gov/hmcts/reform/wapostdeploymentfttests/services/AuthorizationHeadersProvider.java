@@ -48,23 +48,16 @@ public class AuthorizationHeadersProvider implements AuthorizationHeaders {
 
     @Override
     public Headers getIaUserAuthorization(CredentialRequest request) throws IOException {
-        switch (request.getCredentialsKey()) {
-            case "WaSystemUser":
-                return getWaSystemUserAuthorization();
-            case "IALegalRepresentative":
-                return getLegalRepAuthorization();
-            case "IACaseworker":
-                return getTribunalCaseworkerAAuthorization();
-            case "CTSCAdmin":
-                return getCtscAdminAuthorization();
-            case "AdminOfficer":
-                return getAdminOfficerAuthorization();
-            case "NBCAdmin":
-                return getNbcAdminAuthorization();
-            default:
-                throw new IllegalStateException("Credentials implementation for '"
-                                                    + request.getCredentialsKey() + "' not found");
-        }
+        return switch (request.getCredentialsKey()) {
+            case "WaSystemUser" -> getWaSystemUserAuthorization();
+            case "IALegalRepresentative" -> getLegalRepAuthorization();
+            case "IACaseworker" -> getTribunalCaseworkerAAuthorization();
+            case "CTSCAdmin" -> getCtscAdminAuthorization();
+            case "AdminOfficer" -> getAdminOfficerAuthorization();
+            case "NBCAdmin" -> getNbcAdminAuthorization();
+            default -> throw new IllegalStateException("Credentials implementation for '"
+                                                           + request.getCredentialsKey() + "' not found");
+        };
     }
 
     @Override

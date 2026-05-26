@@ -1,5 +1,8 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam;
 
+import lombok.*;
+
+@Getter
 public class RoleCode {
     private final String code;
 
@@ -7,7 +10,4 @@ public class RoleCode {
         this.code = code;
     }
 
-    public String getCode() {
-        return code;
-    }
 }

@@ -87,9 +87,9 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
-    protected MessageInjector messageInjector;
-    protected TaskDataVerifier taskDataVerifier;
-    protected AuthorizationHeadersProvider authorizationHeadersProvider;
+    protected final MessageInjector messageInjector;
+    protected final TaskDataVerifier taskDataVerifier;
+    protected final AuthorizationHeadersProvider authorizationHeadersProvider;
     private final CamundaTaskRetrieverService camundaTaskRetrievableService;
     private final TaskMgmApiRetrieverService taskMgmApiRetrievableService;
     private final RoleAssignmentService roleAssignmentService;
@@ -496,7 +496,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     @SneakyThrows
     private void removeInvalidMessages(String expectationCaseId) {
 
-        log.info("Checking Invalid Messages for caseId: " + expectationCaseId);
+        log.info("Checking Invalid Messages for caseId: {}", expectationCaseId);
         String actualMessageResponse = restMessageService.getCaseMessages(expectationCaseId);
 
         Map<String, Object> actualResponse = MapSerializer.deserialize(actualMessageResponse);
@@ -506,7 +506,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         messagesSent.forEach(messageData -> {
             String state = MapValueExtractor.extract(messageData, "State");
-            log.info("State: " + state);
+            log.info("State: {}", state);
             if ("UNPROCESSABLE".equals(state)) {
                 String messageId = MapValueExtractor.extract(messageData, "MessageId");
                 String caseId = MapValueExtractor.extract(messageData, "CaseId");

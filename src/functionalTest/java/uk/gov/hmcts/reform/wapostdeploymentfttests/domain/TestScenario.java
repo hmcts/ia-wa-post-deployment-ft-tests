@@ -14,18 +14,29 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestScenario {
 
+    @Getter
     private final Map<String, Object> scenarioMapValues;
     private final String scenarioSource;
+    @Getter
     private final Map<String, Object> beforeClauseValues;
+    @Getter
     private final Map<String, Object> testClauseValues;
+    @Getter
     private final Map<String, Object> postRoleAssignmentClauseValues;
+    @Getter
     private final Map<String, Object> updateCaseClauseValues;
+    @Getter
     private final String jurisdiction;
+    @Getter
     private final String caseType;
 
+    @Getter
     private final List<String> taskIds;
+    @Setter
+    @Getter
     private String assigneeId;
     private final Map<String, String> caseIdMap;
+    @Getter
     private final Set<Map<String, Object>> searchMap;
 
     public TestScenario(@NonNull Map<String, Object> scenarioMapValues,
@@ -49,10 +60,6 @@ public class TestScenario {
         this.taskIds = new ArrayList<>();
     }
 
-    public Map<String, Object> getScenarioMapValues() {
-        return scenarioMapValues;
-    }
-
     @NonNull
     public String getScenarioSource() {
         return scenarioSource;
@@ -71,36 +78,8 @@ public class TestScenario {
         return caseIdMap;
     }
 
-    public String getCaseType() {
-        return caseType;
-    }
-
-    public Map<String, Object> getBeforeClauseValues() {
-        return beforeClauseValues;
-    }
-
-    public Map<String, Object> gettestClauseValues() {
-        return testClauseValues;
-    }
-
-    public String getJurisdiction() {
-        return jurisdiction;
-    }
-
-    public Map<String, Object> getPostRoleAssignmentClauseValues() {
-        return postRoleAssignmentClauseValues;
-    }
-
     public void addSearchMap(Map<String, Object> map) {
         searchMap.add(map);
-    }
-
-    public Set<Map<String, Object>> getSearchMap() {
-        return searchMap;
-    }
-
-    public Map<String, Object> getUpdateCaseClauseValues() {
-        return updateCaseClauseValues;
     }
 
     public void addTaskId(String taskId) {
@@ -108,15 +87,4 @@ public class TestScenario {
         taskIds.add(taskId);
     }
 
-    public List<String> getTaskIds() {
-        return taskIds;
-    }
-
-    public String getAssigneeId() {
-        return assigneeId;
-    }
-
-    public void setAssigneeId(String assigneeId) {
-        this.assigneeId = assigneeId;
-    }
 }

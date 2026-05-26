@@ -1,10 +1,10 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.gov;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
+@Getter
 @EqualsAndHashCode
 @ToString
 public class CountryHolidayDates {
@@ -17,7 +17,4 @@ public class CountryHolidayDates {
         this.events = events;
     }
 
-    public List<HolidayDate> getEvents() {
-        return events;
-    }
 }

@@ -23,9 +23,7 @@ public class AzureMessageInjector {
         serviceBusMessage.getApplicationProperties().put("jurisdiction_id", jurisdictionId);
         serviceBusMessage.setSessionId(caseId);
 
-        System.out.println(
-            "Attempting to inject a message into azure service bus to session with ID: %s".formatted(caseId)
-        );
+        System.out.printf("Attempting to inject a message into azure service bus to session with ID: %s%n", caseId);
         senderClient.sendMessage(serviceBusMessage);
         System.out.println("Message injected successfully into Azure Service Bus");
     }

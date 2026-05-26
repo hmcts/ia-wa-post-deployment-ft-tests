@@ -38,7 +38,7 @@ public class DocumentManagementUploader {
                 ByteStreams.toByteArray(resource.getInputStream())
             );
 
-            System.out.println("Uploading document '%s'".formatted(file.getOriginalFilename()));
+            System.out.printf("Uploading document '%s'%n", file.getOriginalFilename());
             UploadResponse uploadResponse =
                 documentUploadClientApi
                     .upload(
@@ -54,7 +54,7 @@ public class DocumentManagementUploader {
                     .getDocuments()
                     .getFirst();
 
-            System.out.println("Document '%s' uploaded successfully".formatted(file.getOriginalFilename()));
+            System.out.printf("Document '%s' uploaded successfully%n", file.getOriginalFilename());
             return new Document(
                 uploadedDocument
                     .links

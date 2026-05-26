@@ -1,8 +1,10 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 
 import io.restassured.http.Headers;
+import io.restassured.path.json.*;
 import io.restassured.response.Response;
 import lombok.*;
+import lombok.extern.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -11,11 +13,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import static java.lang.String.format;
 import static net.serenitybdd.rest.SerenityRest.given;
-import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Slf4j
 @Service
 public class RestMessageService {
 
@@ -28,9 +30,9 @@ public class RestMessageService {
     public void sendMessage(String message, String caseId, boolean fromDlq) {
         String messageId = randomMessageId();
 
-        System.out.println(
-            format("Attempting to inject a message into Case Event Handler using REST endpoint with "
-                       + "caseId: %s, messageId: %s", caseId, messageId)
+        log.info(
+            "Attempting to inject a message into Case Event Handler using REST endpoint with "
+                + "caseId: {}, messageId: {}", caseId, messageId
         );
 
         Headers systemUserUserToken = authorizationHeadersProvider.getWaSystemUserAuthorization();
@@ -42,24 +44,26 @@ public class RestMessageService {
             .when()
             .post(caseEventHandlerUrl + "/messages/" + messageId + (fromDlq ? "?from_dlq=true" : "?from_dlq=false"));
 
-        result.then().assertThat()
+        JsonPath response = result.then().assertThat()
             .statusCode(HttpStatus.CREATED.value())
             .contentType(APPLICATION_JSON_VALUE)
-            .body("MessageId", is(messageId));
-
+            .extract()
+            .body()
+            .jsonPath();
+        assertEquals(messageId, response.get("MessageId"));
 
         String actualResponseBody = result.then()
             .extract()
             .body().asString();
 
-        System.out.println("Message injected successfully using Case Event Handler REST endpoint");
-        System.out.println("REST response message body: " + actualResponseBody);
+        log.info("Message injected successfully using Case Event Handler REST endpoint");
+        log.info("REST response message body: {}", actualResponseBody);
     }
 
     public String getCaseMessages(String caseId) {
-        System.out.println(
-            format("Attempting to retrieve messages from Case Event Handler using REST endpoint with "
-                       + "caseId: %s", caseId)
+        log.info(
+            "Attempting to retrieve messages from Case Event Handler using REST endpoint with "
+                + "caseId: {}", caseId
         );
 
         Headers systemUserUserToken = authorizationHeadersProvider.getWaSystemUserAuthorization();
@@ -80,9 +84,9 @@ public class RestMessageService {
 
     public void deleteMessage(String messageId, String caseId) {
 
-        System.out.println(
-            format("Attempting to delete a message from Case Event Handler using REST endpoint with "
-                       + "caseId: %s, messageId: %s", caseId, messageId)
+        log.info(
+            "Attempting to delete a message from Case Event Handler using REST endpoint with "
+                + "caseId: {}, messageId: {}", caseId, messageId
         );
 
         Headers systemUserUserToken = authorizationHeadersProvider.getWaSystemUserAuthorization();
@@ -97,7 +101,7 @@ public class RestMessageService {
         result.then().assertThat()
             .statusCode(HttpStatus.OK.value());
 
-        System.out.println("Message deleted successfully using Case Event Handler REST endpoint");
+        log.info("Message deleted successfully using Case Event Handler REST endpoint");
     }
 
 }

@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 
 import feign.FeignException;
 import io.restassured.http.Headers;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -16,12 +17,8 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.util.StringResourceLoader;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
-import static java.util.stream.Collectors.toList;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.SERVICE_AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.JsonUtil.toJsonString;
@@ -159,11 +156,11 @@ public class RoleAssignmentService {
             //Delete All role assignments
             List<RoleAssignment> organisationalRoleAssignments = response.getRoleAssignmentResponse().stream()
                 .filter(assignment -> RoleType.ORGANISATION.equals(assignment.getRoleType()))
-                .collect(toList());
+                .toList();
 
             List<RoleAssignment> caseRoleAssignments = response.getRoleAssignmentResponse().stream()
                 .filter(assignment -> RoleType.CASE.equals(assignment.getRoleType()))
-                .collect(toList());
+                .toList();
 
             //Check if there are 'orphaned' restricted roles
             if (organisationalRoleAssignments.isEmpty() && !caseRoleAssignments.isEmpty()) {
@@ -242,7 +239,7 @@ public class RoleAssignmentService {
                            String endTime,
                            String assignerId) {
 
-        String assignmentRequestBody = null;
+        String assignmentRequestBody;
 
         assignmentRequestBody = resourceFile;
         assignmentRequestBody = assignmentRequestBody.replace("{ACTOR_ID_PLACEHOLDER}", actorId);
@@ -269,17 +266,14 @@ public class RoleAssignmentService {
                 .replace(",\n" + "      \"beginTime\": \"{BEGIN_TIME_PLACEHOLDER}\"", "");
         }
 
-        if (endTime != null) {
-            assignmentRequestBody = assignmentRequestBody.replace(
-                "{END_TIME_PLACEHOLDER}",
-                endTime
-            );
-        } else {
-            assignmentRequestBody = assignmentRequestBody.replace(
-                "{END_TIME_PLACEHOLDER}",
-                ZonedDateTime.now().plusHours(2).format(ROLE_ASSIGNMENT_DATA_TIME_FORMATTER)
-            );
-        }
+        assignmentRequestBody = assignmentRequestBody.replace(
+            "{END_TIME_PLACEHOLDER}",
+            Objects.requireNonNullElseGet(
+                endTime,
+                () -> ZonedDateTime.now().plusHours(2).format(
+                    ROLE_ASSIGNMENT_DATA_TIME_FORMATTER)
+            )
+        );
 
         if (attributes != null) {
             assignmentRequestBody = assignmentRequestBody

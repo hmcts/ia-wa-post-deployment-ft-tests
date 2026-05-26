@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 
 import io.restassured.http.Headers;
+import io.restassured.path.json.*;
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static net.serenitybdd.rest.SerenityRest.given;
-import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Service
@@ -75,26 +76,26 @@ public class TaskManagementService {
             .post(taskManagementUrl + "/task/extended-search");
 
         try {
-            result.then().assertThat()
+            JsonPath response = result.then().assertThat()
                 .statusCode(expectedStatus)
                 .contentType(APPLICATION_JSON_VALUE)
-                .body("tasks.size()", is(expectedTasks));
+                .extract()
+                .body()
+                .jsonPath();
+            assertEquals(expectedTasks, response.getList("tasks").size());
         } catch (Exception e) {
             log.error("Error while validating response: {}", e.getMessage());
             log.info("tasks.size() is: {}", result.then().extract().body().jsonPath().getList("tasks").size());
             String actualResponseBody = result.then()
                 .extract()
                 .body().asString();
-            log.info("Response body: " + actualResponseBody);
+            log.info("Response body: {}", actualResponseBody);
             throw e;
         }
-        String actualResponseBody = result.then()
+
+        return result.then()
             .extract()
             .body().asString();
-
-        log.info("Response body: " + actualResponseBody);
-
-        return actualResponseBody;
     }
 
     public String retrieveTaskRolePermissions(Map<String, Object> roleDataMap,
@@ -111,18 +112,17 @@ public class TaskManagementService {
         int expectedRoles = MapValueExtractor.extractOrDefault(
             roleDataMap, "numberOfRolesAvailable", 4);
 
-        result.then().assertThat()
+        JsonPath response = result.then().assertThat()
             .statusCode(expectedStatus)
             .contentType(APPLICATION_JSON_VALUE)
-            .body("roles.size()", is(expectedRoles));
+            .extract()
+            .body()
+            .jsonPath();
+        assertEquals(expectedRoles, response.getList("roles").size());
 
-        String actualResponseBody = result.then()
+        return result.then()
             .extract()
             .body().asString();
-
-        log.info("Response body: " + actualResponseBody);
-
-        return actualResponseBody;
     }
 
     public void claimTask(TestScenario scenario, Headers authorizationHeaders, UserInfo userInfo) {

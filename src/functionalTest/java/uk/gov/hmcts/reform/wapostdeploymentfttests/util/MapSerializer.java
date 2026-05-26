@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -41,12 +40,11 @@ public final class MapSerializer {
         JsonNode node = MAPPER.readTree(source);
         ObjectNode objectNode = node.deepCopy();
 
-        if (node.get(elementNameToSort) instanceof ArrayNode) {
-            ArrayNode list = (ArrayNode) node.get(elementNameToSort);
+        if (node.get(elementNameToSort) instanceof ArrayNode list) {
 
             List<JsonNode> sortList = new ArrayList<>();
             list.elements().forEachRemaining(sortList::add);
-            Collections.sort(sortList, comparator);
+            sortList.sort(comparator);
 
             ArrayNode array = MAPPER.createArrayNode();
             sortList.forEach(array::add);

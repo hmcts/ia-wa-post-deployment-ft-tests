@@ -1,17 +1,11 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
+import java.util.*;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.text.MatchesPattern.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -68,15 +62,16 @@ public class MapFieldAsserter {
 
                         }
                     } else {
-                        List<Object> expectedValuesStrings = expectedValueCollection;
-                        List<Object> actualValuesStrings = actualValueCollection;
                         //The collection was a list of objects assert them using any order
-                        assertThat(expectedValuesStrings, containsInAnyOrder(actualValuesStrings.toArray()));
-                        assertEquals(expectedValuesStrings.size(), actualValuesStrings.size());
+                        assertTrue(
+                            new HashSet<>(actualValueCollection).containsAll(expectedValueCollection),
+                            "Expected collection did not contain all actual values (" + pathWithKey + ")"
+                        );
+                        assertEquals(((List<Object>) expectedValueCollection).size(), ((List<Object>) actualValueCollection).size());
                     }
                 } else {
                     //The collection was empty
-                    assertThat(actualValue, equalTo(expectedValue));
+                    assertEquals(expectedValue, actualValue);
                 }
 
             } else {
@@ -142,24 +137,22 @@ public class MapFieldAsserter {
                            && expectedValueString.endsWith("/")) {
 
                     expectedValueString = expectedValueString.substring(2, expectedValueString.length() - 1);
-
-                    assertThat(
-                        "Expected field matches regular expression (" + path + ")",
-                        actualValueString,
-                        matchesPattern(expectedValueString)
+                    assertTrue(
+                        actualValueString.matches(expectedValueString),
+                        "Expected field did not match regular expression (" + path + ")"
                     );
                 } else {
-                    assertThat(
-                        "Expected field matches (" + path + ")",
+                    assertEquals(
+                        expectedValue,
                         actualValue,
-                        equalTo(expectedValue)
+                        "Expected field did not match actual (" + path + ")"
                     );
                 }
             } else {
-                assertThat(
-                    "Expected field matches (" + path + ")",
+                assertEquals(
+                    expectedValue,
                     actualValue,
-                    equalTo(expectedValue)
+                    "Expected field matches (" + path + ")"
                 );
             }
         }

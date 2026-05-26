@@ -175,8 +175,6 @@ dependencies {
 
   functionalTestImplementation sourceSets.main.runtimeClasspath
   functionalTestImplementation sourceSets.test.runtimeClasspath
-
-  functionalTestImplementation group: "org.hamcrest", name: "hamcrest", version: "2.2"
 }
 
 application {

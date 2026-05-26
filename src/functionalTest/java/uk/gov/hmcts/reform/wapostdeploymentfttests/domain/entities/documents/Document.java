@@ -2,11 +2,11 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.documents;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import static java.util.Objects.requireNonNull;
 
+@Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @EqualsAndHashCode
 @ToString
@@ -34,15 +34,4 @@ public class Document {
         this.documentFilename = documentFilename;
     }
 
-    public String getDocumentUrl() {
-        return documentUrl;
-    }
-
-    public String getDocumentBinaryUrl() {
-        return documentBinaryUrl;
-    }
-
-    public String getDocumentFilename() {
-        return documentFilename;
-    }
 }
