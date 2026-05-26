@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -83,11 +85,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private final List<Preparer> preparers;
     private final CcdCaseCreator ccdCaseCreator;
     private final RestMessageService restMessageService;
-    @Value("${ia-wa-post-deployment-test.environment}")
-    protected String postDeploymentTestEnvironment;
-    private StopWatch stopWatch;
-    @Value("${scenarioRunner.retryCount}")
-    private int retryCount;
+    private final int retryCount;
 
     private final Map<String, String> scenarioSources = new HashMap<>();
 
@@ -106,7 +104,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         List<Verifier> verifiers,
         List<Preparer> preparers,
         CcdCaseCreator ccdCaseCreator,
-        RestMessageService restMessageService
+        RestMessageService restMessageService,
+        @Value("${scenarioRunner.retryCount}") int retryCount
     ) {
         this.messageInjector = messageInjector;
         this.taskDataVerifier = taskDataVerifier;
@@ -122,6 +121,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         this.preparers = preparers;
         this.ccdCaseCreator = ccdCaseCreator;
         this.restMessageService = restMessageService;
+        this.retryCount = retryCount;
     }
 
     @BeforeAll
@@ -148,6 +148,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         log.info("-------------------------------------------------------------------");
     }
 
+    @Execution(ExecutionMode.CONCURRENT)
     @ParameterizedTest(name = "{0}:{1}")
     @MethodSource("caseTypeScenarios")
     public void scenarios_should_behave_as_specified(String fileName,
@@ -156,7 +157,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                                                      Map<String, Object> scenarioValues) throws Exception {
         assumeFalse(fileName.startsWith("Disabled:"), "ℹ️ SCENARIO: " + description + " **disabled**");
         for (int i = 0; i < retryCount; i++) {
-            stopWatch = new StopWatch();
+            StopWatch stopWatch = new StopWatch();
             stopWatch.start();
             try {
                 createBaseCcdCase(scenario);
