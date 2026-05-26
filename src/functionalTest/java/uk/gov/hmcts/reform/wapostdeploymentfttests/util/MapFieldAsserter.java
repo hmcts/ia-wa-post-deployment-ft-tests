@@ -50,7 +50,7 @@ public class MapFieldAsserter {
 
                 if (!actualValueCollection.isEmpty()) {
                     //Get first Item to check the instance
-                    Object actualValueCollectionItem = actualValueCollection.get(0);
+                    Object actualValueCollectionItem = actualValueCollection.getFirst();
 
                     if ((actualValueCollectionItem instanceof Map)) {
 

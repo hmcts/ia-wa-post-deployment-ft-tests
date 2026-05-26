@@ -52,7 +52,7 @@ public class DocumentManagementUploader {
                 uploadResponse
                     .getEmbedded()
                     .getDocuments()
-                    .get(0);
+                    .getFirst();
 
             System.out.println("Document '%s' uploaded successfully".formatted(file.getOriginalFilename()));
             return new Document(

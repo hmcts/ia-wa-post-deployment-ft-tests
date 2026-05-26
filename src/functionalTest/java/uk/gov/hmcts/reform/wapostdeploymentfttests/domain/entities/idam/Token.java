@@ -1,13 +1,15 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Getter;
 
 import java.util.Objects;
 
+@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Token {
 
     private String accessToken;
@@ -20,14 +22,6 @@ public class Token {
     public Token(String accessToken, String scope) {
         this.accessToken = accessToken;
         this.scope = scope;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public String getScope() {
-        return scope;
     }
 
     @Override

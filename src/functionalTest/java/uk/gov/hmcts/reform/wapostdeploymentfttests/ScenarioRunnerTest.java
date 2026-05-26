@@ -534,6 +534,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             .filter(EnumerablePropertySource.class::isInstance)
             .map(propertySource -> ((EnumerablePropertySource<?>) propertySource).getPropertyNames())
             .flatMap(Arrays::stream)
+            .filter(name -> environment.getProperty(name) != null)
             .forEach(name -> ENVIRONMENT_PROPERTIES.setProperty(name, environment.getProperty(name)));
     }
 

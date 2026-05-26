@@ -2,14 +2,16 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.Objects;
 
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@Getter
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInfo {
@@ -33,30 +35,6 @@ public class UserInfo {
         this.name = name;
         this.givenName = givenName;
         this.familyName = familyName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getGivenName() {
-        return givenName;
-    }
-
-    public String getFamilyName() {
-        return familyName;
     }
 
     @Override

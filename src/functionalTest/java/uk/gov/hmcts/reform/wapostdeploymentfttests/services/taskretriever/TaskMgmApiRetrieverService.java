@@ -75,7 +75,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
         } else {
             additionalValues = new HashMap<>() {
                 {
-                    put("caseId", caseIds.get(0));
+                    put("caseId", caseIds.getFirst());
                 }
             };
         }
