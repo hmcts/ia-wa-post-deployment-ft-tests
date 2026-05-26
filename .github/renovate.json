@@ -3,6 +3,14 @@
   "extends": [
     "local>hmcts/.github:renovate-config"
   ],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "org.owasp.dependencycheck"
+      ],
+      "enabled": false
+    }
+  ],
   "labels": [
     "dependencies"
   ]
