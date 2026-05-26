@@ -134,8 +134,6 @@ public class CcdCaseCreator {
             caseDataContent
         );
 
-        System.out.println("Created case [" + caseDetails.getId() + "]");
-
         return caseDetails.getId().toString();
     }
 

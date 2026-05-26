@@ -38,7 +38,6 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.TaskMg
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.JsonUtil;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.util.Logger;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapSerializer;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.StringResourceLoader;
@@ -57,19 +56,6 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.SERVICE_AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil.addAssignedCaseId;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_BEFORE_COMPLETED;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_BEFORE_FOUND;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_DISABLED;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_ENABLED;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_FINISHED;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_ROLE_ASSIGNMENT_COMPLETED;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_ROLE_ASSIGNMENT_FOUND;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_RUNNING;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_RUNNING_TIME;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_START;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_SUCCESSFUL;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_UPDATE_CASE_COMPLETED;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.LoggerMessage.SCENARIO_UPDATE_CASE_FOUND;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.ENVIRONMENT_PROPERTIES;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrDefault;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrThrow;
@@ -136,8 +122,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
     @BeforeAll
     public void beforeAll() throws Exception {
-        stopWatch = new StopWatch();
-        stopWatch.start();
         loadPropertiesIntoMapValueExpander();
 
         for (Preparer preparer : preparers) {
@@ -155,13 +139,9 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             scenarioPattern = "*" + scenarioPattern + "*.json";
         }
         scenarioSources.putAll(StringResourceLoader.load("/scenarios/ia/" + scenarioPattern));
-        Logger.say(SCENARIO_START, scenarioSources.size() + " IA");
-    }
-
-    @AfterAll
-    public void tearDown() {
-        stopWatch.stop();
-        Logger.say(SCENARIO_RUNNING_TIME, stopWatch.getTotalTimeSeconds());
+        log.info("-------------------------------------------------------------------");
+        log.info("⚙️️ FOUND {} SCENARIOS", scenarioSources.size());
+        log.info("-------------------------------------------------------------------");
     }
 
     @ParameterizedTest(name = "{0}:{1}")
@@ -172,38 +152,35 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                                                      Map<String, Object> scenarioValues) throws Exception {
         assumeFalse(fileName.startsWith("Disabled:"), "ℹ️ SCENARIO: " + description + " **disabled**");
         for (int i = 0; i < retryCount; i++) {
+            stopWatch = new StopWatch();
+            stopWatch.start();
             try {
                 createBaseCcdCase(scenario);
 
                 addSearchParameters(scenario, scenarioValues);
 
                 if (scenario.getBeforeClauseValues() != null) {
-                    Logger.say(SCENARIO_BEFORE_FOUND);
-                    //If before was found process with before values
+                    log.info("ℹ️ SCENARIO: Found BEFORE Clause processing setup scenario");
                     processBeforeClauseScenario(scenario);
-                    Logger.say(SCENARIO_BEFORE_COMPLETED);
-
                 }
 
                 if (scenario.getPostRoleAssignmentClauseValues() != null) {
-                    Logger.say(SCENARIO_ROLE_ASSIGNMENT_FOUND);
+                    log.info("ℹ️ SCENARIO: POST_ROLE_ASSIGNMENTS Clause found");
                     processRoleAssignment(scenario.getPostRoleAssignmentClauseValues(), scenario);
-                    Logger.say(SCENARIO_ROLE_ASSIGNMENT_COMPLETED);
                 }
 
                 if (scenario.getUpdateCaseClauseValues() != null) {
-                    Logger.say(SCENARIO_UPDATE_CASE_FOUND);
+                    log.info("ℹ️ SCENARIO: Update case Clause found");
                     updateBaseCcdCase(scenario);
-                    Logger.say(SCENARIO_UPDATE_CASE_COMPLETED);
                 }
 
-                Logger.say(SCENARIO_RUNNING);
                 processTestClauseScenario(scenario);
-                Logger.say(SCENARIO_SUCCESSFUL, description);
-                Logger.say(SCENARIO_FINISHED);
+                stopWatch.stop();
+                log.info("✅ SCENARIO: Total time taken to complete test {} seconds", stopWatch.getTotalTimeSeconds());
                 break;
             } catch (Error | RetryableException | NullPointerException e) {
-                log.error("Scenario failed with error {}", e.getMessage());
+                stopWatch.stop();
+                log.error("Scenario failed after {} seconds with error {}", stopWatch.getTotalTimeSeconds(), e.getMessage());
                 if (i == retryCount - 1) {
                     throw e;
                 }
@@ -225,7 +202,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     return Arguments.of("Disabled: " + fileName, description, null, null);
                 }
 
-                Logger.say(SCENARIO_ENABLED, description);
+                log.info("ℹ️ SCENARIO {}", description);
 
                 Map<String, Object> beforeClauseValues = extractOrDefault(scenarioValues, "before", null);
                 Map<String, Object> testClauseValues = Objects.requireNonNull(
@@ -260,7 +237,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     scenarioValues
                 );
             } catch (IOException e) {
-                Logger.say(SCENARIO_DISABLED, "Failed to load scenario" + e);
+                log.info("Failed to load scenario: {}", String.valueOf(e));
                 return null;
             }
         });
