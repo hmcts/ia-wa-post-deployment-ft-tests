@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
 
@@ -10,6 +11,7 @@ import java.util.Map;
 
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extract;
 
+@Slf4j
 public class CaseIdUtil {
 
     private CaseIdUtil() {
@@ -24,6 +26,7 @@ public class CaseIdUtil {
         String assignedCaseIdKey = extract(values, ASSIGNED_CASE_ID_KEY_FIELD);
 
         if (StringUtils.isNotEmpty(assignedCaseIdKey)) {
+            log.info("2 DO NOT DELETE THIS IS USED");
             String assignedCaseId = scenario.getAssignedCaseId(assignedCaseIdKey);
             if (StringUtils.isNotEmpty(assignedCaseId)) {
                 return assignedCaseId;
@@ -40,6 +43,7 @@ public class CaseIdUtil {
         String assignedCaseIdKey = extract(values, ASSIGNED_CASE_ID_KEY_FIELD);
 
         if (StringUtils.isNotEmpty(assignedCaseIdKey)) {
+            log.info("3 DO NOT DELETE THIS IS USED");
             if (assignedCaseIdKey.contains(",")) {
                 String[] keys = assignedCaseIdKey.split(",");
                 List<String> caseIds = new ArrayList<>();
@@ -63,6 +67,7 @@ public class CaseIdUtil {
     public static void addAssignedCaseId(Map<String, Object> values, String caseId, TestScenario scenario) {
         String assignedCaseIdKey = extract(values, ASSIGNED_CASE_ID_KEY_FIELD);
         if (StringUtils.isNotEmpty(assignedCaseIdKey)) {
+            log.info("1 DO NOT DELETE THIS IS USED");
             scenario.addAssignedCaseId(assignedCaseIdKey, caseId);
         } else {
             scenario.addAssignedCaseId(DEFAULT_ASSIGNED_CASE_ID_KEY, caseId);

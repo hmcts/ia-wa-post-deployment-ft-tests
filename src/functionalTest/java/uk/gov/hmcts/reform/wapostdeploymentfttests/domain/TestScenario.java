@@ -69,7 +69,7 @@ public class TestScenario {
 
 
     public void addAssignedCaseId(String key, String caseId) {
-        caseIdMap.put(key, caseId);
+        caseIdMap.putIfAbsent(key, caseId);
     }
 
     public String getAssignedCaseId(String key) {

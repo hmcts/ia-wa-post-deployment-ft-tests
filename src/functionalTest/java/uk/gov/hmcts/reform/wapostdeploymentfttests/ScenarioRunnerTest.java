@@ -320,7 +320,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     scenario.getCaseType(),
                     requestAuthorizationHeaders
                 );
-                addAssignedCaseId(caseValues, caseId, scenario);
             } catch (IOException e) {
                 e.printStackTrace();
             }
