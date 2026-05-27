@@ -14,7 +14,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
@@ -51,6 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -150,9 +150,11 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     @MethodSource("caseTypeScenarios")
     public void scenarios_should_behave_as_specified(String fileName,
                                                      String description,
+                                                     int counter,
                                                      TestScenario scenario,
                                                      Map<String, Object> scenarioValues) throws Exception {
         assumeFalse(fileName.startsWith("Disabled:"), "ℹ️ SCENARIO: " + description + " **disabled**");
+        Thread.sleep(counter);
         int retryCount = 5;
         for (int i = 0; i < retryCount; i++) {
             StopWatch stopWatch = new StopWatch();
@@ -239,6 +241,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 return Arguments.of(
                     fileName,
                     description,
+                    Math.floor(Math.random() * 6 * 500),
                     scenario,
                     scenarioValues
                 );
