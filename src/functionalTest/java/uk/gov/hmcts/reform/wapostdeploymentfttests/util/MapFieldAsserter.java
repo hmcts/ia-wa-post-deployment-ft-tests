@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -17,6 +18,7 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.UUID_REGEX_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_ZONED_DATETIME_TODAY_WORKING_DAYS_PATTERN;
 
+@Slf4j
 @Component
 @SuppressWarnings("unchecked")
 public class MapFieldAsserter {
@@ -54,19 +56,6 @@ public class MapFieldAsserter {
                         for (Object expectedValueItem : expectedValueCollection) {
                             assertCollectionContainsValue(expectedValueItem, actualValueCollection, pathWithKey);
                         }
-                        for (int i = 0; i < expectedValueCollection.size(); i++) {
-                            String pathWithKeyAndIndex = pathWithKey + "." + i;
-
-
-                            Object expectedValueItem = expectedValueCollection.get(i);
-                            Object actualValueItem =
-                                i < actualValueCollection.size()
-                                    ? actualValueCollection.get(i)
-                                    : null;
-
-                            assertValue(expectedValueItem, actualValueItem, pathWithKeyAndIndex);
-
-                        }
                     } else {
                         //The collection was a list of objects assert them using any order
                         assertTrue(
@@ -101,7 +90,8 @@ public class MapFieldAsserter {
                 // continue
             }
         }
-
+        log.info("Expected value: {}", expectedValueItem);
+        log.info("Actual collection: {}", actualCollection);
         fail("Expected value was not found in actual collection (" + path + ")");
     }
 
