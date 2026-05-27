@@ -1,13 +1,9 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
-import lombok.extern.slf4j.Slf4j;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +16,6 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.UUID_REGEX_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_ZONED_DATETIME_TODAY_WORKING_DAYS_PATTERN;
 
-@Slf4j
 @Component
 @SuppressWarnings("unchecked")
 public class MapFieldAsserter {
@@ -55,8 +50,19 @@ public class MapFieldAsserter {
                     Object actualValueCollectionItem = actualValueCollection.getFirst();
 
                     if ((actualValueCollectionItem instanceof Map)) {
-                        for (Object expectedValueItem : expectedValueCollection) {
-                            assertCollectionContainsValue(expectedValueItem, actualValueCollection, pathWithKey);
+
+                        for (int i = 0; i < expectedValueCollection.size(); i++) {
+                            String pathWithKeyAndIndex = pathWithKey + "." + i;
+
+
+                            Object expectedValueItem = expectedValueCollection.get(i);
+                            Object actualValueItem =
+                                i < actualValueCollection.size()
+                                    ? actualValueCollection.get(i)
+                                    : null;
+
+                            assertValue(expectedValueItem, actualValueItem, pathWithKeyAndIndex);
+
                         }
                     } else {
                         //The collection was a list of objects assert them using any order
@@ -76,30 +82,6 @@ public class MapFieldAsserter {
 
                 assertValue(expectedValue, actualValue, pathWithKey);
             }
-        }
-    }
-
-    private void assertCollectionContainsValue(
-        Object expectedValueItem,
-        Collection<?> actualCollection,
-        String path
-    ) {
-        for (Object actualValueItem : actualCollection) {
-            try {
-                assertValue(expectedValueItem, actualValueItem, path);
-                return;
-            } catch (AssertionError e) {
-                // continue
-            }
-        }
-        try {
-            fail("Expected value was not found in actual collection (" + path + ")\nExpected value: "
-                     + new JSONObject(expectedValueItem.toString()) + "\nActual collection: "
-                     + new JSONObject(actualCollection.toString()));
-        } catch (JSONException e) {
-            fail("Expected value was not found in actual collection (" + path + ")\nExpected value: "
-                     + expectedValueItem + "\nActual collection: "
-                     + actualCollection);
         }
     }
 
