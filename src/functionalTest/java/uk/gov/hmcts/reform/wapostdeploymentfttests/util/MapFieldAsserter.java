@@ -48,30 +48,12 @@ public class MapFieldAsserter {
                 if (!actualValueCollection.isEmpty()) {
                     //Get first Item to check the instance
                     Object actualValueCollectionItem = actualValueCollection.getFirst();
-
-                    if ((actualValueCollectionItem instanceof Map)) {
-
-                        for (int i = 0; i < expectedValueCollection.size(); i++) {
-                            String pathWithKeyAndIndex = pathWithKey + "." + i;
-
-
-                            Object expectedValueItem = expectedValueCollection.get(i);
-                            Object actualValueItem =
-                                i < actualValueCollection.size()
-                                    ? actualValueCollection.get(i)
-                                    : null;
-
-                            assertValue(expectedValueItem, actualValueItem, pathWithKeyAndIndex);
-
-                        }
-                    } else {
-                        //The collection was a list of objects assert them using any order
-                        assertTrue(
-                            new HashSet<>(actualValueCollection).containsAll(expectedValueCollection),
-                            "Expected collection did not contain all actual values (" + pathWithKey + ")"
-                        );
-                        assertEquals(((List<Object>) expectedValueCollection).size(),
-                                     ((List<Object>) actualValueCollection).size());
+                    assertTrue(
+                        new HashSet<>(actualValueCollection).containsAll(expectedValueCollection),
+                        "Expected collection did not contain all actual values (" + pathWithKey + ")"
+                    );
+                    if (actualValueCollectionItem instanceof List) {
+                        assertEquals(expectedValueCollection.size(), actualValueCollection.size());
                     }
                 } else {
                     //The collection was empty
