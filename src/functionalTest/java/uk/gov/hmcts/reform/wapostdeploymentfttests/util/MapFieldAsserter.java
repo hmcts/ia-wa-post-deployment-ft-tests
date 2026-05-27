@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -90,9 +92,15 @@ public class MapFieldAsserter {
                 // continue
             }
         }
-        log.info("Expected value: {}", expectedValueItem);
-        log.info("Actual collection: {}", actualCollection);
-        fail("Expected value was not found in actual collection (" + path + ")");
+        try {
+            fail("Expected value was not found in actual collection (" + path + ")\nExpected value: "
+                     + new JSONObject(expectedValueItem.toString()) + "\nActual collection: "
+                     + new JSONObject(actualCollection.toString()));
+        } catch (JSONException e) {
+            fail("Expected value was not found in actual collection (" + path + ")\nExpected value: "
+                     + expectedValueItem + "\nActual collection: "
+                     + actualCollection);
+        }
     }
 
     private void assertValue(
