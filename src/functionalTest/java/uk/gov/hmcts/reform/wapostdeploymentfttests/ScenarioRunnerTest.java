@@ -207,7 +207,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 String description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
                 Object scenarioDisabled = MapValueExtractor.extractOrDefault(scenarioValues, "disabled", false);
                 if (Boolean.parseBoolean(scenarioDisabled.toString())) {
-                    return Arguments.of("Disabled: " + fileName, description, null, null);
+                    return Arguments.of("Disabled: " + fileName, description, 0, null, null);
                 }
 
                 log.info("ℹ️ SCENARIO {}", description);
