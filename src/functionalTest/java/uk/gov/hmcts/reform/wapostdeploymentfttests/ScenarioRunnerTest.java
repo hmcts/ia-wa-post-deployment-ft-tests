@@ -85,7 +85,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private final List<Preparer> preparers;
     private final CcdCaseCreator ccdCaseCreator;
     private final RestMessageService restMessageService;
-    private final int retryCount;
 
     private final Map<String, String> scenarioSources = new HashMap<>();
 
@@ -104,8 +103,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         List<Verifier> verifiers,
         List<Preparer> preparers,
         CcdCaseCreator ccdCaseCreator,
-        RestMessageService restMessageService,
-        @Value("${scenarioRunner.retryCount}") int retryCount
+        RestMessageService restMessageService
     ) {
         this.messageInjector = messageInjector;
         this.taskDataVerifier = taskDataVerifier;
@@ -121,7 +119,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         this.preparers = preparers;
         this.ccdCaseCreator = ccdCaseCreator;
         this.restMessageService = restMessageService;
-        this.retryCount = retryCount;
     }
 
     @BeforeAll
@@ -156,6 +153,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                                                      TestScenario scenario,
                                                      Map<String, Object> scenarioValues) throws Exception {
         assumeFalse(fileName.startsWith("Disabled:"), "ℹ️ SCENARIO: " + description + " **disabled**");
+        int retryCount = 5;
         for (int i = 0; i < retryCount; i++) {
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
@@ -188,6 +186,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 stopWatch.stop();
                 log.error("Scenario failed after {} seconds with error {}",
                           stopWatch.getTotalTimeSeconds(), e.getMessage());
+                log.info("Retrying scenario. Attempt {}/{}", i + 1, retryCount);
                 if (i == retryCount - 1) {
                     throw e;
                 }
