@@ -241,7 +241,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 return Arguments.of(
                     fileName,
                     description,
-                    Math.random() * 6 * 500,
+                    (int) (Math.random() * 6 * 500),
                     scenario,
                     scenarioValues
                 );
