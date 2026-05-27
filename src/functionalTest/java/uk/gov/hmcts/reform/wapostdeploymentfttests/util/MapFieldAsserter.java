@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -16,6 +17,7 @@ import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.UUID_REGEX_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_ZONED_DATETIME_TODAY_WORKING_DAYS_PATTERN;
 
+@Slf4j
 @Component
 @SuppressWarnings("unchecked")
 public class MapFieldAsserter {
@@ -110,9 +112,11 @@ public class MapFieldAsserter {
                         "Expected field did not match UUID regular expression (" + path + ")"
                     );
                 } else if (VERIFIER_ZONED_DATETIME_TODAY_WORKING_DAYS_PATTERN.matcher(expectedValueString).find()) {
-
+                    log.info("Found verifier for ZonedDateTime today working days in expected value: {}", expectedValueString);
                     expectedValueString = expectedValueString.replace("VERIFIER-", "");
+                    log.info("Expected value after removing VERIFIER- prefix: {}", expectedValueString);
                     String expandedExpectedDate = mapValueExpander.expandDateTimeToday(expectedValueString);
+                    log.info("Expanded expected date: {}", expandedExpectedDate);
 
                     Date expectedDate = null;
                     try {
@@ -123,7 +127,7 @@ public class MapFieldAsserter {
                     }
 
                     Date actualDate = null;
-
+                    log.info("Actual value string to parse: {}", actualValueString);
                     try {
                         actualDate = DATE_FORMATTER.parse(actualValueString);
 
