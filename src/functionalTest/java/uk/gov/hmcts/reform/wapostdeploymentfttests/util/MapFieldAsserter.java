@@ -48,12 +48,19 @@ public class MapFieldAsserter {
                 if (!actualValueCollection.isEmpty()) {
                     //Get first Item to check the instance
                     Object actualValueCollectionItem = actualValueCollection.getFirst();
-                    assertTrue(
-                        new HashSet<>(actualValueCollection).containsAll(expectedValueCollection),
-                        "Expected collection did not contain all actual values (" + pathWithKey + ")"
-                    );
-                    if (actualValueCollectionItem instanceof List) {
-                        assertEquals(expectedValueCollection.size(), actualValueCollection.size());
+
+                    if ((actualValueCollectionItem instanceof Map)) {
+                        for (Object expectedValueItem : expectedValueCollection) {
+                            assertMapContainsValue(expectedValueItem, actualMap, pathWithKey);
+                        }
+                    } else {
+                        //The collection was a list of objects assert them using any order
+                        assertTrue(
+                            new HashSet<>(actualValueCollection).containsAll(expectedValueCollection),
+                            "Expected collection did not contain all actual values (" + pathWithKey + ")"
+                        );
+                        assertEquals(((List<Object>) expectedValueCollection).size(),
+                                     ((List<Object>) actualValueCollection).size());
                     }
                 } else {
                     //The collection was empty
@@ -65,6 +72,23 @@ public class MapFieldAsserter {
                 assertValue(expectedValue, actualValue, pathWithKey);
             }
         }
+    }
+
+    private void assertMapContainsValue(
+        Object expectedValueItem,
+        Map<String, Object> actualMap,
+        String path
+    ) {
+        for (Map.Entry<String, Object> actualEntry : actualMap.entrySet()) {
+            Object actualValueItem = actualEntry.getValue();
+            try {
+                assertValue(expectedValueItem, actualValueItem, path);
+                return;
+            } catch (AssertionError e) {
+                //Continue to next entry
+            }
+        }
+        fail("Expected value was not found in actual map (" + path + ")");
     }
 
     private void assertValue(
