@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -51,7 +52,20 @@ public class MapFieldAsserter {
 
                     if ((actualValueCollectionItem instanceof Map)) {
                         for (Object expectedValueItem : expectedValueCollection) {
-                            assertMapContainsValue(expectedValueItem, actualMap, pathWithKey);
+                            assertCollectionContainsValue(expectedValueItem, actualValueCollection, pathWithKey);
+                        }
+                        for (int i = 0; i < expectedValueCollection.size(); i++) {
+                            String pathWithKeyAndIndex = pathWithKey + "." + i;
+
+
+                            Object expectedValueItem = expectedValueCollection.get(i);
+                            Object actualValueItem =
+                                i < actualValueCollection.size()
+                                    ? actualValueCollection.get(i)
+                                    : null;
+
+                            assertValue(expectedValueItem, actualValueItem, pathWithKeyAndIndex);
+
                         }
                     } else {
                         //The collection was a list of objects assert them using any order
@@ -74,21 +88,21 @@ public class MapFieldAsserter {
         }
     }
 
-    private void assertMapContainsValue(
+    private void assertCollectionContainsValue(
         Object expectedValueItem,
-        Map<String, Object> actualMap,
+        Collection<?> actualCollection,
         String path
     ) {
-        for (Map.Entry<String, Object> actualEntry : actualMap.entrySet()) {
-            Object actualValueItem = actualEntry.getValue();
+        for (Object actualValueItem : actualCollection) {
             try {
                 assertValue(expectedValueItem, actualValueItem, path);
                 return;
             } catch (AssertionError e) {
-                //Continue to next entry
+                // continue
             }
         }
-        fail("Expected value was not found in actual map (" + path + ")");
+
+        fail("Expected value was not found in actual collection (" + path + ")");
     }
 
     private void assertValue(
