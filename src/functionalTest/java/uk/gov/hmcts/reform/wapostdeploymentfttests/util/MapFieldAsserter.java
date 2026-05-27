@@ -123,7 +123,7 @@ public class MapFieldAsserter {
                         expectedDate = DATE_FORMATTER.parse(expandedExpectedDate);
 
                     } catch (ParseException | NumberFormatException e) {
-                        fail("Could not parse expected date in (" + path + ")");
+                        fail("Could not parse expected date: " + expandedExpectedDate + " in (" + path + ")");
                     }
 
                     Date actualDate = null;
@@ -132,7 +132,7 @@ public class MapFieldAsserter {
                         actualDate = DATE_FORMATTER.parse(actualValueString);
 
                     } catch (ParseException | NumberFormatException e) {
-                        fail("Could not parse actual date in (" + path + ")");
+                        fail("Could not parse actual date: " + expandedExpectedDate + " in (" + path + ")");
                     }
 
                     assertEquals(
