@@ -155,44 +155,37 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                                                      Map<String, Object> scenarioValues) throws Exception {
         assumeFalse(fileName.startsWith("Disabled:"), "ℹ️ SCENARIO: " + description + " **disabled**");
         Thread.sleep(counter);
-        int retryCount = 5;
-        for (int i = 0; i < retryCount; i++) {
-            StopWatch stopWatch = new StopWatch();
-            stopWatch.start();
-            try {
-                createBaseCcdCase(scenario);
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        try {
+            createBaseCcdCase(scenario);
 
-                addSearchParameters(scenario, scenarioValues);
+            addSearchParameters(scenario, scenarioValues);
 
-                if (scenario.getBeforeClauseValues() != null) {
-                    log.info("ℹ️ SCENARIO: Found BEFORE Clause processing setup scenario");
-                    processBeforeClauseScenario(scenario);
-                }
-
-                if (scenario.getPostRoleAssignmentClauseValues() != null) {
-                    log.info("ℹ️ SCENARIO: POST_ROLE_ASSIGNMENTS Clause found");
-                    processRoleAssignment(scenario.getPostRoleAssignmentClauseValues(), scenario);
-                }
-
-                if (scenario.getUpdateCaseClauseValues() != null) {
-                    log.info("ℹ️ SCENARIO: Update case Clause found");
-                    updateBaseCcdCase(scenario);
-                }
-
-                processTestClauseScenario(scenario);
-                stopWatch.stop();
-                log.info("✅ SCENARIO {}: Total time taken to complete test {} seconds", description,
-                         stopWatch.getTotalTimeSeconds());
-                break;
-            } catch (Error | RetryableException | NullPointerException e) {
-                stopWatch.stop();
-                log.error("Scenario failed after {} seconds with error {}",
-                          stopWatch.getTotalTimeSeconds(), e.getMessage());
-                log.info("Retrying scenario. Attempt {}/{}", i + 1, retryCount);
-                if (i == retryCount - 1) {
-                    throw e;
-                }
+            if (scenario.getBeforeClauseValues() != null) {
+                log.info("ℹ️ SCENARIO: Found BEFORE Clause processing setup scenario");
+                processBeforeClauseScenario(scenario);
             }
+
+            if (scenario.getPostRoleAssignmentClauseValues() != null) {
+                log.info("ℹ️ SCENARIO: POST_ROLE_ASSIGNMENTS Clause found");
+                processRoleAssignment(scenario.getPostRoleAssignmentClauseValues(), scenario);
+            }
+
+            if (scenario.getUpdateCaseClauseValues() != null) {
+                log.info("ℹ️ SCENARIO: Update case Clause found");
+                updateBaseCcdCase(scenario);
+            }
+
+            processTestClauseScenario(scenario);
+            stopWatch.stop();
+            log.info("✅ SCENARIO {}: Total time taken to complete test {} seconds", description,
+                     stopWatch.getTotalTimeSeconds());
+        } catch (Error | RetryableException | NullPointerException e) {
+            stopWatch.stop();
+            log.error("Scenario failed after {} seconds with error {}",
+                      stopWatch.getTotalTimeSeconds(), e.getMessage());
+            throw e;
         }
     }
 
