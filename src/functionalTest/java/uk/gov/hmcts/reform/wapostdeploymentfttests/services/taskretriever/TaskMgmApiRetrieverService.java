@@ -67,11 +67,8 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
         Map<String, String> additionalValues;
         if (scenario.getAssignedCaseIdMap() != null && scenario.getAssignedCaseIdMap().size() > 1) {
-            log.info("Assigned case id map found in scenario with multiple entries. Using the map for value expansion");
             additionalValues = scenario.getAssignedCaseIdMap();
-            log.info("assignedCaseIdMap is {}", additionalValues);
         } else {
-            log.info("No assigned case id map found in scenario or map is empty. Defaulting to using first case id from list of case ids");
             log.info("caseIds is {}", caseIds);
             additionalValues = new HashMap<>() {
                 {

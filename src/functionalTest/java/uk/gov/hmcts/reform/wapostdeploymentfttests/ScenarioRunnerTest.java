@@ -34,7 +34,6 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.services.RoleAssignmentServic
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.TaskManagementService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.CamundaTaskRetrieverService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.TaskMgmApiRetrieverService;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.JsonUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapSerializer;
@@ -46,6 +45,7 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.Verifier;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +61,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.SERVICE_AUTHORIZATION;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil.addAssignedCaseId;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.ENVIRONMENT_PROPERTIES;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrDefault;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrThrow;
@@ -87,6 +86,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private final RestMessageService restMessageService;
 
     private final Map<String, String> scenarioSources = new HashMap<>();
+    public static final String DEFAULT_ASSIGNED_CASE_ID_KEY = "defaultCaseId";
 
     @Autowired
     public ScenarioRunnerTest(
@@ -294,7 +294,9 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     scenario.getCaseType(),
                     requestAuthorizationHeaders
                 );
-                addAssignedCaseId(caseValues, caseId, scenario);
+                String description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
+                log.info("setting caseId {} for scenario {}", caseId, description);
+                scenario.addAssignedCaseId(DEFAULT_ASSIGNED_CASE_ID_KEY, caseId);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -312,7 +314,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         ccdCaseToUpdate.forEach(caseValues -> {
             try {
-                String caseId = CaseIdUtil.extractAssignedCaseIdOrDefault(caseValues, scenario);
+                String caseId = scenario.getAssignedCaseId(DEFAULT_ASSIGNED_CASE_ID_KEY);
+
                 ccdCaseCreator.updateCase(
                     caseId,
                     caseValues,
@@ -343,7 +346,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 expectationValue, "numberOfTasksAvailable", 0);
             int expectedMessages = extractOrDefault(
                 expectationValue, "numberOfMessagesToCheck", 0);
-            List<String> expectationCaseIds = CaseIdUtil.extractAllAssignedCaseIdOrDefault(expectationValue, scenario);
+            List<String> expectationCaseIds = Collections.singletonList(scenario.getAssignedCaseId(DEFAULT_ASSIGNED_CASE_ID_KEY));
+
 
             verifyTasks(scenario, taskRetrieverOption, expectationValue, expectedTasks, expectationCaseIds);
 

@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.idam.UserInfo;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapMerger;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapSerializer;
@@ -18,6 +17,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.ScenarioRunnerTest.DEFAULT_ASSIGNED_CASE_ID_KEY;
 
 @Service
 @Slf4j
@@ -49,7 +50,8 @@ public class MessageInjector {
 
         messagesToSend.forEach(messageData -> {
             try {
-                String testCaseId = CaseIdUtil.extractAssignedCaseIdOrDefault(messageData, scenario);
+                String testCaseId = scenario.getAssignedCaseId(DEFAULT_ASSIGNED_CASE_ID_KEY);
+
                 String eventMessage = getMessageData(messageData,
                                                      eventMessageTemplatesByFilename,
                                                      testCaseId,

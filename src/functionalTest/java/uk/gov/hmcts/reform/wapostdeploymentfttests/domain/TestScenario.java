@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.domain;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -13,7 +14,9 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrDefault;
 
+@Slf4j
 public class TestScenario {
 
     @Getter
@@ -73,6 +76,8 @@ public class TestScenario {
     }
 
     public String getAssignedCaseId(String key) {
+        String description = extractOrDefault(scenarioMapValues, "description", "Unnamed scenario");
+        log.info("Getting caseId for key {} from scenario {}", key, description);
         return caseIdMap.get(key);
     }
 
