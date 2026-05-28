@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers;
 
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapFieldAsserter;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor;
 
 import java.util.Map;
 

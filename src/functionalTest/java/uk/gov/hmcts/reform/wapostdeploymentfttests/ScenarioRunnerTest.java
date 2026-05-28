@@ -41,11 +41,7 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.util.StringResourceLoader;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.TaskDataVerifier;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.Verifier;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
