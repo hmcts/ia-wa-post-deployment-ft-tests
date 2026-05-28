@@ -5,6 +5,7 @@ import io.restassured.http.Headers;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.parallel.Execution;
@@ -135,7 +136,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         MapSerializer.setObjectMapper(objectMapper);
         JsonUtil.setObjectMapper(objectMapper);
-        String scenarioPattern = System.getProperty("scenario");
+        // String scenarioPattern = System.getProperty("scenario");
+        String scenarioPattern = "IA-DIAC-1833-decisionAndReasonsStarted-with-listCaseHearingCentre-detained-should-create-detainedListTheCase-task";
         if (scenarioPattern == null) {
             scenarioPattern = "*.json";
         } else {
@@ -165,7 +167,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             stopWatch.start();
             try {
                 createBaseCcdCase(scenario);
-
+                log.info(scenario.getAssignedCaseId());
+                Assertions.fail();
                 addSearchParameters(scenario, scenarioValues);
 
                 if (scenario.getBeforeClauseValues() != null) {
