@@ -209,8 +209,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
             } catch (Exception | Error e) {
                 stopWatch.stop();
                 log.error(
-                    "Scenario failed after {} seconds with error",
-                    stopWatch.getTotalTimeSeconds(), e
+                    "Scenario {} failed after {} seconds with error",
+                    fileName, stopWatch.getTotalTimeSeconds(), e
                 );
                 if (i == retryCount - 1) {
                     throw e;
