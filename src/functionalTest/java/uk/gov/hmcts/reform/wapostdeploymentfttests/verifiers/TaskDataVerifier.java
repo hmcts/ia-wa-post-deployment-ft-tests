@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers;
 
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapFieldAsserter;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor;
 
 import java.util.Map;
 
@@ -16,12 +15,10 @@ public class TaskDataVerifier implements Verifier {
     }
 
     public void verify(
-        Map<String, Object> scenario,
+        String fileName,
         Map<String, Object> expectedResponse,
         Map<String, Object> actualResponse
     ) {
-        String description = MapValueExtractor.extract(scenario, "description");
-
-        mapFieldAsserter.assertFields(expectedResponse, actualResponse, (description + ": "));
+        mapFieldAsserter.assertFields(expectedResponse, actualResponse, (fileName + ": "));
     }
 }

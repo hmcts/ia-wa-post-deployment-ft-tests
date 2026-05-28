@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.restassured.http.Headers;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
 import org.springframework.stereotype.Component;
@@ -66,15 +65,11 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
             );
 
         Map<String, String> additionalValues;
-        if (scenario.getAssignedCaseIdMap() != null && scenario.getAssignedCaseIdMap().size() > 1) {
-            additionalValues = scenario.getAssignedCaseIdMap();
-        } else {
-            additionalValues = new HashMap<>() {
-                {
-                    put("caseId", caseIds.getFirst());
-                }
-            };
-        }
+        additionalValues = new HashMap<>() {
+            {
+                put("caseId", caseIds.getFirst());
+            }
+        };
 
         if (scenario.getAssigneeId() != null) {
             additionalValues.put("assigneeId", scenario.getAssigneeId());
@@ -118,10 +113,10 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                             taskTitleComparator()
                         ));
                     Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
-
+                    String fileName = scenario.getFileName();
                     verifiers.forEach(verifier ->
                         verifier.verify(
-                            clauseValues,
+                            fileName,
                             expectedResponse,
                             actualResponse
                         )
@@ -146,9 +141,6 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                     AtomicInteger index = new AtomicInteger(0);
                     tasks.forEach(task -> {
                         try {
-                            String taskId = MapValueExtractor.extract(task, "id");
-                            log.info("task id is {}", taskId);
-
                             List<Map<String, Object>> taskDataList = MapValueExtractor.extract(
                                 scenarioMap,
                                 "taskData.replacements.tasks"
@@ -188,10 +180,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                             int expectedStatus = MapValueExtractor.extractOrDefault(
                                 clauseValues, "status", 200);
 
-
-                            Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
-
-
+                            String taskId = MapValueExtractor.extract(task, "id");
                             String retrieveTaskRolePermissionsResponseBody =
                                 taskManagementService.retrieveTaskRolePermissions(
                                     roleDataMap,
@@ -218,7 +207,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
                             verifiers.forEach(verifier ->
                                 verifier.verify(
-                                    clauseValues,
+                                    fileName,
                                     expectedRoleResponse.get(),
                                     actualRoleResponse.get()
                                 )

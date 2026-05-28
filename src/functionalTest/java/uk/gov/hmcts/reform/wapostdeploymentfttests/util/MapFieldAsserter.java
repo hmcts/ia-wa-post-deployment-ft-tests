@@ -1,10 +1,12 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -12,16 +14,13 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.ZONED_DATE_TIME_FORMAT;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.UUID_REGEX_PATTERN;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.RegularExpressions.VERIFIER_ZONED_DATETIME_TODAY_WORKING_DAYS_PATTERN;
 
+@Slf4j
 @Component
 @SuppressWarnings("unchecked")
 public class MapFieldAsserter {
-
-    private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
-    private static final SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat(ZONED_DATE_TIME_FORMAT);
 
     private final MapValueExpander mapValueExpander;
 
@@ -70,8 +69,10 @@ public class MapFieldAsserter {
                             new HashSet<>(actualValueCollection).containsAll(expectedValueCollection),
                             "Expected collection did not contain all actual values (" + pathWithKey + ")"
                         );
-                        assertEquals(((List<Object>) expectedValueCollection).size(),
-                                     ((List<Object>) actualValueCollection).size());
+                        assertEquals(
+                            ((List<Object>) expectedValueCollection).size(),
+                            ((List<Object>) actualValueCollection).size()
+                        );
                     }
                 } else {
                     //The collection was empty
@@ -110,25 +111,26 @@ public class MapFieldAsserter {
                         "Expected field did not match UUID regular expression (" + path + ")"
                     );
                 } else if (VERIFIER_ZONED_DATETIME_TODAY_WORKING_DAYS_PATTERN.matcher(expectedValueString).find()) {
-
                     expectedValueString = expectedValueString.replace("VERIFIER-", "");
                     String expandedExpectedDate = mapValueExpander.expandDateTimeToday(expectedValueString);
 
-                    Date expectedDate = null;
+                    LocalDate expectedDate = null;
                     try {
-                        expectedDate = DATE_FORMATTER.parse(expandedExpectedDate);
+                        expectedDate = LocalDate.parse(expandedExpectedDate.trim());
 
-                    } catch (ParseException e) {
-                        fail("Could not parse expected date in (" + path + ")");
+                    } catch (DateTimeParseException | NumberFormatException e) {
+                        fail("Could not parse expected date: " + expandedExpectedDate + " in (" + path + ")");
                     }
 
-                    Date actualDate = null;
-
+                    LocalDate actualDate = null;
                     try {
-                        actualDate = DATE_FORMATTER.parse(actualValueString);
+                        actualDate = OffsetDateTime.parse(
+                            actualValueString,
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ")
+                        ).toLocalDate();
 
-                    } catch (ParseException e) {
-                        fail("Could not parse actual date in (" + path + ")");
+                    } catch (DateTimeParseException | NumberFormatException e) {
+                        fail("Could not parse actual date: " + expandedExpectedDate + " in (" + path + ")");
                     }
 
                     assertEquals(
@@ -137,8 +139,8 @@ public class MapFieldAsserter {
                         "Expected field did not match actual (" + path + ")"
                     );
                 } else if (expectedValueString.length() > 3
-                           && expectedValueString.startsWith("$/")
-                           && expectedValueString.endsWith("/")) {
+                    && expectedValueString.startsWith("$/")
+                    && expectedValueString.endsWith("/")) {
 
                     expectedValueString = expectedValueString.substring(2, expectedValueString.length() - 1);
                     assertTrue(

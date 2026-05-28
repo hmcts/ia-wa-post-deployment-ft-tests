@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import feign.RetryableException;
 import io.restassured.http.Headers;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
@@ -35,7 +33,6 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.services.RoleAssignmentServic
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.TaskManagementService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.CamundaTaskRetrieverService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever.TaskMgmApiRetrieverService;
-import uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.JsonUtil;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapSerializer;
@@ -47,6 +44,7 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.Verifier;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,9 +57,9 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario.deepCopy;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.AUTHORIZATION;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.services.AuthorizationHeadersProvider.SERVICE_AUTHORIZATION;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.CaseIdUtil.addAssignedCaseId;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExpander.ENVIRONMENT_PROPERTIES;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrDefault;
 import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrThrow;
@@ -85,7 +83,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     private final List<Preparer> preparers;
     private final CcdCaseCreator ccdCaseCreator;
     private final RestMessageService restMessageService;
-    private final int retryCount;
 
     private final Map<String, String> scenarioSources = new HashMap<>();
 
@@ -104,8 +101,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         List<Verifier> verifiers,
         List<Preparer> preparers,
         CcdCaseCreator ccdCaseCreator,
-        RestMessageService restMessageService,
-        @Value("${scenarioRunner.retryCount}") int retryCount
+        RestMessageService restMessageService
     ) {
         this.messageInjector = messageInjector;
         this.taskDataVerifier = taskDataVerifier;
@@ -121,7 +117,6 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         this.preparers = preparers;
         this.ccdCaseCreator = ccdCaseCreator;
         this.restMessageService = restMessageService;
-        this.retryCount = retryCount;
     }
 
     @BeforeAll
@@ -153,10 +148,15 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
     @MethodSource("caseTypeScenarios")
     public void scenarios_should_behave_as_specified(String fileName,
                                                      String description,
-                                                     TestScenario scenario,
-                                                     Map<String, Object> scenarioValues) throws Exception {
+                                                     int counter,
+                                                     TestScenario originalScenario,
+                                                     Map<String, Object> originalScenarioValues) throws Exception {
         assumeFalse(fileName.startsWith("Disabled:"), "ℹ️ SCENARIO: " + description + " **disabled**");
+        int retryCount = 5;
         for (int i = 0; i < retryCount; i++) {
+            TestScenario scenario = new TestScenario(originalScenario);
+            Map<String, Object> scenarioValues = deepCopy(originalScenarioValues);
+            Thread.sleep(counter);
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
             try {
@@ -181,13 +181,17 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
                 processTestClauseScenario(scenario);
                 stopWatch.stop();
-                log.info("✅ SCENARIO {}: Total time taken to complete test {} seconds", description,
-                         stopWatch.getTotalTimeSeconds());
+                log.info(
+                    "✅ SCENARIO {}: Total time taken to complete test {} seconds", description,
+                    stopWatch.getTotalTimeSeconds()
+                );
                 break;
-            } catch (Error | RetryableException | NullPointerException e) {
+            } catch (Exception | Error e) {
                 stopWatch.stop();
-                log.error("Scenario failed after {} seconds with error {}",
-                          stopWatch.getTotalTimeSeconds(), e.getMessage());
+                log.error(
+                    "Scenario {} failed after {} seconds with error",
+                    fileName, stopWatch.getTotalTimeSeconds(), e
+                );
                 if (i == retryCount - 1) {
                     throw e;
                 }
@@ -206,7 +210,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 String description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
                 Object scenarioDisabled = MapValueExtractor.extractOrDefault(scenarioValues, "disabled", false);
                 if (Boolean.parseBoolean(scenarioDisabled.toString())) {
-                    return Arguments.of("Disabled: " + fileName, description, null, null);
+                    return Arguments.of("Disabled: " + fileName, description, 0, null, null);
                 }
 
                 log.info("ℹ️ SCENARIO {}", description);
@@ -235,11 +239,13 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     beforeClauseValues,
                     testClauseValues,
                     postRoleAssignmentClauseValues,
-                    updateCaseClauseValues
+                    updateCaseClauseValues,
+                    fileName
                 );
                 return Arguments.of(
                     fileName,
                     description,
+                    (int) (Math.random() * 6 * 500),
                     scenario,
                     scenarioValues
                 );
@@ -283,20 +289,24 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         List<Map<String, Object>> ccdCaseToCreate = new ArrayList<>(Objects.requireNonNull(
             MapValueExtractor.extract(scenarioValues, "required.ccd")));
-
-        ccdCaseToCreate.forEach(caseValues -> {
-            try {
-                String caseId = ccdCaseCreator.createCase(
-                    caseValues,
-                    scenario.getJurisdiction(),
-                    scenario.getCaseType(),
-                    requestAuthorizationHeaders
-                );
-                addAssignedCaseId(caseValues, caseId, scenario);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        if (ccdCaseToCreate.size() > 1) {
+            log.warn(
+                "Multiple CCD cases found in scenario {}, only the first one will be created",
+                scenario.getFileName()
+            );
+        }
+        Map<String, Object> caseValues = ccdCaseToCreate.getFirst();
+        try {
+            String caseId = ccdCaseCreator.createCase(
+                caseValues,
+                scenario.getJurisdiction(),
+                scenario.getCaseType(),
+                requestAuthorizationHeaders
+            );
+            scenario.setAssignedCaseId(caseId);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     private void updateBaseCcdCase(TestScenario scenario) throws IOException {
@@ -307,22 +317,26 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         List<Map<String, Object>> ccdCaseToUpdate = new ArrayList<>(Objects.requireNonNull(
             MapValueExtractor.extract(scenarioValues, "updateCase.ccd")));
+        if (ccdCaseToUpdate.size() > 1) {
+            log.warn(
+                "Multiple CCD cases found in scenario {}, only the first one will be updated",
+                scenario.getFileName()
+            );
+        }
+        Map<String, Object> caseValues = ccdCaseToUpdate.getFirst();
+        try {
+            String caseId = scenario.getAssignedCaseId();
 
-        ccdCaseToUpdate.forEach(caseValues -> {
-            try {
-                String caseId = CaseIdUtil.extractAssignedCaseIdOrDefault(caseValues, scenario);
-                ccdCaseCreator.updateCase(
-                    caseId,
-                    caseValues,
-                    scenario.getJurisdiction(),
-                    scenario.getCaseType(),
-                    requestAuthorizationHeaders
-                );
-                addAssignedCaseId(caseValues, caseId, scenario);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+            ccdCaseCreator.updateCase(
+                caseId,
+                caseValues,
+                scenario.getJurisdiction(),
+                scenario.getCaseType(),
+                requestAuthorizationHeaders
+            );
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     private void processScenario(Map<String, Object> values,
@@ -342,11 +356,13 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 expectationValue, "numberOfTasksAvailable", 0);
             int expectedMessages = extractOrDefault(
                 expectationValue, "numberOfMessagesToCheck", 0);
-            List<String> expectationCaseIds = CaseIdUtil.extractAllAssignedCaseIdOrDefault(expectationValue, scenario);
+            List<String> expectationCaseIds = Collections.singletonList(scenario.getAssignedCaseId());
+
 
             verifyTasks(scenario, taskRetrieverOption, expectationValue, expectedTasks, expectationCaseIds);
 
-            verifyMessages(expectationValue, expectedMessages, expectationCaseIds.getFirst());
+            String fileName = scenario.getFileName();
+            verifyMessages(expectationValue, expectedMessages, expectationCaseIds.getFirst(), fileName);
 
             removeInvalidMessages(expectationCaseIds.getFirst());
         }
@@ -389,7 +405,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         }
     }
 
-    private void verifyMessages(Map<String, Object> expectationValue, int expectedMessages, String expectationCaseId) {
+    private void verifyMessages(Map<String, Object> expectationValue, int expectedMessages, String
+        expectationCaseId, String fileName) {
         if (expectedMessages > 0) {
             await()
                 .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
@@ -406,10 +423,9 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
                         Map<String, Object> actualResponse = MapSerializer.deserialize(actualMessageResponse);
                         Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedMessageResponse);
-
                         verifiers.forEach(verifier ->
                                               verifier.verify(
-                                                  expectationValue,
+                                                  fileName,
                                                   expectedResponse,
                                                   actualResponse
                                               )
@@ -420,7 +436,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         }
     }
 
-    private void verifyTasks(TestScenario scenario, String taskRetrieverOption, Map<String, Object> expectationValue,
+    private void verifyTasks(TestScenario scenario, String
+                                 taskRetrieverOption, Map<String, Object> expectationValue,
                              int expectedTasks, List<String> expectationCaseIds) throws IOException {
         if (expectedTasks > 0) {
             CredentialRequest credentialRequest = extractCredentialRequest(expectationValue, "credentials");

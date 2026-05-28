@@ -7,8 +7,6 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.services.DateProviderService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -37,7 +35,6 @@ public class MapValueExpander {
 
     public static final Properties ENVIRONMENT_PROPERTIES = new Properties(System.getProperties());
     public static final String LOCAL_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
-    public static final String ZONED_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
     private final DateProviderService dateProviderService;
 
@@ -80,13 +77,11 @@ public class MapValueExpander {
 
             LocalDate date = dateProviderService.calculateDate(calculateDateParameters);
 
-            ZonedDateTime dateTime = date.atStartOfDay(ZoneId.of("Europe/London"));
-
             String token = matcher.group(0);
 
             expandedValue = expandedValue.replace(
                 token,
-                dateTime.format(DateTimeFormatter.ofPattern(ZONED_DATE_TIME_FORMAT))
+                date.toString()
             );
         }
 

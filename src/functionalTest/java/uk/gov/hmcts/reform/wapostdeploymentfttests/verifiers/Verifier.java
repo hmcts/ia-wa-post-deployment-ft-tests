@@ -5,7 +5,7 @@ import java.util.Map;
 public interface Verifier {
 
     void verify(
-        Map<String, Object> scenario,
+        String fileName,
         Map<String, Object> expectedResponse,
         Map<String, Object> actualResponse
     );

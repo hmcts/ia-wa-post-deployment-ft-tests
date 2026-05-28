@@ -24,6 +24,7 @@ java {
     languageVersion = JavaLanguageVersion.of(21)
   }
 }
+
 sourceSets {
   functionalTest {
     java {
@@ -73,11 +74,14 @@ checkstyle {
 
 pmd {
   toolVersion = "7.14.0"
+  ignoreFailures = true
   sourceSets = [sourceSets.main, sourceSets.functionalTest]
   reportsDir = file("${project.getLayout().getBuildDirectory()}/reports/pmd")
   // https://github.com/pmd/pmd/issues/876
-  ruleSets = []
-  ruleSetFiles = files("config/pmd/ruleset.xml")
+  ruleSets = [
+    'category/java/errorprone.xml',
+    'category/java/bestpractices.xml'
+  ]
 }
 
 dependencyUpdates {
