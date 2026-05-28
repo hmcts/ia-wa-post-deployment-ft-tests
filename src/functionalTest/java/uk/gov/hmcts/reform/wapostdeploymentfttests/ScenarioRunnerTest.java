@@ -205,6 +205,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     "✅ SCENARIO {}: Total time taken to complete test {} seconds", description,
                     stopWatch.getTotalTimeSeconds()
                 );
+                break;
             } catch (Exception | Error e) {
                 stopWatch.stop();
                 log.error(
