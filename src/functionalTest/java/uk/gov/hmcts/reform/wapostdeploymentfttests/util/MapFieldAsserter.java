@@ -111,14 +111,8 @@ public class MapFieldAsserter {
                         "Expected field did not match UUID regular expression (" + path + ")"
                     );
                 } else if (VERIFIER_ZONED_DATETIME_TODAY_WORKING_DAYS_PATTERN.matcher(expectedValueString).find()) {
-                    log.info(
-                        "{}: Found verifier for ZonedDateTime today working days in expected value: {}", path,
-                        expectedValueString
-                    );
                     expectedValueString = expectedValueString.replace("VERIFIER-", "");
-                    log.info("{}: Expected value after removing VERIFIER- prefix: {}", path, expectedValueString);
                     String expandedExpectedDate = mapValueExpander.expandDateTimeToday(expectedValueString);
-                    log.info("{}: Expanded expected date: {}", path, expandedExpectedDate);
 
                     LocalDate expectedDate = null;
                     try {
@@ -129,7 +123,6 @@ public class MapFieldAsserter {
                     }
 
                     LocalDate actualDate = null;
-                    log.info("{}: Actual value string to parse: {}", path, actualValueString);
                     try {
                         actualDate = OffsetDateTime.parse(
                             actualValueString,

@@ -69,7 +69,6 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
         if (scenario.getAssignedCaseIdMap() != null && scenario.getAssignedCaseIdMap().size() > 1) {
             additionalValues = scenario.getAssignedCaseIdMap();
         } else {
-            log.info("caseIds is {}", caseIds);
             additionalValues = new HashMap<>() {
                 {
                     put("caseId", caseIds.getFirst());
@@ -148,7 +147,6 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                     tasks.forEach(task -> {
                         try {
                             String taskId = MapValueExtractor.extract(task, "id");
-                            log.info("task id is {}", taskId);
 
                             List<Map<String, Object>> taskDataList = MapValueExtractor.extract(
                                 scenarioMap,

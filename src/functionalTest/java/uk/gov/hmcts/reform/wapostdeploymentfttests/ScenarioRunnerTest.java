@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import feign.RetryableException;
 import io.restassured.http.Headers;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +41,11 @@ import uk.gov.hmcts.reform.wapostdeploymentfttests.util.StringResourceLoader;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.TaskDataVerifier;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.verifiers.Verifier;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +53,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -145,47 +147,74 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         log.info("-------------------------------------------------------------------");
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T deepCopy(T obj) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(bos);
+            out.writeObject(obj);
+
+            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+            ObjectInputStream in = new ObjectInputStream(bis);
+
+            return (T) in.readObject();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Execution(ExecutionMode.CONCURRENT)
     @ParameterizedTest(name = "{0}:{1}")
     @MethodSource("caseTypeScenarios")
     public void scenarios_should_behave_as_specified(String fileName,
                                                      String description,
                                                      int counter,
-                                                     TestScenario scenario,
-                                                     Map<String, Object> scenarioValues) throws Exception {
+                                                     TestScenario originalScenario,
+                                                     Map<String, Object> originalScenarioValues) throws Exception {
         assumeFalse(fileName.startsWith("Disabled:"), "ℹ️ SCENARIO: " + description + " **disabled**");
-        Thread.sleep(counter);
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        try {
-            createBaseCcdCase(scenario);
+        int retryCount = 5;
+        for (int i = 0; i < retryCount; i++) {
+            TestScenario scenario = new TestScenario(originalScenario);
+            Map<String, Object> scenarioValues = deepCopy(originalScenarioValues);
+            Thread.sleep(counter);
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
+            try {
+                createBaseCcdCase(scenario);
 
-            addSearchParameters(scenario, scenarioValues);
+                addSearchParameters(scenario, scenarioValues);
 
-            if (scenario.getBeforeClauseValues() != null) {
-                log.info("ℹ️ SCENARIO: Found BEFORE Clause processing setup scenario");
-                processBeforeClauseScenario(scenario);
+                if (scenario.getBeforeClauseValues() != null) {
+                    log.info("ℹ️ SCENARIO: Found BEFORE Clause processing setup scenario");
+                    processBeforeClauseScenario(scenario);
+                }
+
+                if (scenario.getPostRoleAssignmentClauseValues() != null) {
+                    log.info("ℹ️ SCENARIO: POST_ROLE_ASSIGNMENTS Clause found");
+                    processRoleAssignment(scenario.getPostRoleAssignmentClauseValues(), scenario);
+                }
+
+                if (scenario.getUpdateCaseClauseValues() != null) {
+                    log.info("ℹ️ SCENARIO: Update case Clause found");
+                    updateBaseCcdCase(scenario);
+                }
+
+                processTestClauseScenario(scenario);
+                stopWatch.stop();
+                log.info(
+                    "✅ SCENARIO {}: Total time taken to complete test {} seconds", description,
+                    stopWatch.getTotalTimeSeconds()
+                );
+            } catch (Exception | Error e) {
+                stopWatch.stop();
+                log.error(
+                    "Scenario failed after {} seconds with error",
+                    stopWatch.getTotalTimeSeconds(), e
+                );
+                if (i == retryCount - 1) {
+                    throw e;
+                }
             }
-
-            if (scenario.getPostRoleAssignmentClauseValues() != null) {
-                log.info("ℹ️ SCENARIO: POST_ROLE_ASSIGNMENTS Clause found");
-                processRoleAssignment(scenario.getPostRoleAssignmentClauseValues(), scenario);
-            }
-
-            if (scenario.getUpdateCaseClauseValues() != null) {
-                log.info("ℹ️ SCENARIO: Update case Clause found");
-                updateBaseCcdCase(scenario);
-            }
-
-            processTestClauseScenario(scenario);
-            stopWatch.stop();
-            log.info("✅ SCENARIO {}: Total time taken to complete test {} seconds", description,
-                     stopWatch.getTotalTimeSeconds());
-        } catch (Error | RetryableException | NullPointerException e) {
-            stopWatch.stop();
-            log.error("Scenario failed after {} seconds with error {}",
-                      stopWatch.getTotalTimeSeconds(), e.getMessage());
-            throw e;
         }
     }
 
@@ -289,10 +318,9 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     requestAuthorizationHeaders
                 );
                 String description = extractOrDefault(scenarioValues, "description", "Unnamed scenario");
-                log.info("setting caseId {} for scenario {}", caseId, description);
                 scenario.addAssignedCaseId(DEFAULT_ASSIGNED_CASE_ID_KEY, caseId);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         });
     }
@@ -318,7 +346,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     requestAuthorizationHeaders
                 );
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         });
     }
@@ -340,7 +368,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 expectationValue, "numberOfTasksAvailable", 0);
             int expectedMessages = extractOrDefault(
                 expectationValue, "numberOfMessagesToCheck", 0);
-            List<String> expectationCaseIds = Collections.singletonList(scenario.getAssignedCaseId(DEFAULT_ASSIGNED_CASE_ID_KEY));
+            List<String> expectationCaseIds = Collections.singletonList(scenario.getAssignedCaseId(
+                DEFAULT_ASSIGNED_CASE_ID_KEY));
 
 
             verifyTasks(scenario, taskRetrieverOption, expectationValue, expectedTasks, expectationCaseIds);
@@ -389,7 +418,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         }
     }
 
-    private void verifyMessages(Map<String, Object> expectationValue, int expectedMessages, String expectationCaseId, String fileName) {
+    private void verifyMessages(Map<String, Object> expectationValue, int expectedMessages, String
+        expectationCaseId, String fileName) {
         if (expectedMessages > 0) {
             await()
                 .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
@@ -419,7 +449,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         }
     }
 
-    private void verifyTasks(TestScenario scenario, String taskRetrieverOption, Map<String, Object> expectationValue,
+    private void verifyTasks(TestScenario scenario, String
+                                 taskRetrieverOption, Map<String, Object> expectationValue,
                              int expectedTasks, List<String> expectationCaseIds) throws IOException {
         if (expectedTasks > 0) {
             CredentialRequest credentialRequest = extractCredentialRequest(expectationValue, "credentials");

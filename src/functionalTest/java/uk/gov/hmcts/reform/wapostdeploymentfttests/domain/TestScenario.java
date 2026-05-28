@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.domain;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -14,9 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapValueExtractor.extractOrDefault;
 
-@Slf4j
 public class TestScenario {
 
     @Getter
@@ -69,6 +66,22 @@ public class TestScenario {
         this.fileName = fileName;
     }
 
+    public TestScenario(TestScenario other) {
+        this.scenarioMapValues = other.scenarioMapValues;
+        this.scenarioSource = other.scenarioSource;
+        this.beforeClauseValues = other.beforeClauseValues;
+        this.testClauseValues = other.testClauseValues;
+        this.postRoleAssignmentClauseValues = other.postRoleAssignmentClauseValues;
+        this.updateCaseClauseValues = other.updateCaseClauseValues;
+        this.jurisdiction = other.jurisdiction;
+        this.caseType = other.caseType;
+        this.fileName = other.fileName;
+        this.taskIds = other.taskIds;
+        this.assigneeId = other.assigneeId;
+        this.caseIdMap = other.caseIdMap;
+        this.searchMap = other.searchMap;
+    }
+
     @NonNull
     public String getScenarioSource() {
         return scenarioSource;
@@ -80,8 +93,6 @@ public class TestScenario {
     }
 
     public String getAssignedCaseId(String key) {
-        String description = extractOrDefault(scenarioMapValues, "description", "Unnamed scenario");
-        log.info("Getting caseId for key {} from scenario {}", key, description);
         return caseIdMap.get(key);
     }
 
