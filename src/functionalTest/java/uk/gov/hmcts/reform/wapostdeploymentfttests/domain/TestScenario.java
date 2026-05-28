@@ -5,6 +5,10 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,9 +43,11 @@ public class TestScenario {
     @Setter
     @Getter
     private String assigneeId;
-    private final Map<String, String> caseIdMap;
     @Getter
     private final Set<Map<String, Object>> searchMap;
+    @Getter
+    @Setter
+    private String assignedCaseId;
 
     public TestScenario(@NonNull Map<String, Object> scenarioMapValues,
                         @NonNull String scenarioSource,
@@ -60,44 +66,33 @@ public class TestScenario {
         this.testClauseValues = testClauseValues;
         this.postRoleAssignmentClauseValues = postRoleAssignmentClauseValues;
         this.updateCaseClauseValues = updateCaseClauseValues;
-        this.caseIdMap = new HashMap<>();
         this.searchMap = new HashSet<>();
         this.taskIds = new ArrayList<>();
         this.fileName = fileName;
+        this.assignedCaseId = null;
     }
 
     public TestScenario(TestScenario other) {
-        this.scenarioMapValues = other.scenarioMapValues;
+        this.scenarioMapValues = deepCopy(other.scenarioMapValues);
         this.scenarioSource = other.scenarioSource;
-        this.beforeClauseValues = other.beforeClauseValues;
-        this.testClauseValues = other.testClauseValues;
-        this.postRoleAssignmentClauseValues = other.postRoleAssignmentClauseValues;
-        this.updateCaseClauseValues = other.updateCaseClauseValues;
+        this.beforeClauseValues = deepCopy(other.beforeClauseValues);
+        this.testClauseValues = deepCopy(other.testClauseValues);
+        this.postRoleAssignmentClauseValues = deepCopy(other.postRoleAssignmentClauseValues);
+        this.updateCaseClauseValues = deepCopy(other.updateCaseClauseValues);
         this.jurisdiction = other.jurisdiction;
         this.caseType = other.caseType;
         this.fileName = other.fileName;
-        this.taskIds = other.taskIds;
+        this.taskIds = new ArrayList<>();
+        this.taskIds.addAll(other.taskIds);
         this.assigneeId = other.assigneeId;
-        this.caseIdMap = other.caseIdMap;
-        this.searchMap = other.searchMap;
+        this.searchMap = new HashSet<>();
+        this.searchMap.addAll(deepCopy(other.searchMap));
+        this.assignedCaseId = other.assignedCaseId;
     }
 
     @NonNull
     public String getScenarioSource() {
         return scenarioSource;
-    }
-
-
-    public void addAssignedCaseId(String key, String caseId) {
-        caseIdMap.putIfAbsent(key, caseId);
-    }
-
-    public String getAssignedCaseId(String key) {
-        return caseIdMap.get(key);
-    }
-
-    public Map<String, String> getAssignedCaseIdMap() {
-        return caseIdMap;
     }
 
     public void addSearchMap(Map<String, Object> map) {
@@ -109,4 +104,19 @@ public class TestScenario {
         taskIds.add(taskId);
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T deepCopy(T obj) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(bos);
+            out.writeObject(obj);
+
+            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+            ObjectInputStream in = new ObjectInputStream(bis);
+
+            return (T) in.readObject();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

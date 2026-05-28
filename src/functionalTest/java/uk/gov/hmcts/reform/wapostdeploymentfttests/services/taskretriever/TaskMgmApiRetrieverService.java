@@ -66,15 +66,11 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
             );
 
         Map<String, String> additionalValues;
-        if (scenario.getAssignedCaseIdMap() != null && scenario.getAssignedCaseIdMap().size() > 1) {
-            additionalValues = scenario.getAssignedCaseIdMap();
-        } else {
-            additionalValues = new HashMap<>() {
-                {
-                    put("caseId", caseIds.getFirst());
-                }
-            };
-        }
+        additionalValues = new HashMap<>() {
+            {
+                put("caseId", caseIds.getFirst());
+            }
+        };
 
         if (scenario.getAssigneeId() != null) {
             additionalValues.put("assigneeId", scenario.getAssigneeId());

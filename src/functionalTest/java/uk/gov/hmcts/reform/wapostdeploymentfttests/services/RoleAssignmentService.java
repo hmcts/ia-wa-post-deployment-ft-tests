@@ -59,7 +59,7 @@ public class RoleAssignmentService {
                                        String serviceToken,
                                        UserInfo userInfo) throws IOException {
 
-        String caseId = scenario.getAssignedCaseId("defaultCaseId");
+        String caseId = scenario.getAssignedCaseId();
 
         Map<String, Object> roleDataValues = extractOrThrow(postRoleAssignmentValues, "roleData");
         Map<String, Object> replacementsValues = extractOrThrow(roleDataValues, "replacements");

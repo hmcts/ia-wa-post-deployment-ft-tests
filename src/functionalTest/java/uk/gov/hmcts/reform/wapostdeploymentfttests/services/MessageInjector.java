@@ -18,8 +18,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-import static uk.gov.hmcts.reform.wapostdeploymentfttests.ScenarioRunnerTest.DEFAULT_ASSIGNED_CASE_ID_KEY;
-
 @Service
 @Slf4j
 public class MessageInjector {
@@ -50,7 +48,7 @@ public class MessageInjector {
 
         messagesToSend.forEach(messageData -> {
             try {
-                String testCaseId = scenario.getAssignedCaseId(DEFAULT_ASSIGNED_CASE_ID_KEY);
+                String testCaseId = scenario.getAssignedCaseId();
 
                 String eventMessage = getMessageData(messageData,
                                                      eventMessageTemplatesByFilename,
