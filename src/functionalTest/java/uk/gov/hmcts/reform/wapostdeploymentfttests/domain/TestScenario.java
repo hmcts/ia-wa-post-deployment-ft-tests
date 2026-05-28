@@ -34,6 +34,8 @@ public class TestScenario {
     private final String jurisdiction;
     @Getter
     private final String caseType;
+    @Getter
+    private final String fileName;
 
     @Getter
     private final List<String> taskIds;
@@ -51,7 +53,8 @@ public class TestScenario {
                         @Nullable Map<String, Object> beforeClauseValues,
                         @NonNull Map<String, Object> testClauseValues,
                         @Nullable Map<String, Object> postRoleAssignmentClauseValues,
-                        @Nullable Map<String, Object> updateCaseClauseValues) {
+                        @Nullable Map<String, Object> updateCaseClauseValues,
+                        @NonNull String fileName) {
         this.scenarioMapValues = scenarioMapValues;
         this.scenarioSource = scenarioSource;
         this.jurisdiction = jurisdiction;
@@ -63,6 +66,7 @@ public class TestScenario {
         this.caseIdMap = new HashMap<>();
         this.searchMap = new HashSet<>();
         this.taskIds = new ArrayList<>();
+        this.fileName = fileName;
     }
 
     @NonNull

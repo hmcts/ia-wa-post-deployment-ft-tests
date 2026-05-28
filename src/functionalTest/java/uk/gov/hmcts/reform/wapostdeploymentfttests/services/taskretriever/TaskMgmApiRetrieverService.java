@@ -119,10 +119,10 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                             taskTitleComparator()
                         ));
                     Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
-
+                    String fileName = scenario.getFileName();
                     verifiers.forEach(verifier ->
                         verifier.verify(
-                            clauseValues,
+                            fileName,
                             expectedResponse,
                             actualResponse
                         )
@@ -189,10 +189,6 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                             int expectedStatus = MapValueExtractor.extractOrDefault(
                                 clauseValues, "status", 200);
 
-
-                            Map<String, Object> scenarioValues = scenario.getScenarioMapValues();
-
-
                             String retrieveTaskRolePermissionsResponseBody =
                                 taskManagementService.retrieveTaskRolePermissions(
                                     roleDataMap,
@@ -219,7 +215,7 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
                             verifiers.forEach(verifier ->
                                 verifier.verify(
-                                    clauseValues,
+                                    fileName,
                                     expectedRoleResponse.get(),
                                     actualRoleResponse.get()
                                 )

@@ -16,12 +16,10 @@ public class TaskDataVerifier implements Verifier {
     }
 
     public void verify(
-        Map<String, Object> scenario,
+        String fileName,
         Map<String, Object> expectedResponse,
         Map<String, Object> actualResponse
     ) {
-        String description = MapValueExtractor.extract(scenario, "description");
-
-        mapFieldAsserter.assertFields(expectedResponse, actualResponse, (description + ": "));
+        mapFieldAsserter.assertFields(expectedResponse, actualResponse, (fileName + ": "));
     }
 }

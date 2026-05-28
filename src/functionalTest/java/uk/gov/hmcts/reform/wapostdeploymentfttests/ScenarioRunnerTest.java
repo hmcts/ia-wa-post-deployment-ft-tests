@@ -229,7 +229,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                     beforeClauseValues,
                     testClauseValues,
                     postRoleAssignmentClauseValues,
-                    updateCaseClauseValues
+                    updateCaseClauseValues,
+                    fileName
                 );
                 return Arguments.of(
                     fileName,
@@ -344,7 +345,8 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
             verifyTasks(scenario, taskRetrieverOption, expectationValue, expectedTasks, expectationCaseIds);
 
-            verifyMessages(expectationValue, expectedMessages, expectationCaseIds.getFirst());
+            String fileName = scenario.getFileName();
+            verifyMessages(expectationValue, expectedMessages, expectationCaseIds.getFirst(), fileName);
 
             removeInvalidMessages(expectationCaseIds.getFirst());
         }
@@ -387,7 +389,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
         }
     }
 
-    private void verifyMessages(Map<String, Object> expectationValue, int expectedMessages, String expectationCaseId) {
+    private void verifyMessages(Map<String, Object> expectationValue, int expectedMessages, String expectationCaseId, String fileName) {
         if (expectedMessages > 0) {
             await()
                 .conditionEvaluationListener(new ConditionEvaluationLogger(log::info))
@@ -404,10 +406,9 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
                         Map<String, Object> actualResponse = MapSerializer.deserialize(actualMessageResponse);
                         Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedMessageResponse);
-
                         verifiers.forEach(verifier ->
                                               verifier.verify(
-                                                  expectationValue,
+                                                  fileName,
                                                   expectedResponse,
                                                   actualResponse
                                               )
