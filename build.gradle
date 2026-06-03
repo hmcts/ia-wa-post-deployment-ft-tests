@@ -110,7 +110,7 @@ repositories {
 dependencyManagement {
   imports {
     mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2025.0.2'
-    mavenBom 'com.fasterxml.jackson:jackson-bom:2.21.2'
+    mavenBom 'com.fasterxml.jackson:jackson-bom:2.22.0'
     mavenBom "net.serenity-bdd:serenity-bom:5.3.10"
   }
 
