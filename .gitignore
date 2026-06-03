@@ -24,3 +24,4 @@ lombok.config
 
 .DS_Store
 /target/
+/reports/pmd/*
