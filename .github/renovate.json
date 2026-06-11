@@ -3,7 +3,41 @@
   "extends": [
     "local>hmcts/.github:renovate-config"
   ],
+  "labels": [
+    "dependencies"
+  ],
   "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "automerge": true
+    },
+    {
+      "matchPackageNames": [
+        "com.github.hmcts:ccd-case-document-am-client"
+      ],
+      "enabled": false
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": [
+        "au.com.dius.pact.consumer:junit5",
+        "au.com.dius.pact.consumer:java8"
+      ],
+      "enabled": false
+    },
     {
       "matchPackageNames": [
         "org.owasp.dependencycheck"
@@ -11,7 +45,8 @@
       "enabled": false
     }
   ],
-  "labels": [
-    "dependencies"
+  "timezone": "Europe/London",
+  "schedule": [
+    "before 3am every weekday"
   ]
 }
