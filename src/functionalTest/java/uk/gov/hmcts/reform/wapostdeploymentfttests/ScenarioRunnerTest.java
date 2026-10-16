@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -245,7 +246,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
                 return Arguments.of(
                     fileName,
                     description,
-                    (int) (Math.random() * 6 * 500),
+                    (int) (ThreadLocalRandom.current().nextDouble() * 6 * 500),
                     scenario,
                     scenarioValues
                 );
