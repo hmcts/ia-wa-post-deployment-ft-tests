@@ -145,6 +145,8 @@ dependencyManagement {
 dependencies {
   runtimeOnly group: "javax.xml.bind", name: "jaxb-api", version: "2.3.1"
 
+  implementation 'org.springframework.boot:spring-boot-jackson2'
+  implementation 'com.fasterxml.jackson.core:jackson-databind'
   implementation 'org.springframework.boot:spring-boot-starter-aspectj'
   implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
