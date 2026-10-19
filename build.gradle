@@ -143,7 +143,7 @@ dependencyManagement {
 }
 
 dependencies {
-  runtimeOnly 'jakarta.xml.bind:jakarta.xml.bind-api'
+  runtimeOnly "javax.xml.bind:jaxb-api:2.3.1"
 
   implementation 'org.springframework.boot:spring-boot-jackson2'
   implementation 'com.fasterxml.jackson.core:jackson-databind'
@@ -165,8 +165,9 @@ dependencies {
 
   functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '5.3.11'
   functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: '5.3.11'
+  functionalTestImplementation 'jakarta.servlet:jakarta.servlet-api'
 
-  functionalTestImplementation group: "org.springframework.boot", name: "spring-boot-starter-restclient", version: "4.0.8"
+  functionalTestImplementation "org.springframework.boot:spring-boot-starter-restclient"
   functionalTestImplementation sourceSets.main.runtimeClasspath
   functionalTestImplementation sourceSets.test.runtimeClasspath
 }
