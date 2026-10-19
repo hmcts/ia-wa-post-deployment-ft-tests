@@ -107,9 +107,6 @@ repositories {
   }
 }
 
-
-ext['rest-assured.version'] = '5.5.7'
-
 dependencyManagement {
   imports {
     mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2025.1.3'
@@ -123,8 +120,6 @@ dependencyManagement {
       entry 'mockito-core'
       entry 'mockito-junit-jupiter'
     }
-
-    dependency group: 'io.rest-assured', name: 'rest-assured', version: '5.5.7'
 
     // due to Serenity 5.3.10 forcing commons-lang3@3.18.0
     dependency group: 'org.apache.commons', name: 'commons-lang3', version: '3.20.0'
