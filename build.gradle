@@ -143,7 +143,7 @@ dependencyManagement {
 }
 
 dependencies {
-  runtimeOnly group: "javax.xml.bind", name: "jaxb-api", version: "2.3.1"
+  runtimeOnly 'jakarta.xml.bind:jakarta.xml.bind-api'
 
   implementation 'org.springframework.boot:spring-boot-jackson2'
   implementation 'com.fasterxml.jackson.core:jackson-databind'
