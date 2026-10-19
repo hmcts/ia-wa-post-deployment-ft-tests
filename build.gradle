@@ -149,7 +149,7 @@ dependencies {
   implementation 'com.fasterxml.jackson.core:jackson-databind'
   implementation 'org.springframework.boot:spring-boot-starter-aspectj'
   implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-
+  implementation 'org.springframework.boot:spring-boot-http-converter'
   functionalTestImplementation 'org.springframework.boot:spring-boot-starter-test'
 
   functionalTestImplementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '8.0.0'
