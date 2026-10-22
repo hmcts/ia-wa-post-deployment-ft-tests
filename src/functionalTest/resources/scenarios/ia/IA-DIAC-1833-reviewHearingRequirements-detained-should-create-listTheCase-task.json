@@ -48,7 +48,7 @@
     "expectations": [
       {
         "credentials": {
-          "key": "CTSCAdmin"
+          "key": "IACaseworker"
         },
         "status": 200,
         "numberOfTasksAvailable": 1,
@@ -78,7 +78,7 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "CTSC",
+                "role_category": "ADMIN",
                 "warning_list": {
                   "values": [
 
@@ -120,18 +120,6 @@
             {
               "role_category":"ADMIN",
               "role_name":"hearing-centre-admin",
-              "permissions":[
-                "Read",
-                "Own","Claim",
-                "Manage","Unassign","Assign","Complete",
-                "Cancel"
-              ],
-              "authorisations":[
-              ]
-            },
-            {
-              "role_category":"CTSC",
-              "role_name":"ctsc",
               "permissions":[
                 "Read",
                 "Own","Claim",

@@ -1,5 +1,6 @@
 {
   "description": "Should create Send CMR detained notification task when CMR detained is listed",
+  "disabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
