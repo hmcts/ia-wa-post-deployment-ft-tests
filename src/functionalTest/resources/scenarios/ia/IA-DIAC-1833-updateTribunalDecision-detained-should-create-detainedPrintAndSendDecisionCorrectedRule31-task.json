@@ -40,7 +40,7 @@
                   "isAdmin": true,
                   "isDecisionRule31Changed": true,
                   "updateTribunalDecisionList": "underRule31",
-                  "appellantInDetention": "true"
+                  "appellantInDetention": true
                 }
               }
             }

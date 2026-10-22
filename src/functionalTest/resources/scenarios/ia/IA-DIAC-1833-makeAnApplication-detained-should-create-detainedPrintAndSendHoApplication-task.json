@@ -42,7 +42,7 @@
                     "decision": "",
                     "applicant": "Respondent"
                   },
-                  "appellantInDetention": "true"
+                  "appellantInDetention": true
                 }
               }
             }

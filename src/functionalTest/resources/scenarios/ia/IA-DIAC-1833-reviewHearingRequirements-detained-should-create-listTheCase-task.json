@@ -37,7 +37,7 @@
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "appellantInDetention": "true"
+                  "appellantInDetention": true
                 }
               }
             }
@@ -92,7 +92,6 @@
                     "Own",
                     "Claim",
                     "Manage",
-                    "Execute",
                     "Unassign",
                     "Assign",
                     "Complete",

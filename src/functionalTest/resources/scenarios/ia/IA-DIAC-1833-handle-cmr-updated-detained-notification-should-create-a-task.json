@@ -34,14 +34,14 @@
             "template": "minimal-ccd-event-message.json",
             "replacements": {
               "EventId": "cmrReListing",
-              "AdditionalData": {
+              "additionalData": {
                 "Data": {
                   "appealType": "protection",
                   "lastModifiedApplication": {
                     "type": "Adjourn",
                     "decision": "Granted"
                   },
-                  "appellantInDetention": "true"
+                  "appellantInDetention": true
                 }
               }
             }
