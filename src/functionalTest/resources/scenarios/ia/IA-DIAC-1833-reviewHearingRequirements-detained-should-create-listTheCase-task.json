@@ -131,6 +131,18 @@
             },
             {
               "role_category":"CTSC",
+              "role_name":"ctsc",
+              "permissions":[
+                "Read",
+                "Own","Claim",
+                "Manage","Unassign","Assign","Complete",
+                "Cancel"
+              ],
+              "authorisations":[
+              ]
+            },
+            {
+              "role_category":"CTSC",
               "role_name":"ctsc-team-leader",
               "permissions":[
                 "Read",
