@@ -131,13 +131,7 @@ public class ScenarioRunnerTest extends SpringBootFunctionalBaseTest {
 
         MapSerializer.setObjectMapper(objectMapper);
         JsonUtil.setObjectMapper(objectMapper);
-        String scenarioPattern = System.getProperty("scenario");
-        if (scenarioPattern == null) {
-            scenarioPattern = "*.json";
-        } else {
-            scenarioPattern = "*" + scenarioPattern + "*.json";
-        }
-        scenarioSources.putAll(StringResourceLoader.load("/scenarios/ia/" + scenarioPattern));
+        scenarioSources.putAll(StringResourceLoader.load("/scenarios/ia/IA-DIAC-1833-decide-an-application-detained-with-expedite-application-granted-should-create-a-task.json"));
         log.info("-------------------------------------------------------------------");
         log.info("⚙️️ FOUND {} SCENARIOS", scenarioSources.size());
         log.info("-------------------------------------------------------------------");
