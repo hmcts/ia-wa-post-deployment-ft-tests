@@ -100,7 +100,6 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
                         additionalValues
                     );
 
-                    log.info("Expectation {}", expectedResponseBody);
                     if (searchByCaseIdResponseBody.isBlank()) {
                         log.error("Find my case ID response is empty. Test will now fail");
                         return false;
