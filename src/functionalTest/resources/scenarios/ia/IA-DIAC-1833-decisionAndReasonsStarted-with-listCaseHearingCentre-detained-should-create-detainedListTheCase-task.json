@@ -82,7 +82,7 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "CTSC",
+                "role_category": "ADMIN",
                 "warning_list": {
                   "values": [
 
@@ -93,7 +93,6 @@
                 "permissions": {
                   "values": [
                     "Read",
-                    "Own",
                     "Claim",
                     "Manage",
                     "Execute",
