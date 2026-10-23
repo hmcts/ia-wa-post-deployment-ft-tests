@@ -5,7 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.MapFieldAsserter;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 @Component
 public class TaskDataVerifier implements Verifier {
@@ -24,16 +32,74 @@ public class TaskDataVerifier implements Verifier {
         try {
             mapFieldAsserter.assertFields(expectedResponse, actualResponse, (fileName + ": "));
         } catch (AssertionError e) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            try {
-                String expectedResponseJson = objectMapper.writeValueAsString(expectedResponse);
-                String actualResponseJson = objectMapper.writeValueAsString(actualResponse);
-                System.out.println("Expected Response JSON: " + expectedResponseJson);
-                System.out.println("Actual Response JSON: " + actualResponseJson);
-                throw e;
-            } catch (JsonProcessingException jsonProcessingException) {
-                throw new RuntimeException(jsonProcessingException);
-            }
+            Map<String, List<Object>> differences = diff(expectedResponse, actualResponse);
+            System.out.println("Expected value -> Actual value");
+            differences.forEach((key, values) ->
+                                    System.out.printf(
+                                        "%s: %s -> %s%n",
+                                        key,
+                                        values.getFirst(),
+                                        values.get(1)
+                                    )
+            );
         }
     }
+
+    public static Map<String, Object> flatten(Map<String, Object> input) {
+        Map<String, Object> result = new TreeMap<>();
+        flatten("", input, result);
+        return result;
+    }
+
+    private static void flatten(
+        String prefix,
+        Object value,
+        Map<String, Object> result
+    ) {
+        if (value instanceof Map<?, ?> map) {
+            map.forEach((key, val) -> {
+                String path = prefix.isEmpty()
+                    ? String.valueOf(key)
+                    : prefix + "." + key;
+
+                flatten(path, val, result);
+            });
+        } else if (value instanceof List<?> list) {
+            List<?> sorted = list.stream()
+                .sorted(Comparator.comparing(String::valueOf))
+                .toList();
+
+            for (int i = 0; i < sorted.size(); i++) {
+                flatten(prefix + "[" + i + "]", sorted.get(i), result);
+            }
+        } else {
+            result.put(prefix, value);
+        }
+    }
+
+    public static Map<String, List<Object>> diff(
+        Map<String, Object> first,
+        Map<String, Object> second
+    ) {
+        Map<String, Object> a = flatten(first);
+        Map<String, Object> b = flatten(second);
+
+        Set<String> keys = new TreeSet<>(a.keySet());
+        keys.addAll(b.keySet());
+
+        Map<String, List<Object>> differences = new LinkedHashMap<>();
+
+        for (String key : keys) {
+            Object oldValue = a.get(key);
+            Object newValue = b.get(key);
+
+            if (!Objects.equals(oldValue, newValue)
+                || a.containsKey(key) != b.containsKey(key)) {
+                differences.put(key, Arrays.asList(oldValue, newValue));
+            }
+        }
+
+        return differences;
+    }
+
 }
