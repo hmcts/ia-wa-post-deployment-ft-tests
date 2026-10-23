@@ -94,7 +94,7 @@ public class TaskDataVerifier implements Verifier {
             Object oldValue = expectedFlat.get(key);
             Object newValue = actualFlat.get(key);
 
-            if (oldValue != null && (!Objects.equals(oldValue, newValue)
+            if (!shouldBeIgnored(oldValue) && (!Objects.equals(oldValue, newValue)
                 || expectedFlat.containsKey(key) != actualFlat.containsKey(key))) {
                 differences.put(key, Arrays.asList(oldValue, newValue));
             }
@@ -103,4 +103,7 @@ public class TaskDataVerifier implements Verifier {
         return differences;
     }
 
+    private static boolean shouldBeIgnored(Object object) {
+        return object == null || (object instanceof String str && str.startsWith("{$"));
+    }
 }
