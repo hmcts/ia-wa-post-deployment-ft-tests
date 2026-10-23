@@ -80,6 +80,8 @@
                 "case_type_id": "Asylum",
                 "region": "1",
                 "location": "765324",
+                "location_name": "Taylor House",
+                "auto_assigned": false,
                 "warnings": false,
                 "role_category": "ADMIN",
                 "warning_list": {
@@ -92,6 +94,7 @@
                 "permissions": {
                   "values": [
                     "Read",
+                    "Claim",
                     "Manage","Unassign","Assign","Complete",
                     "Execute",
                     "Cancel"
