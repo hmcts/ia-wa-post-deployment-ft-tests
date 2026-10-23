@@ -78,23 +78,23 @@ public class TaskDataVerifier implements Verifier {
     }
 
     public static Map<String, List<Object>> diff(
-        Map<String, Object> first,
-        Map<String, Object> second
+        Map<String, Object> expected,
+        Map<String, Object> actual
     ) {
-        Map<String, Object> a = flatten(first);
-        Map<String, Object> b = flatten(second);
+        Map<String, Object> expectedFlat = flatten(expected);
+        Map<String, Object> actualFlat = flatten(actual);
 
-        Set<String> keys = new TreeSet<>(a.keySet());
-        keys.addAll(b.keySet());
+        Set<String> keys = new TreeSet<>(expectedFlat.keySet());
+        keys.addAll(actualFlat.keySet());
 
         Map<String, List<Object>> differences = new LinkedHashMap<>();
 
         for (String key : keys) {
-            Object oldValue = a.get(key);
-            Object newValue = b.get(key);
+            Object oldValue = expectedFlat.get(key);
+            Object newValue = actualFlat.get(key);
 
-            if (!Objects.equals(oldValue, newValue)
-                || a.containsKey(key) != b.containsKey(key)) {
+            if (oldValue != null && !Objects.equals(oldValue, newValue)
+                || expectedFlat.containsKey(key) != actualFlat.containsKey(key)) {
                 differences.put(key, Arrays.asList(oldValue, newValue));
             }
         }
