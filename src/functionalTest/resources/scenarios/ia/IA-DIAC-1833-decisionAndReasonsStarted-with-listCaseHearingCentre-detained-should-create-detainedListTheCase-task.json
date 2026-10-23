@@ -41,7 +41,7 @@
                   "isIntegrated": true,
                   "autoHearingRequestEnabled": false,
                   "isDecisionWithoutHearing": true,
-                  "appellantInDetention": true
+                  "appellantInDetention": "true"
                 }
               }
             }

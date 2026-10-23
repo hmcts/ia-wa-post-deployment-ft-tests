@@ -39,7 +39,7 @@
                   "appealType": "protection",
                   "ftpaAppellantRjDecisionOutcomeType": "reheardRule35",
                   "ftpaApplicantType": "appellant",
-                  "appellantInDetention": true
+                  "appellantInDetention": "true"
                 }
               }
             }

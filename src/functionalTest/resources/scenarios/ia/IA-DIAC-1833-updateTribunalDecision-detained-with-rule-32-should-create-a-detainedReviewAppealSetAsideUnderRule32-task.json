@@ -38,7 +38,7 @@
                 "Data": {
                   "appealType": "protection",
                   "updateTribunalDecisionList": "underRule32",
-                  "appellantInDetention": true
+                  "appellantInDetention": "true"
                 }
               }
             }

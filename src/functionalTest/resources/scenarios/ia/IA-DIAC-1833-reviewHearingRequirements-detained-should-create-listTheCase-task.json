@@ -37,7 +37,7 @@
               "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
-                  "appellantInDetention": true
+                  "appellantInDetention": "true"
                 }
               }
             }
@@ -48,7 +48,7 @@
     "expectations": [
       {
         "credentials": {
-          "key": "IACaseworker"
+          "key": "CTSCAdmin"
         },
         "status": 200,
         "numberOfTasksAvailable": 1,
@@ -78,7 +78,7 @@
                 "location_name": "Taylor House",
                 "auto_assigned": false,
                 "warnings": false,
-                "role_category": "ADMIN",
+                "role_category": "CTSC",
                 "warning_list": {
                   "values": [
 
@@ -92,6 +92,7 @@
                     "Own",
                     "Claim",
                     "Manage",
+                    "Execute",
                     "Unassign",
                     "Assign",
                     "Complete",

@@ -42,7 +42,7 @@
                     "decision": "Granted",
                     "isIntegrated": false
                   },
-                  "appellantInDetention": true
+                  "appellantInDetention": "true"
                 }
               }
             }

@@ -1,6 +1,5 @@
 {
   "description": "Should create Update CMR detained notification task when CMR detained is updated",
-  "disabled": true,
   "jurisdiction": "IA",
   "caseType": "Asylum",
   "options": {
@@ -35,14 +34,14 @@
             "template": "minimal-ccd-event-message.json",
             "replacements": {
               "EventId": "cmrReListing",
-              "additionalData": {
+              "AdditionalData": {
                 "Data": {
                   "appealType": "protection",
                   "lastModifiedApplication": {
                     "type": "Adjourn",
                     "decision": "Granted"
                   },
-                  "appellantInDetention": true
+                  "appellantInDetention": "true"
                 }
               }
             }

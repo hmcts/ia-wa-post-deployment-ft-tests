@@ -40,7 +40,7 @@
                   "hearingAdjournmentWhen": "onHearingDate",
                   "relistCaseImmediately": true,
                   "autoHearingRequestEnabled": false,
-                  "appellantInDetention": true
+                  "appellantInDetention": "true"
                 }
               }
             }
