@@ -42,6 +42,7 @@ public class TaskDataVerifier implements Verifier {
                                         values.get(1)
                                     )
             );
+            throw e;
         }
     }
 
@@ -93,8 +94,8 @@ public class TaskDataVerifier implements Verifier {
             Object oldValue = expectedFlat.get(key);
             Object newValue = actualFlat.get(key);
 
-            if (oldValue != null && !Objects.equals(oldValue, newValue)
-                || expectedFlat.containsKey(key) != actualFlat.containsKey(key)) {
+            if (oldValue != null && (!Objects.equals(oldValue, newValue)
+                || expectedFlat.containsKey(key) != actualFlat.containsKey(key))) {
                 differences.put(key, Arrays.asList(oldValue, newValue));
             }
         }
