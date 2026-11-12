@@ -67,7 +67,9 @@ public class MapFieldAsserter {
                         //The collection was a list of objects assert them using any order
                         assertTrue(
                             new HashSet<>(actualValueCollection).containsAll(expectedValueCollection),
-                            "Expected collection: " + String.join(", ",expectedValueCollection) + " did not contain all actual values:" + String.join(", ", expectedValueCollection) +" (" + pathWithKey + ")"
+                            "Expected collection: " + String.join(", ",expectedValueCollection)
+                                + " did not contain all actual values:" + String.join(
+                                    ", ", expectedValueCollection) + " (" + pathWithKey + ")"
                         );
                         assertEquals(
                             ((List<Object>) expectedValueCollection).size(),

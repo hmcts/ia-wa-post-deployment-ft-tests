@@ -1,10 +1,10 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services.taskretriever;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.restassured.http.Headers;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.core.ConditionEvaluationLogger;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.JsonNode;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.domain.TestScenario;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.services.TaskManagementService;
 import uk.gov.hmcts.reform.wapostdeploymentfttests.util.DeserializeValuesUtil;
@@ -233,8 +233,8 @@ public class TaskMgmApiRetrieverService implements TaskRetrieverService {
 
     private Comparator<JsonNode> taskTitleComparator() {
         return (j1, j2) -> {
-            String title1 = j1.findValue("task_title").asText();
-            String title2 = j2.findValue("task_title").asText();
+            String title1 = j1.findValue("task_title").asString();
+            String title2 = j2.findValue("task_title").asString();
             return title1.compareTo(title2);
         };
     }
