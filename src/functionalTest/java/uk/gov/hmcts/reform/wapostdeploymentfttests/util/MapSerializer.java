@@ -1,10 +1,11 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.Map;
 
 public final class MapSerializer {
 
-    private static ObjectMapper MAPPER = new ObjectMapper();
+    private static ObjectMapper MAPPER = new JsonMapper();
 
     private MapSerializer() {
         // noop
@@ -38,20 +39,24 @@ public final class MapSerializer {
     public static String sortCollectionElement(String source, String elementNameToSort, Comparator<JsonNode> comparator)
         throws IOException {
         JsonNode node = MAPPER.readTree(source);
-        ObjectNode objectNode = node.deepCopy();
 
-        if (node.get(elementNameToSort) instanceof ArrayNode list) {
+        if (node instanceof ObjectNode originalObject) {
+            ObjectNode objectNode = originalObject.deepCopy();
 
-            List<JsonNode> sortList = new ArrayList<>();
-            list.elements().forEachRemaining(sortList::add);
-            sortList.sort(comparator);
+            if (objectNode.get(elementNameToSort) instanceof ArrayNode list) {
+                List<JsonNode> sortList = new ArrayList<>();
+                for (JsonNode childNode : list) {
+                    sortList.add(childNode);
+                }
+                sortList.sort(comparator);
+                ArrayNode array = MAPPER.createArrayNode();
+                sortList.forEach(array::add);
+                objectNode.set(elementNameToSort, array);
 
-            ArrayNode array = MAPPER.createArrayNode();
-            sortList.forEach(array::add);
-            objectNode.set(elementNameToSort, array);
-
-            return MAPPER.writeValueAsString(objectNode);
+                return MAPPER.writeValueAsString(objectNode);
+            }
         }
+
         return source;
     }
 
