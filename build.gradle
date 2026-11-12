@@ -154,7 +154,7 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-aspectj'
   implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
   implementation("org.springframework.boot:spring-boot-http-converter")
-  implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '6.1.2'
+  implementation 'jakarta.servlet:jakarta.servlet-api'
 
   functionalTestImplementation 'org.springframework.boot:spring-boot-starter-test'
 
