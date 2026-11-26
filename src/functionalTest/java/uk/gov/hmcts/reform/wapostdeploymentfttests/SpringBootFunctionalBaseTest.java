@@ -1,11 +1,11 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import tools.jackson.databind.ObjectMapper;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
 @SpringBootTest

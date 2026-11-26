@@ -3,8 +3,10 @@ package uk.gov.hmcts.reform.wapostdeploymentfttests.config;
 import feign.Logger;
 import feign.codec.Encoder;
 import feign.form.spring.SpringFormEncoder;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.http.converter.autoconfigure.ClientHttpMessageConvertersCustomizer;
+import org.springframework.cloud.openfeign.support.FeignHttpMessageConverters;
+import org.springframework.cloud.openfeign.support.HttpMessageConverterCustomizer;
 import org.springframework.cloud.openfeign.support.SpringEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +21,16 @@ public class FeignConfiguration {
     }
 
     @Bean
+    public FeignHttpMessageConverters feignHttpMessageConverters(
+        ObjectProvider<ClientHttpMessageConvertersCustomizer> messageConverters,
+        ObjectProvider<HttpMessageConverterCustomizer> customizers
+    ) {
+        return new FeignHttpMessageConverters(messageConverters, customizers);
+    }
+
+    @Bean
     @Primary
-    public Encoder feignFormEncoder(ObjectFactory<HttpMessageConverters> messageConverters) {
+    public Encoder feignFormEncoder(ObjectProvider<FeignHttpMessageConverters> messageConverters) {
         return new SpringFormEncoder(new SpringEncoder(messageConverters));
     }
 

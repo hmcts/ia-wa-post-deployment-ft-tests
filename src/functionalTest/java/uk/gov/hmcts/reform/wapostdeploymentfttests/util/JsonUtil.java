@@ -1,14 +1,15 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Map;
 
 public class JsonUtil {
 
-    private static ObjectMapper MAPPER = new ObjectMapper();
+    private static ObjectMapper MAPPER = new JsonMapper();
 
     private JsonUtil() {
         // noop
@@ -26,7 +27,7 @@ public class JsonUtil {
 
         try {
             json = MAPPER.writeValueAsString(attributes);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             e.printStackTrace();
         }
 
@@ -38,7 +39,7 @@ public class JsonUtil {
 
         try {
             json = MAPPER.writeValueAsString(attributes);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             e.printStackTrace();
         }
 

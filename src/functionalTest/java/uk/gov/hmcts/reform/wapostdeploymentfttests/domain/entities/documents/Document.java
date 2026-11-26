@@ -1,10 +1,10 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.domain.entities.documents;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
 
 import static java.util.Objects.requireNonNull;
 

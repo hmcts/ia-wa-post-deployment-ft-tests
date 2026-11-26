@@ -1,11 +1,11 @@
 package uk.gov.hmcts.reform.wapostdeploymentfttests.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
@@ -235,8 +235,8 @@ public class CcdCaseCreator {
         String json = null;
 
         try {
-            json = new ObjectMapper().writeValueAsString(object);
-        } catch (JsonProcessingException e) {
+            json = new JsonMapper().writeValueAsString(object);
+        } catch (JacksonException e) {
             e.printStackTrace();
         }
 
